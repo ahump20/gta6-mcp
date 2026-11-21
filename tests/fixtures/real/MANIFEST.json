@@ -1,0 +1,126 @@
+{
+  "kind": "real",
+  "description": "Real upstream captures. Each entry records the request URL, UTC capture time, revision, licence and trimming.",
+  "fixtures": [
+    {
+      "file": "fandom-parse-cheats-gta-vi.json",
+      "request_url": "https://gta.fandom.com/api.php?format=json&formatversion=2&action=parse&page=Cheats+in+GTA+VI&prop=wikitext%7Crevid%7Ctocdata&redirects=1",
+      "captured_at": "2026-11-21T10:19:16.261Z",
+      "http_status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "revision": 2089363,
+      "license": "CC-BY-SA (Fandom, https://www.fandom.com/licensing)",
+      "trimming": "none"
+    },
+    {
+      "file": "fandom-search-cheats.json",
+      "request_url": "https://gta.fandom.com/api.php?format=json&formatversion=2&action=query&list=search&srsearch=GTA+VI+cheats&srlimit=10&srprop=snippet%7Ctimestamp",
+      "captured_at": "2026-11-21T10:19:17.759Z",
+      "http_status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "revision": null,
+      "license": "CC-BY-SA (Fandom, https://www.fandom.com/licensing)",
+      "trimming": "none"
+    },
+    {
+      "file": "fandom-categories-search-hits.json",
+      "request_url": "https://gta.fandom.com/api.php?format=json&formatversion=2&action=query&prop=categories&cllimit=max&titles=Cheats+in+GTA+VI%7CCheats+in+GTA+V%7CCheats+in+GTA+IV%7CCheats%7CGrand+Theft+Auto+VI%2FLeaks%7CState+of+Leonida",
+      "captured_at": "2026-11-21T10:19:19.495Z",
+      "http_status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "revision": null,
+      "license": "CC-BY-SA (Fandom, https://www.fandom.com/licensing)",
+      "trimming": "none"
+    },
+    {
+      "file": "fandom-parse-missingtitle.json",
+      "request_url": "https://gta.fandom.com/api.php?format=json&formatversion=2&action=parse&page=Secrets+and+Easter+Eggs+in+GTA+VI&prop=wikitext%7Crevid%7Ctocdata&redirects=1",
+      "captured_at": "2026-11-21T10:19:20.816Z",
+      "http_status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "revision": null,
+      "license": "CC-BY-SA (Fandom, https://www.fandom.com/licensing)",
+      "trimming": "none"
+    },
+    {
+      "file": "fandom-parse-nosuchsection.json",
+      "request_url": "https://gta.fandom.com/api.php?format=json&formatversion=2&action=parse&page=Cheats+in+GTA+VI&prop=wikitext%7Crevid&section=99",
+      "captured_at": "2026-11-21T10:19:22.125Z",
+      "http_status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "revision": null,
+      "license": "CC-BY-SA (Fandom, https://www.fandom.com/licensing)",
+      "trimming": "none"
+    },
+    {
+      "file": "fandom-parse-redirect-cheats-gta-5.json",
+      "request_url": "https://gta.fandom.com/api.php?format=json&formatversion=2&action=parse&page=Cheats+in+GTA+5&prop=wikitext%7Crevid%7Ctocdata&redirects=1&section=1",
+      "captured_at": "2026-11-21T10:19:23.508Z",
+      "http_status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "revision": 2082854,
+      "license": "CC-BY-SA (Fandom, https://www.fandom.com/licensing)",
+      "trimming": "section 1 wikitext cut to the table header plus first three rows"
+    },
+    {
+      "file": "fandom-parse-state-of-leonida-lead.json",
+      "request_url": "https://gta.fandom.com/api.php?format=json&formatversion=2&action=parse&page=State+of+Leonida&prop=wikitext%7Crevid&section=0&redirects=1",
+      "captured_at": "2026-11-21T10:19:24.948Z",
+      "http_status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "revision": 2091131,
+      "license": "CC-BY-SA (Fandom, https://www.fandom.com/licensing)",
+      "trimming": "none"
+    },
+    {
+      "file": "wikipedia-parse-gta-vi-toc.json",
+      "request_url": "https://en.wikipedia.org/w/api.php?format=json&formatversion=2&action=parse&page=Grand_Theft_Auto_VI&prop=tocdata%7Crevid&redirects=1",
+      "captured_at": "2026-11-21T10:19:26.488Z",
+      "http_status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "revision": 1386910091,
+      "license": "CC BY-SA 4.0 (Wikipedia, https://creativecommons.org/licenses/by-sa/4.0/deed.en)",
+      "trimming": "none"
+    },
+    {
+      "file": "wikipedia-parse-gta-vi-gameplay.json",
+      "request_url": "https://en.wikipedia.org/w/api.php?format=json&formatversion=2&action=parse&page=Grand_Theft_Auto_VI&prop=wikitext%7Crevid&section=1&redirects=1",
+      "captured_at": "2026-11-21T10:19:31.442Z",
+      "http_status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "revision": 1386910091,
+      "license": "CC BY-SA 4.0 (Wikipedia, https://creativecommons.org/licenses/by-sa/4.0/deed.en)",
+      "trimming": "section 1 wikitext cut to its first 3000 characters"
+    },
+    {
+      "file": "wikipedia-search-gta-vi.json",
+      "request_url": "https://en.wikipedia.org/w/api.php?format=json&formatversion=2&action=query&list=search&srsearch=%22Grand+Theft+Auto+VI%22+Leonida&srlimit=5&srprop=snippet%7Ctimestamp",
+      "captured_at": "2026-11-21T10:19:32.995Z",
+      "http_status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "revision": null,
+      "license": "CC BY-SA 4.0 (Wikipedia, https://creativecommons.org/licenses/by-sa/4.0/deed.en)",
+      "trimming": "none"
+    },
+    {
+      "file": "gamespot-403-challenge.html",
+      "request_url": "https://www.gamespot.com/articles/all-gta-6-cheats-and-how-to-unlock-them/",
+      "captured_at": "2026-11-21T10:10:35.555Z",
+      "http_status": 403,
+      "content_type": "text/html; charset=UTF-8",
+      "revision": null,
+      "license": "Cloudflare challenge page, no article content",
+      "trimming": "first 400 characters"
+    },
+    {
+      "file": "guide-attack-force-excerpts.json",
+      "request_url": "see file",
+      "captured_at": "see file",
+      "http_status": null,
+      "content_type": null,
+      "revision": null,
+      "license": "Short excerpts of publisher text (PC Gamer / Future; GameSpot / Fandom Inc.), not covered by the MIT licence",
+      "trimming": "one table row and one sentence per source"
+    }
+  ]
+}

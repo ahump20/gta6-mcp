@@ -1,0 +1,33 @@
+{
+  "name": "gta6-mcp",
+  "version": "0.1.0",
+  "description": "Headless stdio MCP server for Grand Theft Auto VI: cheats, secrets and lore with provenance, evidence labels and default-deny spoilers",
+  "license": "MIT",
+  "type": "module",
+  "repository": { "type": "git", "url": "git+https://github.com/ahump20/gta6-mcp.git" },
+  "homepage": "https://github.com/ahump20/gta6-mcp#readme",
+  "bugs": "https://github.com/ahump20/gta6-mcp/issues",
+  "keywords": ["mcp", "gta6", "grand-theft-auto-vi", "claude-code"],
+  "bin": { "gta6-mcp": "dist/index.js" },
+  "files": ["dist", "data", "docs/evidence.schema.json", "NOTICE.md"],
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && chmod +x dist/index.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "validate:evidence": "node scripts/validate-evidence.mjs",
+    "check:fixtures": "node scripts/check-fixtures.mjs",
+    "smoke": "node scripts/smoke.mjs",
+    "prepare": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "2.4.0",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/client": "2.4.0",
+    "@types/node": "20.19.43",
+    "typescript": "7.0.2",
+    "vitest": "4.1.12"
+  }
+}
