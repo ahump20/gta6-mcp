@@ -144,10 +144,43 @@ Decisions taken from these observations:
 
 ## 5. X search
 
-See section 6.
+One bounded search (`GTA 6 cheat code since:2026-11-19`, max 10 results) was
+run through the available X search tool at about 10:20Z. It returned HTTP 402,
+"developer account is out of credits". Zero posts were read. X stays outside
+runtime and outside confirmation.
 
 ## 6. Leads checked by a research pass
 
-Filled in below from sources read during the same session.
+These were read by a research subagent of the implementing agent between
+10:15Z and 10:23Z, through search and page-reading tools, **not** from the
+runtime network path. Quotes are as that pass reported them. None of these
+pages was captured as a fixture, and none is used as evidence in the manifest.
 
-RESEARCH_PENDING
+| Claim | Source | Published | Observed | Uncertainty |
+| --- | --- | --- | --- | --- |
+| Take-Two on platforms | https://www.take2games.com/ir/news/rockstar-games-announces-grand-theft-auto-vi-now-available | 2026-11-19 | "is now available for the PlayStation® 5 computer entertainment systems and the Xbox Series X\|S games and entertainment system." | Read in full by the research pass. |
+| Take-Two on single-player | https://www.businesswire.com/news/home/20260624539426/en/Rockstar-Games-Announces-Pre-Orders-for-Grand-Theft-Auto-VI | 2026-06-24 | "Grand Theft Auto VI features a single-player experience". | Pre-launch release. The launch release says nothing about single-player or online. |
+| Take-Two on GTA Online | https://ir.take2games.com/static-files/a45ff316-72c4-4255-b123-aace2e41ad1a (prepared remarks) | 2026-11-09 | "Rockstar Games will continue to support Grand Theft Auto Online with new content and ongoing events for its vast community." | About the existing GTA Online. No Take-Two statement about a GTA VI online mode was found. |
+| "2027" online mode: origin | https://www.bloomberg.com/features/2026-grand-theft-auto-6-making-of/ | 2026-10-14 | "the planned online component, which is expected to be released in 2027". | Byline not seen; other outlets credit Jason Schreier. An earlier item (Bloomberg, 2026-09-17, read only as lede and metadata) is relayed by The Verge as Twitch's CEO saying "an even bigger one next year when they launch multiplayer", which says "next year", not "2027". Earliest found, not proven first. Reporting, not an announcement. |
+| PC version: official position | https://support.rockstargames.com/articles/4QfG4FmZCf5W1gS8jy4UVT/grand-theft-auto-vi-platform-editions-and-versions | updated 2026-11-18 | "You can pre-order Grand Theft Auto VI for PlayStation 5 and XBOX Series X\|S." No PC version announced. | Reached through a search tool; the same host timed out from the runtime path (section 1). |
+| PC version: Q1 2027 report origin | https://gamesbeat.com/grand-theft-auto-vis-pc-release-is-slated-for-q1-2027/ | 2026-10-13 | "according to four industry sources familiar with the studio's plans". The Verge and Tom's Hardware attribute their reports to GamesBeat. | A report. |
+| "61 cheats": where the number comes from | https://www.tweaktown.com/news/114769/gta-6-has-61-cheats-but-youll-have-to-beat-the-story-before-using-any-of-them/index.html | 2026-11-18 | "A new Cheats List menu appears under the Progress menu once the story is complete." Outlets point to the in-game list and a category sum (10+11+21+3+16). None cites Rockstar. | **Reasoned:** every guide reads the same in-game list, so the guides are not independent origins for a code. |
+| Inputs still undiscovered | G2A, Vice, Polygon, Gizdev | 2026-11-18 to 11-20 | G2A: "many of their directional sequences remain undiscovered on November 18". Gizdev: "43 codes are still sitting undiscovered". Polygon: "We're still working to hunt down every cheat code". | Site-level statements about the list as a whole, not about any one row. |
+| G2A: what it tested | https://www.g2a.com/news/gta-6-news/gta-6-cheat-codes-guide-all-cheats/ | 2026-11-18, labelled sponsored | No first-hand test. Codes are "cross-referenced across the freshest post-embargo guides". | Research lead only. |
+| Gizdev: what it tested | https://www.gizdev.com/gta-6-cheat-codes-ps5-xbox/ | 2026-11-20 | No own testing and no platform; codes "confirmed so far, thanks to players who finished the main story". | Research lead only. |
+| Eurogamer | https://www.eurogamer.net/all-gta-6-cheats | 2026-11-19 | Attack Force "Down, Up, Left, Left, Right, Down, Down, Up, Down". No personal-test statement. Says "hold both the L1 and R2 buttons". | Date and table came from two different snapshots. Not captured by this build. |
+| Polygon | https://www.polygon.com/gta-6-cheat-codes-list-unlock/ | 2026-11-19 | Same 9-input Attack Force. "We have only been able to test the PS5 version of the game so far". | The test statement covers the entry method and the story gate, not a specific code. Not captured by this build. |
+| IGN | https://www.ign.com/wikis/gta-6 and guessed URLs | | Could not be read: blocked in three tools, stale hub copy, three 404s. | **Unavailable.** |
+| Rockstar Support on cheats | https://support.rockstargames.com/articles/6sa5xpe2WSuHzecJut4tAZ/issues-after-using-cheat-codes | last updated 2024-01-09 | Generic, pre-dates GTA VI: "Unless the code was given in-game, or in the manual then the code is unofficial and cannot be supported." No GTA VI cheats article found. | Not about GTA VI. |
+
+What this changes: three eligible guides (PC Gamer captured; Eurogamer and
+Polygon as reported) list the 9-input Attack Force sequence, against GameSpot's
+8-input sequence in its 18 November archive. That makes a GameSpot typo
+likely. **It does not resolve the conflict**: resolution needs official
+documentation or two independent direct verifications, and no source claims to
+have entered this code. Both variants stay `conflicting`.
+
+Two more entry-method disagreements are now on record: PC Gamer "hold L1 and
+press R1", GameSpot "holding L1 + R1", Eurogamer "hold both the L1 and R2
+buttons". The server reports the wiki's wording as source-reported and does
+not pick one.
