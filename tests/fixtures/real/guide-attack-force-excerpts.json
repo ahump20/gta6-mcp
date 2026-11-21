@@ -1,0 +1,26 @@
+{
+  "note": "Minimal excerpts recorded for the Attack Force disagreement. Publisher text remains under its own rights; see NOTICE.md.",
+  "pcgamer": {
+    "request_url": "https://www.pcgamer.com/games/grand-theft-auto/gta-6-cheats-list/",
+    "captured_at": "2026-11-21T10:10:35.267Z",
+    "http_status": 200,
+    "article_published": "2026-11-18T11:00:00Z",
+    "article_modified": "2026-11-19T15:42:12Z",
+    "authors": "Sean Martin; Christopher Livingston",
+    "row_excerpt": "Attack force | ??? | Down, Up, Left, Left, Right, Down, Down, Up, Down",
+    "test_statement_excerpt": "We loaded a save to test if cheat commands work earlier in the game and they don't."
+  },
+  "gamespot_archived": {
+    "request_url": "https://web.archive.org/web/20261118184639id_/https://www.gamespot.com/articles/all-gta-6-cheats-and-how-to-unlock-them/",
+    "archive_capture": "2026-11-18T18:46:39Z",
+    "fetched_at": "2026-11-21T10:11:50Z",
+    "http_status": 200,
+    "cdx_statuscode": "204",
+    "article_published": "2026-11-18T12:13:22Z",
+    "article_modified": "2026-11-18T12:18:23Z",
+    "author": "Cheri Faulkner",
+    "row_excerpt": "Attack Force cheat code: Down, Up, Left, Right, Down, Down, Up, Down.",
+    "test_statement_excerpt": "We loaded a fresh save to test that, so you don’t have to.",
+    "live_status": "HTTP 403 Cloudflare challenge at 2026-11-21T10:10:35.555Z; current wording unavailable"
+  }
+}

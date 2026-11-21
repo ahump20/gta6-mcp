@@ -1,0 +1,43 @@
+{{DISPLAYTITLE:SYNTHETIC cheats page}}
+SYNTHETIC lead about {{VI}}. LEADMARKER7Q
+
+==Activating cheats==
+SYNTHETIC steps text. STEPSMARKER7Q
+
+==Cheats==
+{| class="wikitable"
+!Cheat
+!Effect
+!Unlock requirement
+!Code
+|-
+| Confirmed Cheat
+| Effect E
+| Unlock E UNLOCKMARKER7Q
+| Up, Down
+|-
+| Template Cheat
+| Effect A
+| Unlock A
+| {{dpad|TEMPLATEMARKER7Q}}, Down
+|-
+| Undiscovered Cheat
+| Effect B
+| Unlock B
+| Not yet discovered
+|-
+| Omitted Cheat
+| Effect C
+| Unlock C
+| ???
+|-
+| Unreviewed Cheat ROWMARKER7Q
+| Effect D
+| Unlock D
+| Left, Right
+|}
+
+==Secret ending==
+SYNTHETIC story section. BODYMARKER7Q located at LOCATIONMARKER7Q.
+
+[[Category:GTA VI]]

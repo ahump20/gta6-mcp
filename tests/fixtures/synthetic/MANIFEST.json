@@ -1,0 +1,11 @@
+{
+  "kind": "synthetic",
+  "synthetic": true,
+  "description": "Invented material for tests. It does not describe the real game and must never be used as production evidence.",
+  "fixtures": [
+    {
+      "file": "cheats-page.wikitext",
+      "purpose": "Template tokens, an explicit undiscovered statement, an omitted input, and unique markers for spoiler-leak checks."
+    }
+  ]
+}
