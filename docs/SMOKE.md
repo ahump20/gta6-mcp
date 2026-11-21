@@ -20,7 +20,7 @@ npm run smoke -- --out report.json -- node /path/to/node_modules/gta6-mcp/dist/i
 
 ## Recorded run
 
-[`docs/smoke/local-node20.json`](smoke/local-node20.json): Node v20.20.2, npm 10.8.2, SDK client and server 2.4.0, 2026-11-21. The file records the commit it tested and both wire logs sit beside it. Local paths are reduced to placeholders.
+[`docs/smoke/local-node20.json`](smoke/local-node20.json): Node v20.20.2, npm 10.8.2, SDK client and server 2.4.0, 2026-11-21. The file records the commit it tested. Local paths are reduced to placeholders.
 
 | Tracked value | Result |
 |---|---|

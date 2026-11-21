@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-21T11:18:21.991Z",
-  "tested_sha": "8846005af410221fbc0b0022c8727f797ffd3f0a",
+  "generated_at": "2026-11-21T11:18:49.775Z",
+  "tested_sha": "2e4e1a9693d06ed4e10350785f7a07ae40166807",
   "launcher": "~/.nvm/versions/node/v20.20.2/bin/node ./dist/index.js",
   "versions": {
     "node": "v20.20.2",
@@ -38,7 +38,7 @@
     {
       "label": "legacy",
       "requested_mode": "legacy",
-      "wire_log": "docs/smoke/legacy.wire.jsonl",
+      "wire_log": "/tmp/claude-501/gta6-wire-pre/legacy.wire.jsonl",
       "calls": [
         {
           "label": "cheat lookup (default: confirmed only)",
@@ -351,7 +351,7 @@
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
               "revision_id": 1386912958,
-              "retrieved_at": "2026-11-21T11:18:14.531Z",
+              "retrieved_at": "2026-11-21T11:18:42.347Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -394,7 +394,7 @@
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
               "revision_id": 1386912958,
-              "retrieved_at": "2026-11-21T11:18:14.532Z",
+              "retrieved_at": "2026-11-21T11:18:42.348Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -479,7 +479,7 @@
             {
               "title": "Wikipedia search",
               "url": "https://en.wikipedia.org/wiki/Special:Search",
-              "retrieved_at": "2026-11-21T11:18:16.383Z",
+              "retrieved_at": "2026-11-21T11:18:44.178Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -533,7 +533,7 @@
       "requested_mode": {
         "pin": "2026-07-28"
       },
-      "wire_log": "docs/smoke/modern.wire.jsonl",
+      "wire_log": "/tmp/claude-501/gta6-wire-pre/modern.wire.jsonl",
       "calls": [
         {
           "label": "cheat lookup (default: confirmed only)",
@@ -846,7 +846,7 @@
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
               "revision_id": 1386912958,
-              "retrieved_at": "2026-11-21T11:18:18.633Z",
+              "retrieved_at": "2026-11-21T11:18:46.400Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -889,7 +889,7 @@
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
               "revision_id": 1386912958,
-              "retrieved_at": "2026-11-21T11:18:18.634Z",
+              "retrieved_at": "2026-11-21T11:18:46.400Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -974,7 +974,7 @@
             {
               "title": "Wikipedia search",
               "url": "https://en.wikipedia.org/wiki/Special:Search",
-              "retrieved_at": "2026-11-21T11:18:20.456Z",
+              "retrieved_at": "2026-11-21T11:18:48.240Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
