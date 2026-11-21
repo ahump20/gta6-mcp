@@ -184,3 +184,114 @@ Two more entry-method disagreements are now on record: PC Gamer "hold L1 and
 press R1", GameSpot "holding L1 + R1", Eurogamer "hold both the L1 and R2
 buttons". The server reports the wiki's wording as source-reported and does
 not pick one.
+
+
+## 7. gta.wiki (Weird Gloop): probed, then ruled out
+
+Probes ran from 2026-11-21T10:40:46Z to about 10:41:30Z from the server's network path with the server's User-Agent, using a development probe script that is not shipped.
+
+| Request | Result |
+|---|---|
+| `https://gta.wiki/` | HTML page. The main page says the GTA Wiki "has officially migrated from Fandom". Footer licence: CC BY-NC-SA 3.0. |
+| `https://gta.wiki/robots.txt` | Text file. Line 249, in the `User-Agent: *` group: `Disallow: /*api.php`. |
+| The site's RSD document | Names the API endpoint: `https://gta.wiki/api.php`. |
+| `api.php?action=query&meta=siteinfo` | Valid JSON API response. Site name "GTA Wiki", MediaWiki 1.45.3, rights "CC BY-NC-SA 3.0" (https://creativecommons.org/licenses/by-nc-sa/3.0/). |
+| `list=search` (two queries: cheats, Easter eggs) | Valid JSON API responses, 10 hits each. "Cheats in GTA VI" is the second hit for the cheats query. |
+| `list=allpages` (prefixes Cheats, Easter, Secrets) | Valid JSON API responses. Titles include "Easter Eggs in GTA VI". |
+| `action=parse` | Never requested. |
+
+Those API requests were made before the terms were read. No request has been made to gta.wiki since.
+
+Policy, read from the same captures:
+
+- Weird Gloop Terms of Use, https://weirdgloop.org/terms/, "Updated on 31 January 2025". Among activities "we also do not allow": "Attempting to use our Sites in an automated fashion without prior consent from the Company, or other users on our platform where applicable".
+- https://gta.wiki/w/GTA_Wiki:Policy and https://meta.weirdgloop.org/w/Category:Global_policies were read. Neither contains an API or bot policy that grants automated access.
+- Licence: https://meta.weirdgloop.org/w/Licensing says text on most Weird Gloop wikis is CC BY-NC-SA 3.0.
+
+Decision: gta.wiki is not permitted for this server without Weird Gloop's prior consent. The robots rule was recorded but not relied on, since a crawler rule does not settle API permission. The server makes no request to gta.wiki. `gtawiki` remains a recognised `get_page` source and returns `upstream_unavailable` with a `coverage_gap` notice. Consent can be requested from Weird Gloop (support@weirdgloop.org, or the wiki's contact page).
+
+Coverage note: gta.wiki has both a GTA VI cheats page and a GTA VI Easter eggs page. The Fandom copy has no GTA VI Easter egg page (section 3).
+
+## 8. Fandom: automated access needs written permission
+
+Read first-hand by the reviewer in a browser:
+
+- https://www.fandom.com/terms-of-use, read 2026-11-21T11:06:40Z. "Date of Last Revision: December 19, 2025".
+  - Scope: "These Terms of Use apply to our websites at fandom.com, wikia.org and muthead.com, and their respective subdomains".
+  - "Use any robot, spider, site search and/or retrieval application, or other device to scrape, extract, retrieve or index any portion of the content;" (in a list of things a user may not do).
+  - "not use any robot, spider, scraper or other automated means to access the Services for any purpose without our express written permission;"
+- https://community.fandom.com/wiki/Help:API, read about 2026-11-21T10:58Z: "There is currently no text in this page."
+- https://community.fandom.com/wiki/Help:Bots, read 2026-11-21T11:06:53Z: "A bot is a program or script that automatically edits wiki pages." and "Bots on Fandom must use a limited editing rate so that they don't overload Fandom's servers." It refers readers to MediaWiki.org for API clients. It says nothing about read-only retrieval.
+- https://www.fandom.com/licensing, read 2026-11-21T11:13:22Z: "Except where otherwise permitted, the text on Fandom communities (known as "wikis") is licensed under the Creative Commons Attribution-Share Alike License 3.0 (Unported) (CC BY-SA)." and "Some wikis use licenses other than the CC BY-SA license." The GTA Wiki's own rights record (`meta=siteinfo`, captured about 2026-11-21T10:45Z) reads "CC-BY-SA" and links that page. MediaWiki 1.43.10.
+
+From the server's network path (2026-11-21T10:44Z to 10:45Z), `www.fandom.com/terms-of-use`, `www.fandom.com/licensing` and `gta.fandom.com/robots.txt` each returned an HTTP 403 challenge page, while `gta.fandom.com/api.php` returned HTTP 200 JSON.
+
+The sources pull in different directions and this record does not pretend otherwise: Fandom's help pages describe sanctioned bots that use the API, and the API answers; the Terms of Use bar automated access without express written permission, and no published page grants it for read-only use. The brief says to follow each host's published policy, so the stricter text governs.
+
+Decision: the Fandom provider is off by default. Every Fandom request is refused before any network call unless the operator sets `GTA6_MCP_FANDOM_PERMISSION=granted`, which records that Fandom gave written permission. The setting is not set in the smoke run, in CI, in the Claude Code proof or in the installed configuration, because nobody holds that permission today.
+
+What already happened: the Phase 0 probes and the test fixtures in section 3 were fetched from `gta.fandom.com/api.php` on 2026-11-21 before these terms were read. No Fandom API request has been made by this project since the reviewer read the terms.
+
+Both GTA Wiki hosts are therefore closed to this server by their terms. Within the approved source policy the remaining runtime provider is Wikipedia.
+
+## 9. Wikipedia: permitted
+
+- https://foundation.wikimedia.org/wiki/Policy:Wikimedia_Foundation_User-Agent_Policy (captured 2026-11-21T10:44Z): "Scripts should use an informative User-Agent string with contact information, or they may be blocked without notice." and "If you operate a bot, please send a User-Agent header identifying the bot in a way that isn't going to be confused with many other bots, and supplying some way of contacting you, the operator, in accordance with the API Usage Guidelines."
+- https://www.mediawiki.org/wiki/API:Etiquette was read for request pacing.
+- The server sends `gta6-mcp/0.1 (+https://github.com/ahump20/gta6-mcp)`, makes requests one at a time per host with spacing, caches responses and honours `Retry-After`.
+- Licence: CC BY-SA 4.0.
+
+## 10. Guide and official hosts: robots and terms
+
+Captured by a helper agent from the server's network path on 2026-11-21 between 10:47Z and 10:58Z; the full notes with quotes are in `docs/research/hosts.md`. The reviewer read the summary and the Fandom section, not every quote.
+
+| Host | robots.txt for the exact URL | Terms |
+|---|---|---|
+| www.pcgamer.com | No rule matches | Future's terms bar robots, spiders, crawlers and scrapers, and say robots.txt is never written permission |
+| www.gamespot.com | `Allow: /` | No current GameSpot terms page could be read; the footer names Fandom, Inc. |
+| www.ign.com, www.eurogamer.net | No rule matches for an unnamed agent; about 175 named AI agents are blocked; the file's comments prohibit automated retrieval without written permission | Ziff Davis terms prohibit it |
+| www.polygon.com | No rule matches for an unnamed agent; the file's comments prohibit automated retrieval without written permission | Valnet terms prohibit crawling and scraping |
+| www.rockstargames.com | No `*` group; eight named bots are disallowed | Terms bar bots that collect information and use for generative AI tools. Two readers returned different revision dates for the same URL; both are recorded |
+| support.rockstargames.com | Timed out twice; no verdict | Not read |
+| www.take2games.com | No rule matches | Same generative-AI clause as Rockstar |
+| www.playstation.com | No rule matches; `Crawl-delay: 5` | Read; see the notes |
+| www.xbox.com | No rule matches | Microsoft Terms of Use read; see the notes |
+
+Outcome: no guide host's terms allow this server to re-read a guide page. Under the brief, any evidence on those hosts is offline-reviewed only and carries `runtime_recheck: "not_permitted"`, and a claim that rests on it stays `unverified` at run time. The manifest has zero confirmations, so the server fetches no guide or official URL today.
+
+## 11. Community sources
+
+What could be read on 2026-11-21:
+
+| Platform | Result |
+|---|---|
+| Reddit, owner-supplied thread `https://www.reddit.com/r/GTA6unmoderated/s/3ZJFtKSupf` | Not read. The browser extension refused to open reddit.com ("This site is not allowed due to safety restrictions."). No other route was tried, since that would be working around a block. |
+| TikTok search | Not read. A login wall covered the results ("Log in to search for popular content"). |
+| X | Not read. The search tool returned HTTP 402, out of credits. |
+| YouTube | 22 leads captured by a helper agent through a third-party YouTube data plugin. How that plugin obtains its data was not checked against YouTube's API terms. Its notes are in `docs/research/community-leads-youtube-x.md`. |
+
+The reviewer then opened five watch pages in a browser at 2026-11-21T11:10Z and read each page's own metadata (title, channel, upload time, description). Frames were not inspected for any video.
+
+| Video | Channel | Upload time on the page | UTC | Decision |
+|---|---|---|---|---|
+| https://www.youtube.com/watch?v=Hj23ZNatmZQ | @JOETHzz | 2026-11-18T19:00:22-08:00 | 2026-11-19T03:00:22Z | Registered. The description lists a nine-step D-pad sequence for Attack Force, the same as the PC Gamer variant. No test is claimed. |
+| https://www.youtube.com/watch?v=Mj_beVHUJE4 | @MrDalekJD | 2026-11-18T19:50:41-08:00 | 2026-11-19T03:50:41Z | Registered as an unverified Easter egg report, shown from `discovery` up because its description names a location. |
+| https://www.youtube.com/watch?v=C7wrTvoDnww | @GoldxLeaf | 2026-11-18T17:55:55-08:00 | 2026-11-19T01:55:55Z | Not registered. A general guide whose description says it is captured footage with no commentary; it makes no single claim to register. A candidate for frame inspection. |
+| https://www.youtube.com/watch?v=c-UFvg-X8O0 | @JackedBillGaming | 2026-11-18T17:54:32-08:00 | 2026-11-19T01:54:32Z | Not registered. Its description calls the codes "reported". |
+| https://www.youtube.com/watch?v=a78-WeEiTRs | @dpjsc08 | 2026-11-18T15:19:24-08:00 | 2026-11-18T23:19:24Z | Excluded by the date rule, applied in UTC: it was posted 41 minutes before 2026-11-19. Its description is the only one that says the uploader demonstrates the codes. |
+
+No video-backed approval exists. No pair of videos was frame-inspected, so whether a pair exists that would meet the video rule is unknown, not ruled out.
+
+Platform API terms (helper agent, 2026-11-21T10:46:59Z to 10:54:11Z; full notes with quotes in `docs/research/platform-api-terms.md`): Reddit, X, YouTube and TikTok each require an account and an app credential for programmatic search or read access, and each one's terms prohibit unauthenticated automated access. X bills per post read. TikTok's keyword search is limited to approved research applicants. Two Reddit help pages could not be fetched directly and are marked unverified in the notes. A no-account runtime provider is therefore not possible on any of the four, which is why social platforms stay outside runtime retrieval.
+
+## 12. Hand-over and differences from the brief
+
+Two Claude Code sessions worked on this release. The first, on an earlier version of the brief, produced sections 1 to 6, the schemas, the network client, the wikitext parser, the Fandom and Wikipedia client, the evidence manifest and the four tool handlers. It was stopped on the owner's instruction, and the second session adopted its branch and finished the release on the revised brief.
+
+| The brief expected | Observed | What the release does |
+|---|---|---|
+| gta.wiki as the primary gameplay provider | Its host requires prior consent for automated use (section 7) | Never requested. `gtawiki` stays in the `get_page` contract and says why it returns nothing. |
+| Fandom as a labelled secondary | Its terms require express written permission (section 8) | Built, tested, off by default behind a recorded-permission setting. |
+| A wiki to supply gameplay text at run time | Neither GTA Wiki host is open | Out of the box the server reads Wikipedia, its recorded conflict and its reviewed community reports. |
+| Community posts from 2026-11-19 onward | Upload times carry a zone offset | The cutoff is applied in UTC and each time is stored in UTC. |
+| A re-checkable binding for confirming evidence | No guide host permits automated re-reading (section 10) | Such evidence would be offline-reviewed only and its claims stay unverified, as the brief directs. |

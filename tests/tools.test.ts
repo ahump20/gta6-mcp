@@ -5,7 +5,8 @@ import { type Deps, easterEggs, getPage, listCheats, renderText, searchGta6 } fr
 import { type Route, down, fakeHttp, fixtureJson, okJson, okText } from './helpers.js';
 import { SYN_GUIDE_URL, SYN_QUOTE, SYN_WIKITEXT, synManifest } from './synthetic.js';
 
-const manifest = loadManifest();
+// Wiki behaviour only: the community registry has its own tests in revision2.tools.test.ts.
+const manifest = { ...loadManifest(), community_reports: [] };
 const REAL_ROWS = 18;
 const SEARCH_LIMIT = 5;
 const ONE_HIT = 1;

@@ -50,7 +50,7 @@ describe('gta.wiki is known and never requested', () => {
     const deps = (routes: readonly Route[]): Deps => ({ http: fakeHttp(routes), manifest: real });
     expect(mentionsGap(await searchGta6({ query: 'GTA VI cheats', limit: SEARCH_LIMIT, spoilers: 'hints' }, deps(searchRoutes)))).toBe(true);
     expect(mentionsGap(await listCheats({ include_unverified: true, spoilers: 'full' }, deps([cheatsPage])))).toBe(true);
-    expect(mentionsGap(await easterEggs({ spoilers: 'hints' }, deps([missingPage])))).toBe(true);
+    expect(mentionsGap(await easterEggs({ spoilers: 'discovery' }, deps([missingPage])))).toBe(true);
   });
 });
 
@@ -181,8 +181,10 @@ describe('Fandom off (no recorded permission)', () => {
     expect(out.results.map((r) => [r.name, r.confidence, r.conflict_group_id, r.input?.length])).toEqual([
       ['Attack Force', 'conflicting', 'cg-attack-force', 8],
       ['Attack Force', 'conflicting', 'cg-attack-force', 9],
+      ['Attack Force', 'conflicting', 'cg-attack-force', 9],
     ]);
-    expect(out.results.map((r) => new URL(r.evidence[0]?.url ?? '').host)).toEqual(['www.gamespot.com', 'www.pcgamer.com']);
+    expect(out.results.map((r) => new URL(r.evidence[0]?.url ?? '').host)).toEqual(['www.gamespot.com', 'www.pcgamer.com', 'www.youtube.com']);
+    expect(out.results[2]?.evidence[0]).toMatchObject({ evidence_type: 'community_report', social_platform: 'youtube', author_handle: '@JOETHzz', posted_at: '2026-11-19T03:00:22Z' });
     expect(out.notices.map((n) => n.type)).toContain('conflict');
     expect(names(out)).toBe(true);
     expect(out.summary).toContain('0 confirmed');
@@ -222,5 +224,42 @@ describe('borrowed filter cases (Ro25v04/gta6-mcp, MIT)', () => {
       { match: ['en.wikipedia.org', 'list=search'], result: okJson({ query: { search: [] } }) },
     ];
     expect(await titles(routes)).toEqual([]);
+  });
+});
+
+describe('shipped community registry', () => {
+  const deps = (): Deps => ({ http: fakeHttp([missingPage]), manifest: real });
+
+  it('withholds the reported Easter egg at hints and returns it, labelled, at discovery', async () => {
+    const hints = await easterEggs({ spoilers: 'hints' }, deps());
+    expect(hints).toMatchObject({ status: 'partial', results: [] });
+    const discovery = await easterEggs({ spoilers: 'discovery' }, deps());
+    expect(discovery.status).toBe('ok');
+    expect(discovery.results).toHaveLength(1);
+    expect(discovery.results[0]).toMatchObject({ confidence: 'unverified', evidence_status: 'unverified', source_url: 'https://www.youtube.com/watch?v=Mj_beVHUJE4', community: { social_platform: 'youtube', author_handle: '@MrDalekJD' } });
+  });
+
+  it('stores no post text: every description is one reviewer-written line', () => {
+    for (const report of real.community_reports) {
+      expect(report.description.includes('\n')).toBe(false);
+      expect(Date.parse(report.posted_at)).toBeGreaterThanOrEqual(Date.parse('2026-11-19T00:00:00Z'));
+    }
+  });
+});
+
+describe('easter_eggs with Fandom off', () => {
+  const off: Route = { match: ['gta.fandom.com'], result: { ok: false, reason: 'not_permitted', detail: 'simulated' } };
+
+  it('says a report is withheld rather than calling the wiki unavailable', async () => {
+    const out = await easterEggs({ spoilers: 'hints' }, { http: fakeHttp([off]), manifest: real });
+    expect(out).toMatchObject({ status: 'partial', results: [] });
+    expect(out.notices.map((n) => n.type)).toContain('spoiler_withheld');
+    expect(out.notices.filter((n) => n.message.includes('GTA6_MCP_FANDOM_PERMISSION'))).toHaveLength(1);
+  });
+
+  it('names the setting once when a report is returned', async () => {
+    const out = await easterEggs({ spoilers: 'discovery' }, { http: fakeHttp([off]), manifest: real });
+    expect(out.results).toHaveLength(1);
+    expect(out.notices.filter((n) => n.message.includes('GTA6_MCP_FANDOM_PERMISSION'))).toHaveLength(1);
   });
 });

@@ -680,7 +680,9 @@ export async function easterEggs(args: { readonly topic?: string | undefined; re
   const pages = await Promise.all(registry.easter_egg_page_titles.map((title) => fetchPage(deps.http, 'fandom', title)));
   const found = pages.filter((p): p is PageOk => p.kind === 'ok' && !isLeak(p.title) && (mentionsGtaVi(p.title) || mentionsGtaVi(p.wikitext)));
   const failures = pages.filter((p): p is Unavailable => p.kind === 'unavailable');
-  if (reviewed.length === 0 && fromCommunity.length === 0 && found.length === 0 && failures[0]) return unavailable('The wiki', failures[0]);
+  if (reviewed.length === 0 && reported.length === 0 && found.length === 0 && failures[0]) return unavailable('The wiki', failures[0]);
+  const failureMessages = [...new Set(failures.map((f) => (f.reason === 'not_permitted' ? FANDOM_OFF : `The wiki could not be read (${f.reason}); wiki sections are missing from this result.`)))];
+  const failureNotices = failureMessages.map((message) => notice('coverage_gap', message));
 
   const candidates = found.flatMap((page) =>
     splitSections(page.wikitext)
@@ -708,7 +710,7 @@ export async function easterEggs(args: { readonly topic?: string | undefined; re
   );
   const results = [...reviewed, ...fromCommunity, ...fromPages];
   const withheld = visible.length < relevant.length || reportedShown.length < reported.length;
-  if (results.length === 0 && withheld) return withheldOnly();
+  if (results.length === 0 && withheld) return envelope('partial', WITHHELD_MESSAGE, [], [], [notice('spoiler_withheld'), ...failureNotices]);
   if (results.length === 0) {
     return envelope('no_verified_results', 'No Easter egg or secret can be returned yet.', [], [], [
       notice(
@@ -724,9 +726,7 @@ export async function easterEggs(args: { readonly topic?: string | undefined; re
   const notices = [
     ...shownPages.flatMap((page) => staleNotices(page.stale, page.retrieved_at)),
     ...(reviewed.length === 0 ? [notice('coverage_gap', 'No reviewed hint exists; these entries are community reports or unreviewed wiki sections.')] : []),
-    ...failures.map((f) =>
-      f.reason === 'not_permitted' ? notice('coverage_gap', FANDOM_OFF) : notice('coverage_gap', `The wiki could not be read (${f.reason}); wiki sections are missing from this result.`),
-    ),
+    ...failureNotices,
     gtawikiGap(),
     ...(withheld ? [notice('spoiler_withheld')] : []),
   ];

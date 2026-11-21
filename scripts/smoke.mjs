@@ -2,14 +2,14 @@
 // Live protocol smoke test. Starts the server as a child process over real
 // stdio, with real upstream requests, once per protocol era.
 //
-//   node scripts/smoke.mjs [--out report.json] [--sha <commit>] [-- <launcher command...>]
+//   node scripts/smoke.mjs [--out report.json] [--sha <commit>] [--wire-dir <dir>] [-- <launcher command...>]
 //
 // Without a launcher command it runs the built `dist/index.js`. Run `npm run build` first.
 // Exit code 1 means a protocol or contract defect. An unreachable upstream is
 // reported as coverage, not as a failure.
 import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { homedir, tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Client } from '@modelcontextprotocol/client';
@@ -25,6 +25,8 @@ const split = argv.indexOf('--');
 const flags = split < 0 ? argv : argv.slice(0, split);
 const launcher = split < 0 ? [process.execPath, join(root, 'dist/index.js')] : argv.slice(split + 1);
 const flag = (name) => (flags.includes(name) ? flags[flags.indexOf(name) + 1] : undefined);
+// Reports are published, so local paths are reduced to placeholders.
+const tidy = (text) => String(text).replaceAll(root, './').replaceAll(homedir(), '~').replaceAll(tmpdir(), '$TMPDIR');
 const tryExec = (cmd, args) => {
   try {
     return execFileSync(cmd, args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
@@ -37,12 +39,16 @@ const CALLS = [
   { label: 'cheat lookup (default: confirmed only)', name: 'list_cheats', args: {}, schema: CheatsOutput },
   { label: 'cheat lookup (reports, hints)', name: 'list_cheats', args: { include_unverified: true }, schema: CheatsOutput },
   { label: 'easter egg hint', name: 'easter_eggs', args: {}, schema: EggsOutput },
+  { label: 'easter egg reports (discovery)', name: 'easter_eggs', args: { spoilers: 'discovery' }, schema: EggsOutput },
   { label: 'map lookup, bounded full text', name: 'get_page', args: { title: 'State of Leonida', spoilers: 'full' }, schema: PageOutput },
   { label: 'map lookup, hints (unreviewed, so withheld)', name: 'get_page', args: { title: 'State of Leonida' }, schema: PageOutput },
   { label: 'cheat entry steps, hints (reviewed section)', name: 'get_page', args: { title: 'Cheats in GTA VI', section: 'Activating cheats' }, schema: PageOutput },
   { label: 'missing section', name: 'get_page', args: { title: 'Cheats in GTA VI', section: 'No such section' }, schema: PageOutput },
   { label: 'missing page', name: 'get_page', args: { title: 'Zzz No Such Page gta6mcp' }, schema: PageOutput },
   { label: 'background (wikipedia)', name: 'get_page', args: { title: 'Grand Theft Auto VI', section: 'Gameplay', source: 'wikipedia', spoilers: 'full' }, schema: PageOutput },
+  { label: 'story and setting (wikipedia, full text)', name: 'get_page', args: { title: 'Grand Theft Auto VI', source: 'wikipedia', spoilers: 'full' }, schema: PageOutput },
+  { label: 'missing page (wikipedia)', name: 'get_page', args: { title: 'Zzz No Such Page gta6mcp', source: 'wikipedia' }, schema: PageOutput },
+  { label: 'gta.wiki source (recognised, never requested)', name: 'get_page', args: { title: 'Cheats in GTA VI', source: 'gtawiki' }, schema: PageOutput },
   { label: 'search', name: 'search_gta6', args: { query: 'Leonida', limit: 5, spoilers: 'full' }, schema: SearchOutput },
 ];
 
@@ -59,13 +65,13 @@ function sample(parsed) {
 
 async function runEra(label, mode) {
   const defects = [];
-  const log = join(mkdtempSync(join(tmpdir(), 'gta6-mcp-smoke-')), `${label}.wire.jsonl`);
+  const log = join(flag('--wire-dir') ?? mkdtempSync(join(tmpdir(), 'gta6-mcp-smoke-')), `${label}.wire.jsonl`);
   const [command, ...args] = [process.execPath, join(root, 'scripts/tee.mjs'), log, '--', ...launcher];
   const transport = new StdioClientTransport({ command, args, stderr: 'pipe' });
   const stderr = [];
   transport.stderr?.on('data', (chunk) => stderr.push(chunk.toString('utf8')));
   const client = new Client({ name: 'gta6-mcp-smoke', version: '0.1.0' }, { versionNegotiation: { mode } });
-  const report = { label, requested_mode: mode, wire_log: log, calls: [] };
+  const report = { label, requested_mode: mode, wire_log: tidy(log), calls: [] };
   try {
     await client.connect(transport);
     report.observed_revision = client.getNegotiatedProtocolVersion() ?? null;
@@ -136,7 +142,7 @@ async function runEra(label, mode) {
     stdout_lines: received.length,
     exit_events: exits.map((e) => ({ code: e.code, signal: e.signal })),
     clean_shutdown: exits.length === spawns.length && exits.every((e) => e.code === 0 || e.signal === 'SIGTERM'),
-    stderr: stderr.join('').slice(0, 2000),
+    stderr: tidy(stderr.join('')).slice(0, 2000),
   });
   check(defects, stdoutClean, 'stdout carried something other than JSON-RPC messages');
   check(defects, report.clean_shutdown, `server did not shut down cleanly: ${JSON.stringify(report.exit_events)} for ${spawns.length} process(es)`);
@@ -161,10 +167,12 @@ function coverage(eras) {
   const statusOf = (tool, test = () => true) => [...new Set(calls.filter((c) => c.tool === tool && test(c)).map((c) => c.status))];
   const hosts = (name) => calls.filter((c) => (c.sources ?? []).some((s) => s.url.includes(name)));
   const cheats = calls.find((c) => c.tool === 'list_cheats' && c.arguments.include_unverified && c.status);
+  const fandomOff = calls.some((c) => (c.notices ?? []).some((n) => n.message.includes('GTA6_MCP_FANDOM_PERMISSION')));
   const confirmed = Number(/^(\d+) confirmed/.exec(cheats?.summary ?? '')?.[1] ?? NaN);
   return {
     provider_statuses: {
-      'gta.fandom.com': hosts('gta.fandom.com').length > 0 ? 'reachable' : 'no successful retrieval',
+      'gta.wiki': 'never requested: its host requires prior consent for automated use',
+      'gta.fandom.com': fandomOff ? 'not permitted: permission is not recorded, so no request was made' : hosts('gta.fandom.com').length > 0 ? 'reachable' : 'no successful retrieval',
       'en.wikipedia.org': hosts('en.wikipedia.org').length > 0 ? 'reachable' : 'no successful retrieval',
     },
     gameplay_coverage: {
@@ -183,7 +191,7 @@ const versionOf = (pkg) => JSON.parse(readFileSync(join(root, 'node_modules', pk
 const report = {
   generated_at: new Date().toISOString(),
   tested_sha: flag('--sha') ?? tryExec('git', ['rev-parse', 'HEAD']) ?? 'unknown',
-  launcher: launcher.join(' '),
+  launcher: tidy(launcher.join(' ')),
   versions: {
     node: process.version,
     npm: tryExec('npm', ['--version']),

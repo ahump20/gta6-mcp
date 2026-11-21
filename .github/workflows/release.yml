@@ -1,0 +1,45 @@
+name: release
+
+# Publishes the package tarball and its checksum to GitHub Releases only.
+# Nothing is published to the npm registry. An existing release is never overwritten.
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - run: npm run validate:evidence
+      - run: npm run check:fixtures
+      - name: Tag must match the package version
+        run: test "v$(node -p "require('./package.json').version")" = "$GITHUB_REF_NAME"
+      - name: Pack and checksum
+        run: |
+          npm pack
+          TARBALL="gta6-mcp-${GITHUB_REF_NAME#v}.tgz"
+          test -f "$TARBALL"
+          sha256sum "$TARBALL" > "$TARBALL.sha256"
+          cat "$TARBALL.sha256"
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            echo "A release for $GITHUB_REF_NAME already exists. Leaving it untouched."
+            exit 1
+          fi
+          TARBALL="gta6-mcp-${GITHUB_REF_NAME#v}.tgz"
+          gh release create "$GITHUB_REF_NAME" "$TARBALL" "$TARBALL.sha256" --verify-tag --title "$GITHUB_REF_NAME" --generate-notes

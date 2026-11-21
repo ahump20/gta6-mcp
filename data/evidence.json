@@ -94,7 +94,68 @@
     }
   ],
   "resolutions": [],
-  "community_reports": [],
+  "community_reports": [
+    {
+      "id": "yt-joethz-attack-force",
+      "social_platform": "youtube",
+      "url": "https://www.youtube.com/watch?v=Hj23ZNatmZQ",
+      "author_handle": "@JOETHzz",
+      "posted_at": "2026-11-19T03:00:22Z",
+      "captured_at": "2026-11-21T11:10:08Z",
+      "evidence_type": "text_claim",
+      "description": "Thai-language cheat video. Its description lists a nine-step D-pad sequence for Attack Force, the same as the PC Gamer variant. It names PS5 and Xbox Series and claims no test.",
+      "min_level": "hints",
+      "subject": {
+        "kind": "cheat",
+        "cheat_name": "Attack Force",
+        "input": [
+          "Down",
+          "Up",
+          "Left",
+          "Left",
+          "Right",
+          "Down",
+          "Down",
+          "Up",
+          "Down"
+        ],
+        "platform": "unattributed",
+        "effect": null
+      },
+      "video_review": null,
+      "review": {
+        "reviewer": {
+          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session finishing gta6-mcp v0.1.0",
+          "type": "ai_agent"
+        },
+        "reviewed_at": "2026-11-21T11:12:00Z"
+      }
+    },
+    {
+      "id": "yt-mrdalekjd-radio-tower-egg",
+      "social_platform": "youtube",
+      "url": "https://www.youtube.com/watch?v=Mj_beVHUJE4",
+      "author_handle": "@MrDalekJD",
+      "posted_at": "2026-11-19T03:50:41Z",
+      "captured_at": "2026-11-21T11:10:15Z",
+      "evidence_type": "gameplay_video",
+      "description": "Video titled as the first Easter egg found, with a secret cutscene. Its description places the egg at the top of a city radio tower and says the video shows the climb. Frames were not inspected.",
+      "min_level": "discovery",
+      "subject": {
+        "kind": "easter_egg",
+        "title": "Radio tower Easter egg (reported)",
+        "evidence_status": "unverified"
+      },
+      "video_review": null,
+      "review": {
+        "reviewer": {
+          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session finishing gta6-mcp v0.1.0",
+          "type": "ai_agent"
+        },
+        "reviewed_at": "2026-11-21T11:12:00Z"
+      }
+    }
+  ],
   "spoiler_registry": {
     "review": {
       "reviewer": {

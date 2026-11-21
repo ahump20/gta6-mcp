@@ -16,7 +16,7 @@ export const PROVIDERS: Readonly<Record<Provider, ProviderInfo>> = {
   fandom: {
     api: FANDOM_API,
     pageBase: 'https://gta.fandom.com/wiki/',
-    license: 'CC BY-SA (see https://www.fandom.com/licensing)',
+    license: 'CC BY-SA 3.0 Unported (https://www.fandom.com/licensing)',
     attribution: 'GTA Wiki contributors (Fandom). Text extracted and reduced to plain text by gta6-mcp.',
   },
   wikipedia: {
