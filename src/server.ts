@@ -1,6 +1,6 @@
 // Registers the four tools. The same factory serves the legacy and modern eras.
 import { type CallToolResult, McpServer } from '@modelcontextprotocol/server';
-import { approvedEvidenceUrls, loadManifest } from './evidence.js';
+import { approvedEvidenceUrls, assertPolicy, loadManifest } from './evidence.js';
 import { createHttp, fandomPermittedBy } from './net.js';
 import { CheatsInput, CheatsOutput, type Envelope, EggsInput, EggsOutput, PageInput, PageOutput, SearchInput, SearchOutput } from './schemas.js';
 import { type Deps, easterEggs, getPage, listCheats, renderText, searchGta6 } from './tools.js';
@@ -14,7 +14,7 @@ const CARRY =
 
 /** Real network, clock and manifest. Create once per process so the cache and rate limit are shared. */
 export function defaultDeps(): Deps {
-  const manifest = loadManifest();
+  const manifest = assertPolicy(loadManifest());
   const http = createHttp({
     fetch: (input, init) => fetch(input, init),
     now: () => Date.now(),

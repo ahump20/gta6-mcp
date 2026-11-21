@@ -6,6 +6,7 @@ import {
   type CommunityReport,
   type Manifest,
   approvalsMatching,
+  approvedResolutions,
   decideConfidence,
   fingerprint,
   isVideoBacked,
@@ -275,6 +276,8 @@ interface Built {
   readonly extraSources: readonly Source[];
   /** Set on community rows: the level the reviewer cleared this report for. */
   readonly communityMinLevel?: SpoilerLevel;
+  /** Set on rows of a recorded dispute: the level its reviewer cleared the group for, required on top of the wiki row's own review. */
+  readonly groupMinLevel?: SpoilerLevel;
   /** Set on rows confirmed from a video review record that cannot be re-read. */
   readonly reviewOnly?: boolean;
 }
@@ -466,6 +469,7 @@ function reportedRows(parsed: ParsedCheatRow, ctx: CheatContext): Built[] {
     );
     return {
       ...common,
+      groupMinLevel: group.min_level ?? 'full',
       extraSources: variant.evidence.map((e) => publisherSource(e.url, e.captured_at)),
       row: {
         ...single.row,
@@ -490,12 +494,14 @@ async function buildRows(parsed: ParsedCheatRow, ctx: CheatContext): Promise<Bui
 /** Applies the spoiler policy to one row. Returns null when the whole row must be withheld. */
 function discloseRow(built: Built, ctx: CheatContext, level: SpoilerLevel): { row: CheatRow; trimmed: boolean } | null {
   if (built.communityMinLevel !== undefined) return allows(built.communityMinLevel, level) ? { row: built.row, trimmed: false } : null;
+  if (built.groupMinLevel !== undefined && !allows(built.groupMinLevel, level)) return null;
   const review = rowReview(ctx.deps.manifest.spoiler_registry, built.rowText);
   const unlockClass = review?.unlock_min_level ?? 'unclassified';
   if (level === 'full') return { row: { ...built.row, unlock_spoiler_class: unlockClass }, trimmed: false };
-  if ((!review && !built.manifestBacked) || (review && !allows(review.min_level, level))) return null;
-  const unlockOk = review !== null && allows(review.unlock_min_level, level);
-  const stepsOk = built.manifestBacked || (ctx.steps !== null && allows(ctx.steps.min_level, level));
+  // A confirmation is a ruling on truth, not on spoilers: every row needs its own spoiler review.
+  if (!review || !allows(review.min_level, level)) return null;
+  const unlockOk = allows(review.unlock_min_level, level);
+  const stepsOk = ctx.steps !== null && allows(ctx.steps.min_level, level);
   const hideRaw = built.unresolved.length > 0;
   const row: CheatRow = {
     ...built.row,
@@ -513,16 +519,24 @@ export async function listCheats(
   deps: Deps,
 ): Promise<Envelope<CheatRow>> {
   const page = await fetchPage(deps.http, 'fandom', CHEATS_PAGE);
-  if (page.kind === 'unavailable') return args.include_unverified ? recordedOnly(args, deps.manifest, page) : unavailable('The cheats page', page);
+  if (page.kind === 'unavailable') {
+    const nothing = unavailable<CheatRow>('The cheats page', page);
+    return args.include_unverified ? recordedOnly(args, deps.manifest, gapNotice('The cheats page', page.reason), nothing) : nothing;
+  }
   if (page.kind === 'missing') {
-    return envelope('no_verified_results', '0 confirmed cheats. The wiki has no GTA VI cheats page.', [], [], [notice('coverage_gap', NO_CONFIRMED), gtawikiGap()]);
+    const noPage = notice('coverage_gap', 'The wiki has no GTA VI cheats page.');
+    const nothing = envelope<CheatRow>('no_verified_results', '0 confirmed cheats. The wiki has no GTA VI cheats page.', [], [], [notice('coverage_gap', NO_CONFIRMED), gtawikiGap()]);
+    return args.include_unverified ? recordedOnly(args, deps.manifest, noPage, nothing) : nothing;
   }
   const recordedSteps = deps.manifest.spoiler_registry.entry_steps;
   const stepsSection = splitSections(page.wikitext).find((s) => s.heading === recordedSteps?.heading);
   const steps = recordedSteps && stepsSection && fingerprint(stepsSection.wikitext) === recordedSteps.fingerprint ? recordedSteps : null;
   const ctx: CheatContext = { page, deps, steps };
   const fromWiki = (await Promise.all(parseCheatTable(page.wikitext).map((parsed) => buildRows(parsed, ctx)))).flat();
-  const built = [...fromWiki, ...communityRows(deps.manifest)];
+  // A recorded dispute the wiki has no row for is still on record.
+  const onWiki = new Set(fromWiki.map((b) => b.row.conflict_group_id));
+  const offWiki = conflictRows(deps.manifest).filter((b) => !onWiki.has(b.row.conflict_group_id));
+  const built = [...fromWiki, ...offWiki, ...communityRows(deps.manifest)];
 
   const wanted = built.filter((b) => args.include_unverified || b.row.confidence === 'confirmed');
   const onPlatform = wanted.filter((b) => args.platform === undefined || b.row.platform === args.platform);
@@ -571,7 +585,7 @@ export async function listCheats(
 
 /** Rows the manifest itself records for an unresolved conflict: each variant is a report, shown at the group's reviewed level. */
 function conflictRows(manifest: Manifest): Built[] {
-  const resolved = new Set(manifest.resolutions.map((r) => r.conflict_group_id));
+  const resolved = new Set(approvedResolutions(manifest).map((r) => r.conflict_group_id));
   return manifest.conflict_groups
     .filter((group) => !resolved.has(group.conflict_group_id))
     .flatMap((group) =>
@@ -611,14 +625,15 @@ function conflictRows(manifest: Manifest): Built[] {
 function recordedOnly(
   args: { readonly platform?: 'ps5' | 'xbox-series' | undefined; readonly spoilers: SpoilerLevel },
   manifest: Manifest,
-  failure: Unavailable,
+  gap: Notice,
+  otherwise: Envelope<CheatRow>,
 ): Envelope<CheatRow> {
   const built = [...conflictRows(manifest), ...communityRows(manifest)].filter((b) => args.platform === undefined || b.row.platform === args.platform);
   const shown = built.filter((b) => allows(b.communityMinLevel ?? 'full', args.spoilers));
-  if (built.length === 0) return unavailable('The cheats page', failure);
+  if (built.length === 0) return otherwise;
   const conflictNames = [...new Set(shown.filter((b) => b.row.confidence === 'conflicting').map((b) => b.row.name))];
   const notices = [
-    gapNotice('The cheats page', failure.reason),
+    gap,
     notice('coverage_gap', NO_CONFIRMED),
     gtawikiGap(),
     ...(conflictNames.length > 0
@@ -640,8 +655,9 @@ export async function easterEggs(args: { readonly topic?: string | undefined; re
   const onTopic = (...texts: readonly (string | null)[]): boolean => topic === '' || texts.some((t) => (t ?? '').toLowerCase().includes(topic));
   const detailOk = allows('discovery', args.spoilers);
 
+  // The topic is matched only against text the caller is cleared to see, so it cannot probe withheld content.
   const reviewed = registry.easter_eggs
-    .filter((egg) => onTopic(egg.title, egg.hint, egg.detail) && allows(egg.title_min_level, args.spoilers))
+    .filter((egg) => allows(egg.title_min_level, args.spoilers) && onTopic(egg.title, egg.hint, detailOk ? egg.detail : null))
     .map(
       (egg): EggResult => ({
         title: egg.title,
@@ -656,8 +672,9 @@ export async function easterEggs(args: { readonly topic?: string | undefined; re
       }),
     );
 
-  const reported = deps.manifest.community_reports.filter((r) => r.subject.kind === 'easter_egg' && onTopic(r.subject.title, r.description));
-  const reportedShown = reported.filter((r) => allows(r.min_level, args.spoilers));
+  const reported = deps.manifest.community_reports.filter((r) => r.subject.kind === 'easter_egg');
+  const reportedCleared = reported.filter((r) => allows(r.min_level, args.spoilers));
+  const reportedShown = reportedCleared.filter((r) => r.subject.kind === 'easter_egg' && onTopic(r.subject.title, r.description));
   const fromCommunity = reportedShown.flatMap((r): EggResult[] =>
     r.subject.kind === 'easter_egg'
       ? [
@@ -689,12 +706,12 @@ export async function easterEggs(args: { readonly topic?: string | undefined; re
       .filter((s) => s.heading !== '' && toPlainText(s.wikitext).text !== '')
       .map((s) => ({ page, section: s, title: stripHtml(s.heading), detail: toPlainText(s.wikitext).text })),
   );
-  const relevant = candidates.filter((c) => onTopic(c.title, c.detail));
-  const visible = relevant.filter(
+  const cleared = candidates.filter(
     (c) =>
       titleAllowed(registry, 'fandom', c.page.title, args.spoilers) &&
       sectionAllowed(registry, 'fandom', c.page.title, c.section.heading, c.section.wikitext, args.spoilers),
   );
+  const visible = cleared.filter((c) => onTopic(c.title, c.detail));
   const fromPages = visible.map(
     (c): EggResult => ({
       title: c.title,
@@ -709,7 +726,7 @@ export async function easterEggs(args: { readonly topic?: string | undefined; re
     }),
   );
   const results = [...reviewed, ...fromCommunity, ...fromPages];
-  const withheld = visible.length < relevant.length || reportedShown.length < reported.length;
+  const withheld = cleared.length < candidates.length || reportedCleared.length < reported.length;
   if (results.length === 0 && withheld) return envelope('partial', WITHHELD_MESSAGE, [], [], [notice('spoiler_withheld'), ...failureNotices]);
   if (results.length === 0) {
     return envelope('no_verified_results', 'No Easter egg or secret can be returned yet.', [], [], [
@@ -746,7 +763,8 @@ function resultLine(result: unknown): string {
   if ('claim_id' in result) {
     const row = result as CheatRow;
     const input = row.input ? row.input.join(', ') : `input ${row.input_status}`;
-    return `- ${row.name} [${row.confidence}, ${row.platform}]: ${input}. ${row.reason}`;
+    const links = [...new Set(row.evidence.map((e) => e.url))].join(' ');
+    return `- ${row.name} [${row.confidence}, ${row.platform}]: ${input}. ${row.reason}${links === '' ? '' : ` Evidence: ${links}`}`;
   }
   if ('provider' in result) {
     const hit = result as SearchHit;

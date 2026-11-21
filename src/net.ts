@@ -160,7 +160,13 @@ export function createHttp(deps: HttpDeps): Http {
   async function readBody(res: Response, expect: 'json' | 'text'): Promise<HttpResult> {
     const type = res.headers.get('content-type') ?? '';
     if (expect === 'json' && !type.includes('json')) return fail('challenge', `unexpected content type ${type}`);
-    const body = await readCapped(res, expect === 'json' ? API_BYTE_CAP : GUIDE_BYTE_CAP);
+    let body: string | null;
+    try {
+      body = await readCapped(res, expect === 'json' ? API_BYTE_CAP : GUIDE_BYTE_CAP);
+    } catch (error) {
+      // Headers arrived but the body stalled or broke: a failure result, so callers can fall back to a cached copy.
+      return fail(error instanceof Error && error.name === 'TimeoutError' ? 'timeout' : 'network', 'response body could not be read');
+    }
     if (body === null) return fail('too_large', 'response exceeded the size cap');
     if (expect === 'text') return { ok: true, body, json: null, fetched_at: iso(deps.now()), stale: false };
     try {

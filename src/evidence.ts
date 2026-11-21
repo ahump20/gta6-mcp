@@ -344,6 +344,9 @@ function resolutionErrors(manifest: Manifest): string[] {
     const problems = [
       variantIds.includes(resolution.winning_claim_id) ? '' : `resolution ${id}: winner is not a variant of the group`,
       variantIds.every((v) => resolution.dispositions.some((d) => d.claim_id === v)) ? '' : `resolution ${id}: every variant needs a disposition`,
+      resolution.dispositions.every((d) => (d.disposition === 'upheld') === (d.claim_id === resolution.winning_claim_id))
+        ? ''
+        : `resolution ${id}: only the winner may have the upheld disposition, and it must have it`,
       resolution.basis === 'official_documentation' && !officialOnly ? `resolution ${id}: official_documentation needs official hosts` : '',
       resolution.basis === 'independent_direct_verifications' && direct.size < MIN_INDEPENDENT
         ? `resolution ${id}: needs two independent direct verifications`
@@ -433,11 +436,23 @@ const BINDING_REASONS: Readonly<Record<Exclude<Binding, 'match'>, string>> = {
 const NOT_PERMITTED =
   'Reviewed evidence sits on a host that does not permit automated retrieval, so it cannot be re-read and the approval is withheld.';
 
+/** Only an approved resolution settles a conflict; a rejected one is a record, not a ruling. */
+export function approvedResolutions(manifest: Manifest): Manifest['resolutions'] {
+  return manifest.resolutions.filter((r) => r.review.decision === 'approved');
+}
+
+/** Throws when the manifest breaks policy, so a server never starts on data the rules reject. */
+export function assertPolicy(manifest: Manifest): Manifest {
+  const problems = validatePolicy(manifest);
+  if (problems.length > 0) throw new Error(`evidence manifest fails policy: ${problems.join('; ')}`);
+  return manifest;
+}
+
 export function decideConfidence(args: Candidate & { readonly manifest: Manifest; readonly binding: Binding }): Decision {
   const { manifest, binding } = args;
   const group = manifest.conflict_groups.find((g) => sameName(g.cheat_name, args.name));
   const conflict_group_id = group?.conflict_group_id ?? null;
-  const resolution = manifest.resolutions.find((r) => r.conflict_group_id === conflict_group_id);
+  const resolution = approvedResolutions(manifest).find((r) => r.conflict_group_id === conflict_group_id);
   const approval = findApproval(manifest, args);
   const claim_id = approval?.claim_id ?? null;
   const unverified = (reason: string): Decision => ({ confidence: 'unverified', reason, conflict_group_id, claim_id });
