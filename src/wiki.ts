@@ -1,7 +1,7 @@
 // MediaWiki client for the two runtime providers. User input only ever travels
 // inside API query parameters.
 import * as z from 'zod/v4';
-import { FANDOM_API, type FailReason, type Http, WIKIPEDIA_API } from './net.js';
+import { FANDOM_API, type FailReason, type Http, MISSING_TITLE, WIKIPEDIA_API } from './net.js';
 import type { Provider } from './schemas.js';
 import { stripHtml } from './wikitext.js';
 
@@ -29,7 +29,7 @@ export const PROVIDERS: Readonly<Record<Provider, ProviderInfo>> = {
 
 export interface Unavailable {
   readonly kind: 'unavailable';
-  readonly reason: FailReason | 'api_error';
+  readonly reason: FailReason;
   readonly detail: string;
 }
 
@@ -71,12 +71,15 @@ const SearchResponse = z.object({
   query: z.object({ search: z.array(z.object({ title: z.string(), snippet: z.string().optional() })) }),
 });
 const CategoriesResponse = z.object({
+  continue: z.record(z.string(), z.string()).optional(),
   query: z.object({
     pages: z.array(z.object({ title: z.string(), categories: z.array(z.object({ title: z.string() })).optional() })),
   }),
 });
 
 const CATEGORY_PREFIX = 'Category:';
+/** Most category batches read for one request; a page in more categories than this covers is cut short. */
+export const MAX_CATEGORY_BATCHES = 5;
 const unavailable = (reason: Unavailable['reason'], detail: string): Unavailable => ({ kind: 'unavailable', reason, detail });
 
 export function pageUrl(provider: Provider, title: string): string {
@@ -92,7 +95,7 @@ export async function fetchPage(http: Http, provider: Provider, title: string): 
   if (!res.ok) return unavailable(res.reason, res.detail);
   const error = ApiError.safeParse(res.json);
   if (error.success) {
-    return error.data.error.code === 'missingtitle'
+    return error.data.error.code === MISSING_TITLE
       ? { kind: 'missing' }
       : unavailable('api_error', `API error ${error.data.error.code}`);
   }
@@ -127,12 +130,19 @@ export async function search(http: Http, provider: Provider, query: string, limi
 
 export async function categories(http: Http, provider: Provider, titles: readonly string[]): Promise<CategoriesOk | Unavailable> {
   if (titles.length === 0) return { kind: 'ok', byTitle: new Map() };
-  const res = await http.get(apiUrl(provider, { action: 'query', prop: 'categories', cllimit: 'max', titles: titles.join('|') }));
-  if (!res.ok) return unavailable(res.reason, res.detail);
-  const parsed = CategoriesResponse.safeParse(res.json);
-  if (!parsed.success) return unavailable('api_error', 'unsupported categories response');
-  const byTitle = new Map(
-    parsed.data.query.pages.map((page) => [page.title, (page.categories ?? []).map((c) => c.title.replace(CATEGORY_PREFIX, ''))]),
-  );
+  const byTitle = new Map<string, readonly string[]>();
+  // Continuation keys go first so a response can never replace the fixed parameters.
+  let more: Readonly<Record<string, string>> = {};
+  for (let batch = 0; batch < MAX_CATEGORY_BATCHES; batch += 1) {
+    const res = await http.get(apiUrl(provider, { ...more, action: 'query', prop: 'categories', cllimit: 'max', titles: titles.join('|') }));
+    if (!res.ok) return unavailable(res.reason, res.detail);
+    const parsed = CategoriesResponse.safeParse(res.json);
+    if (!parsed.success) return unavailable('api_error', 'unsupported categories response');
+    for (const page of parsed.data.query.pages) {
+      byTitle.set(page.title, [...(byTitle.get(page.title) ?? []), ...(page.categories ?? []).map((c) => c.title.replace(CATEGORY_PREFIX, ''))]);
+    }
+    if (!parsed.data.continue) break;
+    more = parsed.data.continue;
+  }
   return { kind: 'ok', byTitle };
 }

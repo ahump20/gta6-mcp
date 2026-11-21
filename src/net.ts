@@ -32,6 +32,7 @@ export type FailReason =
   | 'rate_limited'
   | 'challenge'
   | 'invalid_json'
+  | 'api_error'
   | 'too_large'
   | 'network';
 
@@ -96,6 +97,26 @@ export function isAllowed(raw: string, exactUrls: ReadonlySet<string>): boolean 
   return API_ENDPOINTS.has(`${url.origin}${url.pathname}`) || exactUrls.has(url.href);
 }
 
+/** MediaWiki's answer for a page that does not exist: a result to keep, not an outage. */
+export const MISSING_TITLE = 'missingtitle';
+
+// MediaWiki reports failures such as a read-only window as HTTP 200 with a top-level error object.
+function apiErrorCode(json: unknown): string | null {
+  if (typeof json !== 'object' || json === null || !('error' in json)) return null;
+  const { error } = json;
+  if (typeof error !== 'object' || error === null) return null;
+  return 'code' in error && typeof error.code === 'string' ? error.code : 'unknown';
+}
+
+// Releases a body that will not be read; a failure to cancel must never surface.
+async function discard(res: Response): Promise<void> {
+  try {
+    await res.body?.cancel();
+  } catch {
+    // Nothing to release.
+  }
+}
+
 async function readCapped(res: Response, cap: number): Promise<string | null> {
   if (!res.body) return '';
   const reader = res.body.getReader();
@@ -111,10 +132,12 @@ async function readCapped(res: Response, cap: number): Promise<string | null> {
   return pump([], 0);
 }
 
-function retryDelayMs(res: Response): number {
-  const seconds = Number(res.headers.get('retry-after'));
-  const ms = Number.isFinite(seconds) && seconds > 0 ? seconds * MS_PER_SECOND : DEFAULT_RETRY_MS;
-  return Math.min(ms, RETRY_AFTER_CAP_MS);
+// Retry-After is either delta-seconds or an HTTP date.
+function retryDelayMs(res: Response, now: number): number {
+  const header = res.headers.get('retry-after') ?? '';
+  const seconds = Number(header);
+  const ms = Number.isFinite(seconds) ? seconds * MS_PER_SECOND : Date.parse(header) - now;
+  return Math.min(ms > 0 ? ms : DEFAULT_RETRY_MS, RETRY_AFTER_CAP_MS);
 }
 
 export function createHttp(deps: HttpDeps): Http {
@@ -159,7 +182,10 @@ export function createHttp(deps: HttpDeps): Http {
 
   async function readBody(res: Response, expect: 'json' | 'text'): Promise<HttpResult> {
     const type = res.headers.get('content-type') ?? '';
-    if (expect === 'json' && !type.includes('json')) return fail('challenge', `unexpected content type ${type}`);
+    if (expect === 'json' && !type.includes('json')) {
+      void discard(res);
+      return fail('challenge', `unexpected content type ${type}`);
+    }
     let body: string | null;
     try {
       body = await readCapped(res, expect === 'json' ? API_BYTE_CAP : GUIDE_BYTE_CAP);
@@ -169,11 +195,15 @@ export function createHttp(deps: HttpDeps): Http {
     }
     if (body === null) return fail('too_large', 'response exceeded the size cap');
     if (expect === 'text') return { ok: true, body, json: null, fetched_at: iso(deps.now()), stale: false };
+    let json: unknown;
     try {
-      return { ok: true, body, json: JSON.parse(body) as unknown, fetched_at: iso(deps.now()), stale: false };
+      json = JSON.parse(body) as unknown;
     } catch {
       return fail('invalid_json', 'response was not valid JSON');
     }
+    const code = apiErrorCode(json);
+    if (code !== null && code !== MISSING_TITLE) return fail('api_error', `API error ${code}`);
+    return { ok: true, body, json, fetched_at: iso(deps.now()), stale: false };
   }
 
   // One attempt; redirects and retries recurse with their counters.
@@ -190,32 +220,46 @@ export function createHttp(deps: HttpDeps): Http {
         : fail('network', error instanceof Error ? error.message : 'request failed');
     }
     if (res.status >= HTTP_REDIRECT_MIN && res.status < HTTP_CLIENT_ERROR_MIN) {
+      void discard(res);
       const location = res.headers.get('location');
       if (!location) return fail('http', `HTTP ${res.status} without a location`);
       if (hops >= MAX_REDIRECTS) return fail('blocked', 'too many redirects');
-      return fetchOnce(new URL(location, url).href, expect, retries, hops + 1);
+      let next: string;
+      try {
+        next = new URL(location, url).href;
+      } catch {
+        return fail('http', `HTTP ${res.status} with an invalid location`);
+      }
+      return fetchOnce(next, expect, retries, hops + 1);
     }
     if (res.status === HTTP_TOO_MANY_REQUESTS || res.status === HTTP_UNAVAILABLE) {
+      void discard(res);
       if (retries >= MAX_RETRIES) {
         return fail(res.status === HTTP_TOO_MANY_REQUESTS ? 'rate_limited' : 'http', `HTTP ${res.status}`);
       }
-      await deps.sleep(retryDelayMs(res));
+      await deps.sleep(retryDelayMs(res, deps.now()));
       return fetchOnce(url, expect, retries + 1, hops);
     }
-    if (res.status < HTTP_OK_MIN || res.status >= HTTP_REDIRECT_MIN) return fail('http', `HTTP ${res.status}`);
+    if (res.status < HTTP_OK_MIN || res.status >= HTTP_REDIRECT_MIN) {
+      void discard(res);
+      return fail('http', `HTTP ${res.status}`);
+    }
     return readBody(res, expect);
   }
 
   async function load(url: string, opts: GetOptions): Promise<HttpResult> {
-    const cached = cache.get(url);
+    const expect = opts.expect ?? 'json';
+    // A json read and a text read of one URL are different entries.
+    const key = `${expect}:${url}`;
+    const cached = cache.get(key);
     const age = cached ? deps.now() - cached.at : Infinity;
     if (cached && !opts.fresh && age < CACHE_TTL_MS) {
       return { ok: true, body: cached.body, json: cached.json, fetched_at: iso(cached.at), stale: false };
     }
-    const result = await fetchOnce(url, opts.expect ?? 'json');
+    const result = await fetchOnce(url, expect);
     if (result.ok) {
-      cache.delete(url);
-      cache.set(url, { body: result.body, json: result.json, at: deps.now() });
+      cache.delete(key);
+      cache.set(key, { body: result.body, json: result.json, at: deps.now() });
       const oldest = cache.keys().next();
       if (cache.size > CACHE_MAX_ENTRIES && !oldest.done) cache.delete(oldest.value);
       return result;
