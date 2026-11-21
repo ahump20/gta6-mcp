@@ -10,9 +10,10 @@ Unofficial. Not affiliated with Rockstar Games or Take-Two Interactive.
 
 Read this before installing. It is deliberately strict.
 
-- **Confirmed cheats: zero.** No cheat has met the confirmation rules yet. The published lists are reports, and the guides that print them do not say they tested each code.
-- **One recorded dispute.** Attack Force is printed with 8 inputs by GameSpot and 9 by PC Gamer. Both are returned as reports, neither as a working code.
-- **Two reviewed community reports**, as links with a one-line description: a video whose description lists the 9-input Attack Force sequence, and a video whose title reports an Easter egg at a radio tower. Neither is confirmed, and no video frames were inspected.
+- **Confirmed cheats: zero.** No cheat has met the confirmation rules yet. The published lists are reports, and the guides that print them do not say they tested each code. The frames of five launch-week videos were inspected: every one shows codes as captions or cards, and none shows a code being entered or its effect.
+- **Eighteen reported codes, all unverified.** With `include_unverified: true`, `list_cheats` returns each code's name and the D-pad sequence one video captions for it, with the link. No platform and no effect is attached, because the video shows neither. Treat them as leads to try, not working codes.
+- **One recorded dispute.** Attack Force is printed with 8 inputs by GameSpot and 9 by PC Gamer. Three videos show the 9-input version as text. All are returned as reports, none as a working code; three videos repeating a list is not three tests.
+- **One reported Easter egg**, unverified, shown from the `discovery` level up: a video of a radio tower climb whose frames show a nest and an egg at the top.
 - **Wikipedia** for background on the game.
 - **The GTA Wiki is not read out of the box.** Both of its hosts restrict automated access:
   - `gta.wiki` (Weird Gloop) does not allow automated use without prior consent. This server never requests it.
@@ -25,18 +26,20 @@ Details and dated evidence for every line above are in [docs/VERIFICATION.md](do
 Requires Node.js 20 or newer.
 
 ```sh
-claude mcp add --scope local gta6 -- npx -y https://github.com/ahump20/gta6-mcp/releases/download/v0.1.0/gta6-mcp-0.1.0.tgz
+claude mcp add --scope local gta6 -- npx -y https://github.com/ahump20/gta6-mcp/releases/download/v0.1.1/gta6-mcp-0.1.1.tgz
 ```
 
-That installs the release file. Its SHA-256 checksum is `9811c6fe105b469461e9f2569e309206ad6e3f3701135fd78ebe547e2bc757a9`, published beside it on the [release page](https://github.com/ahump20/gta6-mcp/releases/tag/v0.1.0).
+That installs the release file. Its SHA-256 checksum is published beside it on the [release page](https://github.com/ahump20/gta6-mcp/releases/tag/v0.1.1).
+
+Already installed v0.1.0? Run `claude mcp remove gta6 --scope local` first, then the command above.
 
 Straight from the tagged source, which builds on install, also works:
 
 ```sh
-claude mcp add --scope local gta6 -- npx -y github:ahump20/gta6-mcp#v0.1.0
+claude mcp add --scope local gta6 -- npx -y github:ahump20/gta6-mcp#v0.1.1
 ```
 
-Both commands were tested against the published release on Node 20 and passed the live protocol test; the record is the release's [verification log](https://github.com/ahump20/gta6-mcp/releases/download/v0.1.0/gta6-mcp-0.1.0-verification.json). One limit: on npm 10, the source route works with the tag but fails if you replace the tag with a full commit hash.
+The release file was tested on Node 20 before the tag and passed the live protocol test on both protocol versions; see [docs/VERIFICATION.md](docs/VERIFICATION.md), section 18. One limit: on npm 10, the source route works with the tag but fails if you replace the tag with a full commit hash.
 
 The package is published to GitHub Releases only, not to the npm registry. It needs no account, key or hosted service.
 

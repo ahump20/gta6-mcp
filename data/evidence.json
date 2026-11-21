@@ -15,7 +15,7 @@
   ],
   "binding": {
     "algorithm": "sha256",
-    "normalization": "collapse-whitespace-v1",
+    "normalization": "collapse-unicode-whitespace-v2",
     "scope": "reviewed_text_only"
   },
   "confirmations": [],
@@ -101,9 +101,9 @@
       "url": "https://www.youtube.com/watch?v=Hj23ZNatmZQ",
       "author_handle": "@JOETHzz",
       "posted_at": "2026-11-19T03:00:22Z",
-      "captured_at": "2026-11-21T11:36:52Z",
+      "captured_at": "2026-11-21T12:08:21Z",
       "evidence_type": "text_claim",
-      "description": "Thai-language cheat video. Its description lists a nine-step D-pad sequence for Attack Force, the same as the PC Gamer variant, for PS5 and Xbox Series. The description mentions no test. Frames not inspected.",
+      "description": "Thai-language cheat video whose description lists this nine-step sequence. Frames inspected 2026-11-21: the in-game phone is held open beside a controller camera and a web table of codes; no code entry and no effect is shown.",
       "min_level": "hints",
       "subject": {
         "kind": "cheat",
@@ -125,10 +125,10 @@
       "video_review": null,
       "review": {
         "reviewer": {
-          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session finishing gta6-mcp v0.1.0",
+          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session, gta6-mcp v0.1.1 frame review",
           "type": "ai_agent"
         },
-        "reviewed_at": "2026-11-21T11:38:00Z"
+        "reviewed_at": "2026-11-21T12:45:00Z"
       }
     },
     {
@@ -137,9 +137,9 @@
       "url": "https://www.youtube.com/watch?v=Mj_beVHUJE4",
       "author_handle": "@MrDalekJD",
       "posted_at": "2026-11-19T03:50:41Z",
-      "captured_at": "2026-11-21T11:36:54Z",
+      "captured_at": "2026-11-21T12:08:21Z",
       "evidence_type": "gameplay_video",
-      "description": "Title claims a first Easter egg with a secret cutscene. The description says the video is a climb of the tallest radio tower and that reports mention a bird-nest egg nearby; the egg is not its stated focus. Frames not inspected.",
+      "description": "Frames inspected 2026-11-21: a climb up a red radio tower; near 5:22 a striped egg is shown in mid-air above the map, and near 5:40 a character stands beside a nest on the top platform. One video, so it stays unverified.",
       "min_level": "discovery",
       "subject": {
         "kind": "easter_egg",
@@ -149,10 +149,692 @@
       "video_review": null,
       "review": {
         "reviewer": {
-          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session finishing gta6-mcp v0.1.0",
+          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session, gta6-mcp v0.1.1 frame review",
           "type": "ai_agent"
         },
-        "reviewed_at": "2026-11-21T11:38:00Z"
+        "reviewed_at": "2026-11-21T12:45:00Z"
+      }
+    },
+    {
+      "id": "yt-goldleaf-250000",
+      "social_platform": "youtube",
+      "url": "https://www.youtube.com/watch?v=C7wrTvoDnww",
+      "author_handle": "@GoldxLeaf",
+      "posted_at": "2026-11-19T01:55:55Z",
+      "captured_at": "2026-11-21T12:35:00Z",
+      "evidence_type": "text_claim",
+      "description": "An on-screen caption in a 112-second video lists this D-pad sequence. Frames inspected 2026-11-21: a character stands idle throughout; no phone, no code entry and no effect is shown. The caption names no platform.",
+      "min_level": "hints",
+      "subject": {
+        "kind": "cheat",
+        "cheat_name": "$250000",
+        "input": [
+          "Up",
+          "Right",
+          "Down",
+          "Left",
+          "Up",
+          "Left",
+          "Down",
+          "Right"
+        ],
+        "platform": "unattributed",
+        "effect": null
+      },
+      "video_review": null,
+      "review": {
+        "reviewer": {
+          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session, gta6-mcp v0.1.1 frame review",
+          "type": "ai_agent"
+        },
+        "reviewed_at": "2026-11-21T12:45:00Z"
+      }
+    },
+    {
+      "id": "yt-goldleaf-raise-heat-level",
+      "social_platform": "youtube",
+      "url": "https://www.youtube.com/watch?v=C7wrTvoDnww",
+      "author_handle": "@GoldxLeaf",
+      "posted_at": "2026-11-19T01:55:55Z",
+      "captured_at": "2026-11-21T12:35:00Z",
+      "evidence_type": "text_claim",
+      "description": "An on-screen caption in a 112-second video lists this D-pad sequence. Frames inspected 2026-11-21: a character stands idle throughout; no phone, no code entry and no effect is shown. The caption names no platform.",
+      "min_level": "hints",
+      "subject": {
+        "kind": "cheat",
+        "cheat_name": "Raise Heat Level",
+        "input": [
+          "Left",
+          "Down",
+          "Right",
+          "Down",
+          "Up",
+          "Down",
+          "Up"
+        ],
+        "platform": "unattributed",
+        "effect": null
+      },
+      "video_review": null,
+      "review": {
+        "reviewer": {
+          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session, gta6-mcp v0.1.1 frame review",
+          "type": "ai_agent"
+        },
+        "reviewed_at": "2026-11-21T12:45:00Z"
+      }
+    },
+    {
+      "id": "yt-goldleaf-raise-wanted-level",
+      "social_platform": "youtube",
+      "url": "https://www.youtube.com/watch?v=C7wrTvoDnww",
+      "author_handle": "@GoldxLeaf",
+      "posted_at": "2026-11-19T01:55:55Z",
+      "captured_at": "2026-11-21T12:35:00Z",
+      "evidence_type": "text_claim",
+      "description": "An on-screen caption in a 112-second video lists this D-pad sequence. Frames inspected 2026-11-21: a character stands idle throughout; no phone, no code entry and no effect is shown. The caption names no platform.",
+      "min_level": "hints",
+      "subject": {
+        "kind": "cheat",
+        "cheat_name": "Raise Wanted Level",
+        "input": [
+          "Left",
+          "Down",
+          "Right",
+          "Down",
+          "Up",
+          "Right",
+          "Up"
+        ],
+        "platform": "unattributed",
+        "effect": null
+      },
+      "video_review": null,
+      "review": {
+        "reviewer": {
+          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session, gta6-mcp v0.1.1 frame review",
+          "type": "ai_agent"
+        },
+        "reviewed_at": "2026-11-21T12:45:00Z"
+      }
+    },
+    {
+      "id": "yt-goldleaf-unlimited-focus",
+      "social_platform": "youtube",
+      "url": "https://www.youtube.com/watch?v=C7wrTvoDnww",
+      "author_handle": "@GoldxLeaf",
+      "posted_at": "2026-11-19T01:55:55Z",
+      "captured_at": "2026-11-21T12:35:00Z",
+      "evidence_type": "text_claim",
+      "description": "An on-screen caption in a 112-second video lists this D-pad sequence. Frames inspected 2026-11-21: a character stands idle throughout; no phone, no code entry and no effect is shown. The caption names no platform.",
+      "min_level": "hints",
+      "subject": {
+        "kind": "cheat",
+        "cheat_name": "Unlimited Focus",
+        "input": [
+          "Down",
+          "Up",
+          "Up",
+          "Down",
+          "Up",
+          "Down",
+          "Up",
+          "Down",
+          "Up",
+          "Right"
+        ],
+        "platform": "unattributed",
+        "effect": null
+      },
+      "video_review": null,
+      "review": {
+        "reviewer": {
+          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session, gta6-mcp v0.1.1 frame review",
+          "type": "ai_agent"
+        },
+        "reviewed_at": "2026-11-21T12:45:00Z"
+      }
+    },
+    {
+      "id": "yt-goldleaf-body-armor",
+      "social_platform": "youtube",
+      "url": "https://www.youtube.com/watch?v=C7wrTvoDnww",
+      "author_handle": "@GoldxLeaf",
+      "posted_at": "2026-11-19T01:55:55Z",
+      "captured_at": "2026-11-21T12:35:00Z",
+      "evidence_type": "text_claim",
+      "description": "An on-screen caption in a 112-second video lists this D-pad sequence. Frames inspected 2026-11-21: a character stands idle throughout; no phone, no code entry and no effect is shown. The caption names no platform.",
+      "min_level": "hints",
+      "subject": {
+        "kind": "cheat",
+        "cheat_name": "Body Armor",
+        "input": [
+          "Down",
+          "Up",
+          "Left",
+          "Up",
+          "Up",
+          "Up",
+          "Up",
+          "Up",
+          "Down",
+          "Down"
+        ],
+        "platform": "unattributed",
+        "effect": null
+      },
+      "video_review": null,
+      "review": {
+        "reviewer": {
+          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session, gta6-mcp v0.1.1 frame review",
+          "type": "ai_agent"
+        },
+        "reviewed_at": "2026-11-21T12:45:00Z"
+      }
+    },
+    {
+      "id": "yt-goldleaf-exploding-balls",
+      "social_platform": "youtube",
+      "url": "https://www.youtube.com/watch?v=C7wrTvoDnww",
+      "author_handle": "@GoldxLeaf",
+      "posted_at": "2026-11-19T01:55:55Z",
+      "captured_at": "2026-11-21T12:35:00Z",
+      "evidence_type": "text_claim",
+      "description": "An on-screen caption in a 112-second video lists this D-pad sequence. Frames inspected 2026-11-21: a character stands idle throughout; no phone, no code entry and no effect is shown. The caption names no platform.",
+      "min_level": "hints",
+      "subject": {
+        "kind": "cheat",
+        "cheat_name": "Exploding Balls",
+        "input": [
+          "Down",
+          "Up",
+          "Left",
+          "Left",
+          "Right",
+          "Down",
+          "Down",
+          "Up",
+          "Right"
+        ],
+        "platform": "unattributed",
+        "effect": null
+      },
+      "video_review": null,
+      "review": {
+        "reviewer": {
+          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session, gta6-mcp v0.1.1 frame review",
+          "type": "ai_agent"
+        },
+        "reviewed_at": "2026-11-21T12:45:00Z"
+      }
+    },
+    {
+      "id": "yt-goldleaf-max-ammo",
+      "social_platform": "youtube",
+      "url": "https://www.youtube.com/watch?v=C7wrTvoDnww",
+      "author_handle": "@GoldxLeaf",
+      "posted_at": "2026-11-19T01:55:55Z",
+      "captured_at": "2026-11-21T12:35:00Z",
+      "evidence_type": "text_claim",
+      "description": "An on-screen caption in a 112-second video lists this D-pad sequence. Frames inspected 2026-11-21: a character stands idle throughout; no phone, no code entry and no effect is shown. The caption names no platform.",
+      "min_level": "hints",
+      "subject": {
+        "kind": "cheat",
+        "cheat_name": "Max Ammo",
+        "input": [
+          "Down",
+          "Up",
+          "Right",
+          "Down",
+          "Left",
+          "Left",
+          "Up",
+          "Up",
+          "Down",
+          "Left"
+        ],
+        "platform": "unattributed",
+        "effect": null
+      },
+      "video_review": null,
+      "review": {
+        "reviewer": {
+          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session, gta6-mcp v0.1.1 frame review",
+          "type": "ai_agent"
+        },
+        "reviewed_at": "2026-11-21T12:45:00Z"
+      }
+    },
+    {
+      "id": "yt-goldleaf-infinite-ammo",
+      "social_platform": "youtube",
+      "url": "https://www.youtube.com/watch?v=C7wrTvoDnww",
+      "author_handle": "@GoldxLeaf",
+      "posted_at": "2026-11-19T01:55:55Z",
+      "captured_at": "2026-11-21T12:35:00Z",
+      "evidence_type": "text_claim",
+      "description": "An on-screen caption in a 112-second video lists this D-pad sequence. Frames inspected 2026-11-21: a character stands idle throughout; no phone, no code entry and no effect is shown. The caption names no platform.",
+      "min_level": "hints",
+      "subject": {
+        "kind": "cheat",
+        "cheat_name": "Infinite Ammo",
+        "input": [
+          "Down",
+          "Up",
+          "Right",
+          "Down",
+          "Left",
+          "Left",
+          "Up",
+          "Down",
+          "Down",
+          "Down"
+        ],
+        "platform": "unattributed",
+        "effect": null
+      },
+      "video_review": null,
+      "review": {
+        "reviewer": {
+          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session, gta6-mcp v0.1.1 frame review",
+          "type": "ai_agent"
+        },
+        "reviewed_at": "2026-11-21T12:45:00Z"
+      }
+    },
+    {
+      "id": "yt-goldleaf-no-reload",
+      "social_platform": "youtube",
+      "url": "https://www.youtube.com/watch?v=C7wrTvoDnww",
+      "author_handle": "@GoldxLeaf",
+      "posted_at": "2026-11-19T01:55:55Z",
+      "captured_at": "2026-11-21T12:35:00Z",
+      "evidence_type": "text_claim",
+      "description": "An on-screen caption in a 112-second video lists this D-pad sequence. Frames inspected 2026-11-21: a character stands idle throughout; no phone, no code entry and no effect is shown. The caption names no platform.",
+      "min_level": "hints",
+      "subject": {
+        "kind": "cheat",
+        "cheat_name": "No Reload",
+        "input": [
+          "Down",
+          "Up",
+          "Right",
+          "Down",
+          "Left",
+          "Left",
+          "Up",
+          "Down",
+          "Down",
+          "Up"
+        ],
+        "platform": "unattributed",
+        "effect": null
+      },
+      "video_review": null,
+      "review": {
+        "reviewer": {
+          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session, gta6-mcp v0.1.1 frame review",
+          "type": "ai_agent"
+        },
+        "reviewed_at": "2026-11-21T12:45:00Z"
+      }
+    },
+    {
+      "id": "yt-goldleaf-attack-force",
+      "social_platform": "youtube",
+      "url": "https://www.youtube.com/watch?v=C7wrTvoDnww",
+      "author_handle": "@GoldxLeaf",
+      "posted_at": "2026-11-19T01:55:55Z",
+      "captured_at": "2026-11-21T12:35:00Z",
+      "evidence_type": "text_claim",
+      "description": "An on-screen caption in a 112-second video lists this D-pad sequence. Frames inspected 2026-11-21: a character stands idle throughout; no phone, no code entry and no effect is shown. The caption names no platform.",
+      "min_level": "hints",
+      "subject": {
+        "kind": "cheat",
+        "cheat_name": "Attack Force",
+        "input": [
+          "Down",
+          "Up",
+          "Left",
+          "Left",
+          "Right",
+          "Down",
+          "Down",
+          "Up",
+          "Down"
+        ],
+        "platform": "unattributed",
+        "effect": null
+      },
+      "video_review": null,
+      "review": {
+        "reviewer": {
+          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session, gta6-mcp v0.1.1 frame review",
+          "type": "ai_agent"
+        },
+        "reviewed_at": "2026-11-21T12:45:00Z"
+      }
+    },
+    {
+      "id": "yt-goldleaf-vehicle-force",
+      "social_platform": "youtube",
+      "url": "https://www.youtube.com/watch?v=C7wrTvoDnww",
+      "author_handle": "@GoldxLeaf",
+      "posted_at": "2026-11-19T01:55:55Z",
+      "captured_at": "2026-11-21T12:35:00Z",
+      "evidence_type": "text_claim",
+      "description": "An on-screen caption in a 112-second video lists this D-pad sequence. Frames inspected 2026-11-21: a character stands idle throughout; no phone, no code entry and no effect is shown. The caption names no platform.",
+      "min_level": "hints",
+      "subject": {
+        "kind": "cheat",
+        "cheat_name": "Vehicle Force",
+        "input": [
+          "Down",
+          "Up",
+          "Left",
+          "Left",
+          "Right",
+          "Down",
+          "Left",
+          "Up",
+          "Down"
+        ],
+        "platform": "unattributed",
+        "effect": null
+      },
+      "video_review": null,
+      "review": {
+        "reviewer": {
+          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session, gta6-mcp v0.1.1 frame review",
+          "type": "ai_agent"
+        },
+        "reviewed_at": "2026-11-21T12:45:00Z"
+      }
+    },
+    {
+      "id": "yt-goldleaf-maibatsu-boomazoom",
+      "social_platform": "youtube",
+      "url": "https://www.youtube.com/watch?v=C7wrTvoDnww",
+      "author_handle": "@GoldxLeaf",
+      "posted_at": "2026-11-19T01:55:55Z",
+      "captured_at": "2026-11-21T12:35:00Z",
+      "evidence_type": "text_claim",
+      "description": "An on-screen caption in a 112-second video lists this D-pad sequence. Frames inspected 2026-11-21: a character stands idle throughout; no phone, no code entry and no effect is shown. The caption names no platform.",
+      "min_level": "hints",
+      "subject": {
+        "kind": "cheat",
+        "cheat_name": "Maibatsu Boomazoom",
+        "input": [
+          "Left",
+          "Up",
+          "Right",
+          "Down",
+          "Left",
+          "Left",
+          "Up",
+          "Left"
+        ],
+        "platform": "unattributed",
+        "effect": null
+      },
+      "video_review": null,
+      "review": {
+        "reviewer": {
+          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session, gta6-mcp v0.1.1 frame review",
+          "type": "ai_agent"
+        },
+        "reviewed_at": "2026-11-21T12:45:00Z"
+      }
+    },
+    {
+      "id": "yt-goldleaf-hvy-bulldozer",
+      "social_platform": "youtube",
+      "url": "https://www.youtube.com/watch?v=C7wrTvoDnww",
+      "author_handle": "@GoldxLeaf",
+      "posted_at": "2026-11-19T01:55:55Z",
+      "captured_at": "2026-11-21T12:35:00Z",
+      "evidence_type": "text_claim",
+      "description": "An on-screen caption in a 112-second video lists this D-pad sequence. Frames inspected 2026-11-21: a character stands idle throughout; no phone, no code entry and no effect is shown. The caption names no platform.",
+      "min_level": "hints",
+      "subject": {
+        "kind": "cheat",
+        "cheat_name": "HVY Bulldozer",
+        "input": [
+          "Left",
+          "Up",
+          "Right",
+          "Down",
+          "Left",
+          "Right",
+          "Right",
+          "Down"
+        ],
+        "platform": "unattributed",
+        "effect": null
+      },
+      "video_review": null,
+      "review": {
+        "reviewer": {
+          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session, gta6-mcp v0.1.1 frame review",
+          "type": "ai_agent"
+        },
+        "reviewed_at": "2026-11-21T12:45:00Z"
+      }
+    },
+    {
+      "id": "yt-goldleaf-mtl-pumper",
+      "social_platform": "youtube",
+      "url": "https://www.youtube.com/watch?v=C7wrTvoDnww",
+      "author_handle": "@GoldxLeaf",
+      "posted_at": "2026-11-19T01:55:55Z",
+      "captured_at": "2026-11-21T12:35:00Z",
+      "evidence_type": "text_claim",
+      "description": "An on-screen caption in a 112-second video lists this D-pad sequence. Frames inspected 2026-11-21: a character stands idle throughout; no phone, no code entry and no effect is shown. The caption names no platform.",
+      "min_level": "hints",
+      "subject": {
+        "kind": "cheat",
+        "cheat_name": "MTL Pumper",
+        "input": [
+          "Left",
+          "Up",
+          "Right",
+          "Down",
+          "Left",
+          "Right",
+          "Right",
+          "Up"
+        ],
+        "platform": "unattributed",
+        "effect": null
+      },
+      "video_review": null,
+      "review": {
+        "reviewer": {
+          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session, gta6-mcp v0.1.1 frame review",
+          "type": "ai_agent"
+        },
+        "reviewed_at": "2026-11-21T12:45:00Z"
+      }
+    },
+    {
+      "id": "yt-goldleaf-cycle-weather",
+      "social_platform": "youtube",
+      "url": "https://www.youtube.com/watch?v=C7wrTvoDnww",
+      "author_handle": "@GoldxLeaf",
+      "posted_at": "2026-11-19T01:55:55Z",
+      "captured_at": "2026-11-21T12:35:00Z",
+      "evidence_type": "text_claim",
+      "description": "An on-screen caption in a 112-second video lists this D-pad sequence. Frames inspected 2026-11-21: a character stands idle throughout; no phone, no code entry and no effect is shown. The caption names no platform.",
+      "min_level": "hints",
+      "subject": {
+        "kind": "cheat",
+        "cheat_name": "Cycle Weather",
+        "input": [
+          "Down",
+          "Right",
+          "Up",
+          "Down",
+          "Right",
+          "Up",
+          "Right"
+        ],
+        "platform": "unattributed",
+        "effect": null
+      },
+      "video_review": null,
+      "review": {
+        "reviewer": {
+          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session, gta6-mcp v0.1.1 frame review",
+          "type": "ai_agent"
+        },
+        "reviewed_at": "2026-11-21T12:45:00Z"
+      }
+    },
+    {
+      "id": "yt-goldleaf-dollhouse",
+      "social_platform": "youtube",
+      "url": "https://www.youtube.com/watch?v=C7wrTvoDnww",
+      "author_handle": "@GoldxLeaf",
+      "posted_at": "2026-11-19T01:55:55Z",
+      "captured_at": "2026-11-21T12:35:00Z",
+      "evidence_type": "text_claim",
+      "description": "An on-screen caption in a 112-second video lists this D-pad sequence. Frames inspected 2026-11-21: a character stands idle throughout; no phone, no code entry and no effect is shown. The caption names no platform.",
+      "min_level": "hints",
+      "subject": {
+        "kind": "cheat",
+        "cheat_name": "Dollhouse",
+        "input": [
+          "Down",
+          "Down",
+          "Up",
+          "Right",
+          "Right",
+          "Up",
+          "Left",
+          "Left",
+          "Down",
+          "Right"
+        ],
+        "platform": "unattributed",
+        "effect": null
+      },
+      "video_review": null,
+      "review": {
+        "reviewer": {
+          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session, gta6-mcp v0.1.1 frame review",
+          "type": "ai_agent"
+        },
+        "reviewed_at": "2026-11-21T12:45:00Z"
+      }
+    },
+    {
+      "id": "yt-goldleaf-cataclysm",
+      "social_platform": "youtube",
+      "url": "https://www.youtube.com/watch?v=C7wrTvoDnww",
+      "author_handle": "@GoldxLeaf",
+      "posted_at": "2026-11-19T01:55:55Z",
+      "captured_at": "2026-11-21T12:35:00Z",
+      "evidence_type": "text_claim",
+      "description": "An on-screen caption in a 112-second video lists this D-pad sequence. Frames inspected 2026-11-21: a character stands idle throughout; no phone, no code entry and no effect is shown. The caption names no platform.",
+      "min_level": "hints",
+      "subject": {
+        "kind": "cheat",
+        "cheat_name": "Cataclysm",
+        "input": [
+          "Down",
+          "Down",
+          "Up",
+          "Right",
+          "Right",
+          "Up",
+          "Left",
+          "Left",
+          "Right",
+          "Right"
+        ],
+        "platform": "unattributed",
+        "effect": null
+      },
+      "video_review": null,
+      "review": {
+        "reviewer": {
+          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session, gta6-mcp v0.1.1 frame review",
+          "type": "ai_agent"
+        },
+        "reviewed_at": "2026-11-21T12:45:00Z"
+      }
+    },
+    {
+      "id": "yt-goldleaf-faded-glory",
+      "social_platform": "youtube",
+      "url": "https://www.youtube.com/watch?v=C7wrTvoDnww",
+      "author_handle": "@GoldxLeaf",
+      "posted_at": "2026-11-19T01:55:55Z",
+      "captured_at": "2026-11-21T12:35:00Z",
+      "evidence_type": "text_claim",
+      "description": "An on-screen caption in a 112-second video lists this D-pad sequence. Frames inspected 2026-11-21: a character stands idle throughout; no phone, no code entry and no effect is shown. The caption names no platform.",
+      "min_level": "hints",
+      "subject": {
+        "kind": "cheat",
+        "cheat_name": "Faded Glory",
+        "input": [
+          "Down",
+          "Down",
+          "Up",
+          "Right",
+          "Right",
+          "Up",
+          "Left",
+          "Left",
+          "Left",
+          "Right"
+        ],
+        "platform": "unattributed",
+        "effect": null
+      },
+      "video_review": null,
+      "review": {
+        "reviewer": {
+          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session, gta6-mcp v0.1.1 frame review",
+          "type": "ai_agent"
+        },
+        "reviewed_at": "2026-11-21T12:45:00Z"
+      }
+    },
+    {
+      "id": "yt-frameproof-attack-force",
+      "social_platform": "youtube",
+      "url": "https://www.youtube.com/watch?v=Peo_d4Oh-x0",
+      "author_handle": "@FrameproofGaming",
+      "posted_at": "2026-11-19T08:32:41Z",
+      "captured_at": "2026-11-21T12:38:00Z",
+      "evidence_type": "text_claim",
+      "description": "A designed card at 2:55 in an edited explainer lists this nine-step sequence. Frames inspected 2026-11-21: gameplay clips play behind the cards; no code entry and no effect is shown. The title says the codes were tested.",
+      "min_level": "hints",
+      "subject": {
+        "kind": "cheat",
+        "cheat_name": "Attack Force",
+        "input": [
+          "Down",
+          "Up",
+          "Left",
+          "Left",
+          "Right",
+          "Down",
+          "Down",
+          "Up",
+          "Down"
+        ],
+        "platform": "unattributed",
+        "effect": null
+      },
+      "video_review": null,
+      "review": {
+        "reviewer": {
+          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session, gta6-mcp v0.1.1 frame review",
+          "type": "ai_agent"
+        },
+        "reviewed_at": "2026-11-21T12:45:00Z"
       }
     }
   ],

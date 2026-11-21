@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-21T11:38:55.453Z",
-  "tested_sha": "e1daaae1d687c185f8c69c1faf14323161b53bee",
+  "generated_at": "2026-11-21T13:00:44.983Z",
+  "tested_sha": "96a15396fc40e2fae93679c01a41050bbb8c730d",
   "launcher": "~/.nvm/versions/node/v20.20.2/bin/node ./dist/index.js",
   "versions": {
     "node": "v20.20.2",
@@ -17,7 +17,7 @@
   },
   "gameplay_coverage": {
     "confirmed_cheats": 0,
-    "reported_rows_returned": 3,
+    "reported_rows_returned": 22,
     "cheat_statuses": [
       "upstream_unavailable",
       "partial"
@@ -38,7 +38,7 @@
     {
       "label": "legacy",
       "requested_mode": "legacy",
-      "wire_log": "$TMPDIR/gta6-mcp-smoke-WuQbzO/legacy.wire.jsonl",
+      "wire_log": "$TMPDIR/gta6-v011/wire-local/legacy.wire.jsonl",
       "calls": [
         {
           "label": "cheat lookup (default: confirmed only)",
@@ -69,8 +69,8 @@
           "schema_valid": true,
           "text_matches_structured": true,
           "status": "partial",
-          "summary": "0 confirmed cheats. The wiki's cheat table was not retrieved, so only the 3 report(s) this server records itself are returned; they are reports, not working codes.",
-          "result_count": 3,
+          "summary": "0 confirmed cheats. The wiki's cheat table was not retrieved, so only the 22 report(s) this server records itself are returned; they are reports, not working codes.",
+          "result_count": 22,
           "notices": [
             {
               "type": "coverage_gap",
@@ -107,9 +107,23 @@
             {
               "title": "youtube post by @JOETHzz",
               "url": "https://www.youtube.com/watch?v=Hj23ZNatmZQ",
-              "retrieved_at": "2026-11-21T11:36:52Z",
+              "retrieved_at": "2026-11-21T12:08:21Z",
               "license": "Community post, all rights reserved by its author. Linked and described, never copied.",
               "attribution": "@JOETHzz"
+            },
+            {
+              "title": "youtube post by @GoldxLeaf",
+              "url": "https://www.youtube.com/watch?v=C7wrTvoDnww",
+              "retrieved_at": "2026-11-21T12:35:00Z",
+              "license": "Community post, all rights reserved by its author. Linked and described, never copied.",
+              "attribution": "@GoldxLeaf"
+            },
+            {
+              "title": "youtube post by @FrameproofGaming",
+              "url": "https://www.youtube.com/watch?v=Peo_d4Oh-x0",
+              "retrieved_at": "2026-11-21T12:38:00Z",
+              "license": "Community post, all rights reserved by its author. Linked and described, never copied.",
+              "attribution": "@FrameproofGaming"
             }
           ],
           "first_result": {
@@ -200,7 +214,7 @@
             {
               "title": "youtube post by @MrDalekJD",
               "url": "https://www.youtube.com/watch?v=Mj_beVHUJE4",
-              "retrieved_at": "2026-11-21T11:36:54Z",
+              "retrieved_at": "2026-11-21T12:08:21Z",
               "license": "Community post, all rights reserved by its author. Linked and described, never copied.",
               "attribution": "@MrDalekJD"
             }
@@ -208,7 +222,7 @@
           "first_result": {
             "title": "Radio tower Easter egg (reported)",
             "hint": null,
-            "detail": "Title claims a first Easter egg with a secret cutscene. The description says the video is a climb of the tallest radio tower and that reports mention a bird-nest egg nearby; the egg is not its stated focus. Frames not inspected.",
+            "detail": "Frames inspected 2026-11-21: a climb up a red radio tower; near 5:22 a striped egg is shown in mid-air above the map, and near 5:40 a character stands beside a nest on the top platform. One video, so it stays unverified.",
             "location": null,
             "prerequisites": null,
             "spoiler_class": "discovery",
@@ -350,8 +364,8 @@
             {
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
-              "revision_id": 1386912958,
-              "retrieved_at": "2026-11-21T11:38:48.006Z",
+              "revision_id": 1386921262,
+              "retrieved_at": "2026-11-21T13:00:37.815Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -393,8 +407,8 @@
             {
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
-              "revision_id": 1386912958,
-              "retrieved_at": "2026-11-21T11:38:48.007Z",
+              "revision_id": 1386921262,
+              "retrieved_at": "2026-11-21T13:00:37.815Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -479,7 +493,7 @@
             {
               "title": "Wikipedia search",
               "url": "https://en.wikipedia.org/wiki/Special:Search",
-              "retrieved_at": "2026-11-21T11:38:49.866Z",
+              "retrieved_at": "2026-11-21T13:00:39.349Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -498,7 +512,7 @@
       "observed_era": "legacy",
       "server": {
         "name": "gta6-mcp",
-        "version": "0.1.0"
+        "version": "0.1.1"
       },
       "tools": [
         "easter_eggs",
@@ -533,7 +547,7 @@
       "requested_mode": {
         "pin": "2026-07-28"
       },
-      "wire_log": "$TMPDIR/gta6-mcp-smoke-G6jklw/modern.wire.jsonl",
+      "wire_log": "$TMPDIR/gta6-v011/wire-local/modern.wire.jsonl",
       "calls": [
         {
           "label": "cheat lookup (default: confirmed only)",
@@ -564,8 +578,8 @@
           "schema_valid": true,
           "text_matches_structured": true,
           "status": "partial",
-          "summary": "0 confirmed cheats. The wiki's cheat table was not retrieved, so only the 3 report(s) this server records itself are returned; they are reports, not working codes.",
-          "result_count": 3,
+          "summary": "0 confirmed cheats. The wiki's cheat table was not retrieved, so only the 22 report(s) this server records itself are returned; they are reports, not working codes.",
+          "result_count": 22,
           "notices": [
             {
               "type": "coverage_gap",
@@ -602,9 +616,23 @@
             {
               "title": "youtube post by @JOETHzz",
               "url": "https://www.youtube.com/watch?v=Hj23ZNatmZQ",
-              "retrieved_at": "2026-11-21T11:36:52Z",
+              "retrieved_at": "2026-11-21T12:08:21Z",
               "license": "Community post, all rights reserved by its author. Linked and described, never copied.",
               "attribution": "@JOETHzz"
+            },
+            {
+              "title": "youtube post by @GoldxLeaf",
+              "url": "https://www.youtube.com/watch?v=C7wrTvoDnww",
+              "retrieved_at": "2026-11-21T12:35:00Z",
+              "license": "Community post, all rights reserved by its author. Linked and described, never copied.",
+              "attribution": "@GoldxLeaf"
+            },
+            {
+              "title": "youtube post by @FrameproofGaming",
+              "url": "https://www.youtube.com/watch?v=Peo_d4Oh-x0",
+              "retrieved_at": "2026-11-21T12:38:00Z",
+              "license": "Community post, all rights reserved by its author. Linked and described, never copied.",
+              "attribution": "@FrameproofGaming"
             }
           ],
           "first_result": {
@@ -695,7 +723,7 @@
             {
               "title": "youtube post by @MrDalekJD",
               "url": "https://www.youtube.com/watch?v=Mj_beVHUJE4",
-              "retrieved_at": "2026-11-21T11:36:54Z",
+              "retrieved_at": "2026-11-21T12:08:21Z",
               "license": "Community post, all rights reserved by its author. Linked and described, never copied.",
               "attribution": "@MrDalekJD"
             }
@@ -703,7 +731,7 @@
           "first_result": {
             "title": "Radio tower Easter egg (reported)",
             "hint": null,
-            "detail": "Title claims a first Easter egg with a secret cutscene. The description says the video is a climb of the tallest radio tower and that reports mention a bird-nest egg nearby; the egg is not its stated focus. Frames not inspected.",
+            "detail": "Frames inspected 2026-11-21: a climb up a red radio tower; near 5:22 a striped egg is shown in mid-air above the map, and near 5:40 a character stands beside a nest on the top platform. One video, so it stays unverified.",
             "location": null,
             "prerequisites": null,
             "spoiler_class": "discovery",
@@ -845,8 +873,8 @@
             {
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
-              "revision_id": 1386912958,
-              "retrieved_at": "2026-11-21T11:38:52.137Z",
+              "revision_id": 1386921262,
+              "retrieved_at": "2026-11-21T13:00:41.636Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -888,8 +916,8 @@
             {
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
-              "revision_id": 1386912958,
-              "retrieved_at": "2026-11-21T11:38:52.137Z",
+              "revision_id": 1386921262,
+              "retrieved_at": "2026-11-21T13:00:41.637Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -974,7 +1002,7 @@
             {
               "title": "Wikipedia search",
               "url": "https://en.wikipedia.org/wiki/Special:Search",
-              "retrieved_at": "2026-11-21T11:38:53.928Z",
+              "retrieved_at": "2026-11-21T13:00:43.456Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -993,7 +1021,7 @@
       "observed_era": "modern",
       "server": {
         "name": "gta6-mcp",
-        "version": "0.1.0"
+        "version": "0.1.1"
       },
       "tools": [
         "easter_eggs",

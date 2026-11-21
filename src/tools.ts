@@ -148,7 +148,7 @@ async function fandomHits(http: Http, query: string): Promise<ProviderHits | Una
   const hits = candidates
     .filter((hit) => mentionsGtaVi(hit.title) || (cats.byTitle.get(hit.title) ?? []).some(mentionsGtaVi))
     .map((hit) => ({ provider: 'fandom' as const, ...hit }));
-  return { hits, source: searchSource('fandom', found.retrieved_at), stale: found.stale };
+  return { hits, source: searchSource('fandom', found.retrieved_at), stale: found.stale || cats.stale };
 }
 
 async function wikipediaHits(http: Http, query: string, limit: number): Promise<ProviderHits | Unavailable> {
@@ -235,10 +235,18 @@ export async function getPage(
   const page = await fetchPage(deps.http, source, args.title);
   if (page.kind === 'unavailable') return unavailable('The page', page);
   if (page.kind === 'missing') return envelope('not_found_page', 'No page with that title exists on this wiki.', [], [], []);
-  if (isLeak(page.title) || !(mentionsGtaVi(page.title) || mentionsGtaVi(page.wikitext))) {
-    return envelope('no_verified_results', 'That page exists but is outside what this server returns.', [], [], [
+  const outside = (): Envelope<PageResult> =>
+    envelope('no_verified_results', 'That page exists but is outside what this server returns.', [], [], [
       notice('coverage_gap', 'The page does not establish that it is about Grand Theft Auto VI, or it is leak material, so it is not returned.'),
     ]);
+  if (isLeak(page.title)) return outside();
+  // A category that names the game counts as the title or text naming it, as in search. A failed read establishes nothing.
+  let categoriesStaleSince: string | null = null;
+  if (!(mentionsGtaVi(page.title) || mentionsGtaVi(page.wikitext))) {
+    const cats = await categories(deps.http, source, [page.title]);
+    if (cats.kind === 'unavailable') return unavailable('The page', cats);
+    if (!(cats.byTitle.get(page.title) ?? []).some(mentionsGtaVi)) return outside();
+    categoriesStaleSince = cats.stale ? cats.retrieved_at : null;
   }
   if (!titleAllowed(registry, source, page.title, args.spoilers)) return withheldOnly();
   const scope = sectionScope(splitSections(page.wikitext), args.section);
@@ -258,6 +266,7 @@ export async function getPage(
   };
   const notices = [
     ...staleNotices(page.stale, page.retrieved_at),
+    ...(categoriesStaleSince !== null && !page.stale ? staleNotices(true, categoriesStaleSince) : []),
     ...(truncated ? [notice('truncated', `Text was cut at ${MAX_PAGE_CHARS} characters. Ask for a section to read further.`)] : []),
     ...(allowed.length < scope.length ? [notice('spoiler_withheld')] : []),
   ];

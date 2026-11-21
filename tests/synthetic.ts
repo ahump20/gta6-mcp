@@ -56,7 +56,7 @@ export function synManifest(overrides: Partial<Manifest> = {}): Manifest {
       { host: 'www.polygon.com', role: 'guide', purpose: 'SYNTHETIC' },
       { host: 'www.rockstargames.com', role: 'official', purpose: 'SYNTHETIC' },
     ],
-    binding: { algorithm: 'sha256', normalization: 'collapse-whitespace-v1', scope: 'reviewed_text_only' },
+    binding: { algorithm: 'sha256', normalization: 'collapse-unicode-whitespace-v2', scope: 'reviewed_text_only' },
     confirmations: [synClaim()],
     conflict_groups: [],
     resolutions: [],

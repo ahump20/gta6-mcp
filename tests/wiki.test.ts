@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { categories, fetchPage, pageUrl, search } from '../src/wiki.js';
+import { MAX_CATEGORY_BATCHES, categories, fetchPage, pageUrl, search } from '../src/wiki.js';
 import { FETCHED_AT, down, fakeHttp, fixtureJson, okJson } from './helpers.js';
 
 const SEARCH_LIMIT = 10;
@@ -108,5 +108,42 @@ describe('categories', () => {
     const http = fakeHttp([]);
     expect(await categories(http, 'fandom', [])).toMatchObject({ kind: 'ok' });
     expect(http.requests).toHaveLength(0);
+  });
+
+  // SYNTHETIC responses: the continuation shape follows the MediaWiki API documentation, not a capture.
+  it('follows clcontinue and merges the batches per title', async () => {
+    const first = { continue: { clcontinue: '7|Next', continue: '||' }, query: { pages: [{ title: 'Vice Beach', categories: [{ title: 'Category:Beaches' }] }] } };
+    const second = { batchcomplete: true, query: { pages: [{ title: 'Vice Beach', categories: [{ title: 'Category:Locations in GTA VI' }] }] } };
+    const http = fakeHttp([
+      { match: ['prop=categories', 'clcontinue=7|Next', 'continue=||'], result: okJson(second) },
+      { match: ['prop=categories'], result: okJson(first) },
+    ]);
+    const result = await categories(http, 'fandom', ['Vice Beach']);
+    expect(result.kind === 'ok' && result.byTitle.get('Vice Beach')).toEqual(['Beaches', 'Locations in GTA VI']);
+    expect(http.requests).toHaveLength(2);
+  });
+
+  it('stops following continuation at a fixed bound and reports the list as unread, not as complete', async () => {
+    const endless = { continue: { clcontinue: '7|Next', continue: '||' }, query: { pages: [{ title: 'Vice Beach', categories: [{ title: 'Category:Beaches' }] }] } };
+    const http = fakeHttp([{ match: ['prop=categories'], result: okJson(endless) }]);
+    expect(await categories(http, 'fandom', ['Vice Beach'])).toMatchObject({ kind: 'unavailable', reason: 'api_error' });
+    expect(http.requests).toHaveLength(MAX_CATEGORY_BATCHES);
+  });
+
+  it('says when the categories came from an expired cache entry', async () => {
+    const body = { query: { pages: [{ title: 'Vice Beach', categories: [{ title: 'Category:Beaches' }] }] } };
+    const stale = await categories(fakeHttp([{ match: ['prop=categories'], result: okJson(body, true) }]), 'fandom', ['Vice Beach']);
+    expect(stale).toMatchObject({ kind: 'ok', stale: true, retrieved_at: '2026-11-21T10:19:00.000Z' });
+    const fresh = await categories(fakeHttp([{ match: ['prop=categories'], result: okJson(body) }]), 'fandom', ['Vice Beach']);
+    expect(fresh).toMatchObject({ kind: 'ok', stale: false });
+  });
+
+  it('is unavailable when a later batch fails', async () => {
+    const first = { continue: { clcontinue: '7|Next', continue: '||' }, query: { pages: [{ title: 'Vice Beach' }] } };
+    const http = fakeHttp([
+      { match: ['prop=categories', 'clcontinue='], result: down() },
+      { match: ['prop=categories'], result: okJson(first) },
+    ]);
+    expect(await categories(http, 'fandom', ['Vice Beach'])).toMatchObject({ kind: 'unavailable', reason: 'timeout' });
   });
 });

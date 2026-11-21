@@ -136,7 +136,9 @@ describe('get_page', () => {
   });
 
   it('refuses a page that is not about GTA VI', async () => {
-    const out = await getPage({ title: 'Cheats in GTA 5', source: 'fandom', spoilers: 'full' }, real([{ match: ['action=parse'], result: okJson(fixtureJson('real/fandom-parse-redirect-cheats-gta-5.json')) }]));
+    // The page is a real capture; its categories response is SYNTHETIC and names no game.
+    const noGameCategories: Route = { match: ['prop=categories'], result: okJson({ query: { pages: [] } }) };
+    const out = await getPage({ title: 'Cheats in GTA 5', source: 'fandom', spoilers: 'full' }, real([{ match: ['action=parse'], result: okJson(fixtureJson('real/fandom-parse-redirect-cheats-gta-5.json')) }, noGameCategories]));
     expect(out).toMatchObject({ status: 'no_verified_results', results: [] });
     expect(types(out)).toContain('coverage_gap');
   });
@@ -158,6 +160,61 @@ describe('get_page', () => {
     const stale = okJson(fixtureJson('real/fandom-parse-cheats-gta-vi.json'), true);
     const out = await getPage({ title: 'Cheats in GTA VI', source: 'fandom', spoilers: 'full' }, real([{ match: ['action=parse'], result: stale }]));
     expect(out.notices.find((n) => n.type === 'stale_cache')?.message).toContain('2026-11-21T10:19:00.000Z');
+  });
+});
+
+describe('get_page category applicability', () => {
+  // SYNTHETIC page and categories: neither the title nor the text names the game.
+  const beach: Route = { match: ['action=parse'], result: okJson(page('Vice Beach', 'A beach.\n==Geography==\nSand BEACHMARKER7Q.')) };
+  const inCategory = (...names: string[]): Route => ({
+    match: ['prop=categories', 'titles=Vice Beach'],
+    result: okJson({ query: { pages: [{ title: 'Vice Beach', categories: names.map((name) => ({ title: `Category:${name}` })) }] } }),
+  });
+  const ask = (routes: readonly Route[], spoilers: 'hints' | 'discovery' | 'full', title = 'Vice Beach'): ReturnType<typeof getPage> =>
+    getPage({ title, source: 'fandom', spoilers }, real(routes));
+
+  it('accepts a page that only its category ties to GTA VI', async () => {
+    const out = await ask([beach, inCategory('Beaches', 'Locations in GTA VI')], 'full');
+    expect(out.status).toBe('ok');
+    expect(out.results[0]?.text).toContain('BEACHMARKER7Q');
+  });
+
+  it.each(['hints', 'discovery'] as const)('still withholds a category-qualified page with no registry clearance at %s', async (level) => {
+    const out = await ask([beach, inCategory('Locations in GTA VI')], level);
+    expect(out).toMatchObject({ status: 'partial', results: [], sources: [] });
+    expect(types(out)).toEqual(['spoiler_withheld']);
+    expect(`${JSON.stringify(out)}${renderText(out)}`).not.toContain('BEACHMARKER7Q');
+  });
+
+  it('adds a stale notice when the categories that qualify the page came from an expired cache entry', async () => {
+    const body = { query: { pages: [{ title: 'Vice Beach', categories: [{ title: 'Category:Locations in GTA VI' }] }] } };
+    const out = await ask([beach, { match: ['prop=categories'], result: okJson(body, true) }], 'full');
+    expect(out.status).toBe('ok');
+    expect(types(out)).toContain('stale_cache');
+    expect(types(await ask([beach, inCategory('Locations in GTA VI')], 'full'))).not.toContain('stale_cache');
+  });
+
+  it('refuses a page whose categories name another game', async () => {
+    expect((await ask([beach, inCategory('Locations in GTA V')], 'full')).status).toBe('no_verified_results');
+  });
+
+  it('reports the wiki as unreadable, and returns nothing, when the categories cannot be read', async () => {
+    const out = await ask([beach, { match: ['prop=categories'], result: down() }], 'full');
+    expect(out).toMatchObject({ status: 'upstream_unavailable', results: [], sources: [] });
+    expect(`${JSON.stringify(out)}${renderText(out)}`).not.toContain('BEACHMARKER7Q');
+  });
+
+  it('refuses a leak page without reading its categories', async () => {
+    const deps = real([{ match: ['action=parse'], result: okJson(page('Vice Beach/Leaks', 'A beach.')) }, inCategory('Locations in GTA VI')]);
+    const out = await getPage({ title: 'Vice Beach/Leaks', source: 'fandom', spoilers: 'full' }, deps);
+    expect(out.status).toBe('no_verified_results');
+    expect((deps.http as ReturnType<typeof fakeHttp>).requests).toHaveLength(1);
+  });
+
+  it('reads no categories when the text already names GTA VI', async () => {
+    const deps = real([cheatsPage]);
+    await getPage({ title: 'Cheats in GTA VI', source: 'fandom', spoilers: 'full' }, deps);
+    expect((deps.http as ReturnType<typeof fakeHttp>).requests).toHaveLength(1);
   });
 });
 

@@ -107,7 +107,7 @@ describe('decisions with review-only and unpermitted evidence', () => {
 describe('shipped manifest, revision 2', () => {
   it('names its fingerprint normalisation and carries a community registry', () => {
     const manifest = loadManifest();
-    expect(manifest.binding).toEqual({ algorithm: 'sha256', normalization: 'collapse-whitespace-v1', scope: 'reviewed_text_only' });
+    expect(manifest.binding).toEqual({ algorithm: 'sha256', normalization: 'collapse-unicode-whitespace-v2', scope: 'reviewed_text_only' });
     expect(Array.isArray(manifest.community_reports)).toBe(true);
     expect(validatePolicy(manifest)).toEqual([]);
   });

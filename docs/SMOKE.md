@@ -27,6 +27,6 @@ npm run smoke -- --out report.json -- node /path/to/node_modules/gta6-mcp/dist/i
 | `legacy_protocol_pass` | true (negotiated `2025-11-25`) |
 | `modern_protocol_pass` | true (negotiated `2026-07-28`) |
 | `provider_statuses` | gta.wiki: never requested. gta.fandom.com: not permitted, no request made. en.wikipedia.org: reachable. |
-| `gameplay_coverage` | 0 confirmed cheats. 3 reports returned with `include_unverified` (the two Attack Force variants and one community report). 1 community Easter egg report at `discovery`. |
+| `gameplay_coverage` | 0 confirmed cheats. 22 reports returned with `include_unverified` (the two Attack Force variants and 20 community text claims). 1 community Easter egg report at `discovery`. |
 
-The same test passed against the packed tarball installed into an empty folder with an empty npm cache under Node 20. After a release is published, the same test is run against the published package and its record is attached to the release by hand. For v0.1.0: [verification log](https://github.com/ahump20/gta6-mcp/releases/download/v0.1.0/gta6-mcp-0.1.0-verification.json) and [wire logs](https://github.com/ahump20/gta6-mcp/releases/download/v0.1.0/gta6-mcp-0.1.0-wire-logs.tar.gz).
+The same test is run against the packed tarball, fetched by `npx` with an empty npm cache under Node 20, before a tag is made. After a release is published, it is run again against the published package and its record is attached to the release by hand. For v0.1.0: [verification log](https://github.com/ahump20/gta6-mcp/releases/download/v0.1.0/gta6-mcp-0.1.0-verification.json) and [wire logs](https://github.com/ahump20/gta6-mcp/releases/download/v0.1.0/gta6-mcp-0.1.0-wire-logs.tar.gz).
