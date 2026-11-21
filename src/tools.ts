@@ -221,10 +221,10 @@ function sectionScope(sections: readonly Section[], wanted: string | undefined):
 
 const sectionWikitext = (s: Section): string => (s.heading === '' ? s.wikitext : `${'='.repeat(s.level)}${s.heading}${'='.repeat(s.level)}\n${s.wikitext}`);
 
-// A category that names the game counts as the title or text naming it, as in search. A failed read establishes nothing.
-async function inGtaViCategory(http: Http, provider: Provider, title: string): Promise<boolean> {
+// A category that names the game counts as the title or text naming it, as in search. A failed read is passed back, since it establishes nothing.
+async function inGtaViCategory(http: Http, provider: Provider, title: string): Promise<boolean | Unavailable> {
   const cats = await categories(http, provider, [title]);
-  return cats.kind === 'ok' && (cats.byTitle.get(title) ?? []).some(mentionsGtaVi);
+  return cats.kind === 'ok' ? (cats.byTitle.get(title) ?? []).some(mentionsGtaVi) : cats;
 }
 
 export async function getPage(
@@ -241,10 +241,15 @@ export async function getPage(
   const page = await fetchPage(deps.http, source, args.title);
   if (page.kind === 'unavailable') return unavailable('The page', page);
   if (page.kind === 'missing') return envelope('not_found_page', 'No page with that title exists on this wiki.', [], [], []);
-  if (isLeak(page.title) || !(mentionsGtaVi(page.title) || mentionsGtaVi(page.wikitext) || (await inGtaViCategory(deps.http, source, page.title)))) {
-    return envelope('no_verified_results', 'That page exists but is outside what this server returns.', [], [], [
+  const outside = (): Envelope<PageResult> =>
+    envelope('no_verified_results', 'That page exists but is outside what this server returns.', [], [], [
       notice('coverage_gap', 'The page does not establish that it is about Grand Theft Auto VI, or it is leak material, so it is not returned.'),
     ]);
+  if (isLeak(page.title)) return outside();
+  if (!(mentionsGtaVi(page.title) || mentionsGtaVi(page.wikitext))) {
+    const byCategory = await inGtaViCategory(deps.http, source, page.title);
+    if (typeof byCategory !== 'boolean') return unavailable('The page', byCategory);
+    if (!byCategory) return outside();
   }
   if (!titleAllowed(registry, source, page.title, args.spoilers)) return withheldOnly();
   const scope = sectionScope(splitSections(page.wikitext), args.section);

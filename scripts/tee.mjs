@@ -8,6 +8,9 @@ import { appendFileSync, realpathSync } from 'node:fs';
 import { StringDecoder } from 'node:string_decoder';
 import { fileURLToPath } from 'node:url';
 
+/** How long the recorder waits for the child's output to end after the child has exited. */
+const LINGER_MS = 1000;
+
 /** Splits a byte stream into lines. A character split across chunks stays whole, and end() emits a last line that has no newline. */
 export function lineSplitter(onLine) {
   const decoder = new StringDecoder('utf8');
@@ -63,9 +66,18 @@ function main() {
       child.kill(signal);
     });
   }
-  // "close" follows the end of the child's stdout, so its last line is recorded before the exit.
-  child.on('close', (code, signal) => {
+  let finished = false;
+  const finish = (code, signal) => {
+    if (finished) return;
+    finished = true;
     record({ event: 'exit', code, signal });
     process.exit(code ?? 0);
+  };
+  // "close" follows the end of the child's stdout, so its last line is recorded before the exit.
+  child.on('close', finish);
+  // Something the child started (npx starts the server) can outlive it and hold stdout open, so "close" may never come.
+  child.on('exit', (code, signal) => {
+    child.stdin.end();
+    setTimeout(() => finish(code, signal), LINGER_MS).unref();
   });
 }

@@ -1,3 +1,8 @@
+import { spawnSync } from 'node:child_process';
+import { mkdtempSync, readFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 interface Splitter {
@@ -31,4 +36,21 @@ describe('wire recorder line splitting', () => {
   it('emits nothing extra when the stream ends on a newline', () => {
     expect(collect([Buffer.from('one\n')])).toEqual(['one']);
   });
+});
+
+describe('wire recorder shutdown', () => {
+  const GIVE_UP_MS = 10_000;
+
+  it('exits once the server has gone, even while something the server started still holds its output open', () => {
+    const log = join(mkdtempSync(join(tmpdir(), 'gta6-tee-')), 'wire.jsonl');
+    // The shell exits at once; the sleep it leaves behind keeps the shell's stdout open.
+    const run = spawnSync(process.execPath, [fileURLToPath(script), log, '--', 'sh', '-c', 'sleep 15 & exit 0'], {
+      input: '',
+      stdio: ['pipe', 'pipe', 'ignore'],
+      timeout: GIVE_UP_MS,
+    });
+    expect(run.error).toBeUndefined();
+    expect(run.status).toBe(0);
+    expect(readFileSync(log, 'utf8')).toContain('"event":"exit"');
+  }, GIVE_UP_MS * 2);
 });

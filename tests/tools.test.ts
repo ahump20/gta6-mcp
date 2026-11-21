@@ -136,7 +136,9 @@ describe('get_page', () => {
   });
 
   it('refuses a page that is not about GTA VI', async () => {
-    const out = await getPage({ title: 'Cheats in GTA 5', source: 'fandom', spoilers: 'full' }, real([{ match: ['action=parse'], result: okJson(fixtureJson('real/fandom-parse-redirect-cheats-gta-5.json')) }]));
+    // The page is a real capture; its categories response is SYNTHETIC and names no game.
+    const noGameCategories: Route = { match: ['prop=categories'], result: okJson({ query: { pages: [] } }) };
+    const out = await getPage({ title: 'Cheats in GTA 5', source: 'fandom', spoilers: 'full' }, real([{ match: ['action=parse'], result: okJson(fixtureJson('real/fandom-parse-redirect-cheats-gta-5.json')) }, noGameCategories]));
     expect(out).toMatchObject({ status: 'no_verified_results', results: [] });
     expect(types(out)).toContain('coverage_gap');
   });
@@ -188,8 +190,10 @@ describe('get_page category applicability', () => {
     expect((await ask([beach, inCategory('Locations in GTA V')], 'full')).status).toBe('no_verified_results');
   });
 
-  it('refuses the page when its categories cannot be read', async () => {
-    expect((await ask([beach, { match: ['prop=categories'], result: down() }], 'full')).status).toBe('no_verified_results');
+  it('reports the wiki as unreadable, and returns nothing, when the categories cannot be read', async () => {
+    const out = await ask([beach, { match: ['prop=categories'], result: down() }], 'full');
+    expect(out).toMatchObject({ status: 'upstream_unavailable', results: [], sources: [] });
+    expect(`${JSON.stringify(out)}${renderText(out)}`).not.toContain('BEACHMARKER7Q');
   });
 
   it('refuses a leak page without reading its categories', async () => {
