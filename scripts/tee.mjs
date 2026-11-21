@@ -3,6 +3,7 @@
 // Usage: node scripts/tee.mjs <logfile> -- <command> [args...]
 // The wrapped server's stdout still reaches the client untouched.
 import { spawn } from 'node:child_process';
+import { homedir } from 'node:os';
 import { appendFileSync } from 'node:fs';
 
 const [logFile, separator, command, ...args] = process.argv.slice(2);
@@ -13,7 +14,8 @@ if (!logFile || separator !== '--' || !command) {
 
 const child = spawn(command, args, { stdio: ['pipe', 'pipe', 'inherit'] });
 const record = (entry) => appendFileSync(logFile, `${JSON.stringify({ at: new Date().toISOString(), wrapper_pid: process.pid, ...entry })}\n`);
-record({ event: 'spawn', command: [command, ...args].join(' ') });
+// Logs are published, so the home directory is reduced to a placeholder.
+record({ event: 'spawn', command: [command, ...args].join(' ').replaceAll(homedir(), '~') });
 
 function tap(stream, direction, forward) {
   let buffer = '';
