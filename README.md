@@ -12,7 +12,7 @@ Read this before installing. It is deliberately strict.
 
 - **Confirmed cheats: zero.** No cheat has met the confirmation rules yet. The published lists are reports, and the guides that print them do not say they tested each code.
 - **One recorded dispute.** Attack Force is printed with 8 inputs by GameSpot and 9 by PC Gamer. Both are returned as reports, neither as a working code.
-- **Two reviewed community reports**, as links with a one-line description: a video whose description lists the 9-input Attack Force sequence, and a video reporting an Easter egg at a radio tower. Neither is confirmed.
+- **Two reviewed community reports**, as links with a one-line description: a video whose description lists the 9-input Attack Force sequence, and a video whose title reports an Easter egg at a radio tower. Neither is confirmed, and no video frames were inspected.
 - **Wikipedia** for background on the game.
 - **The GTA Wiki is not read out of the box.** Both of its hosts restrict automated access:
   - `gta.wiki` (Weird Gloop) does not allow automated use without prior consent. This server never requests it.
@@ -25,13 +25,15 @@ Details and dated evidence for every line above are in [docs/VERIFICATION.md](do
 Requires Node.js 20 or newer.
 
 ```sh
-claude mcp add --scope local gta6 -- npx -y github:ahump20/gta6-mcp#v0.1.0
+claude mcp add --scope local gta6 -- npx -y https://github.com/ahump20/gta6-mcp/releases/download/v0.1.0/gta6-mcp-0.1.0.tgz
 ```
 
-Or from the release tarball:
+That installs the release file and works on every supported Node version. Its SHA-256 checksum is published beside it on the release page.
+
+Straight from the tagged source, which builds on install, also works, but only with npm 11 or newer. On npm 10, which ships with Node 20, npm fails with "GitFetcher requires an Arborist constructor to pack a tarball":
 
 ```sh
-claude mcp add --scope local gta6 -- npx -y https://github.com/ahump20/gta6-mcp/releases/download/v0.1.0/gta6-mcp-0.1.0.tgz
+claude mcp add --scope local gta6 -- npx -y github:ahump20/gta6-mcp#v0.1.0
 ```
 
 The package is published to GitHub Releases only, not to the npm registry. It needs no account, key or hosted service.

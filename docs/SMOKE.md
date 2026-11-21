@@ -29,4 +29,4 @@ npm run smoke -- --out report.json -- node /path/to/node_modules/gta6-mcp/dist/i
 | `provider_statuses` | gta.wiki: never requested. gta.fandom.com: not permitted, no request made. en.wikipedia.org: reachable. |
 | `gameplay_coverage` | 0 confirmed cheats. 3 reports returned with `include_unverified` (the two Attack Force variants and one community report). 1 community Easter egg report at `discovery`. |
 
-The same test passed against the packed tarball installed into an empty folder with an empty npm cache under Node 20. The run against the published release is attached to the release as its verification log.
+The same test passed against the packed tarball installed into an empty folder with an empty npm cache under Node 20. After a release is published, the same test is run against the published package and its record is attached to the release by hand.

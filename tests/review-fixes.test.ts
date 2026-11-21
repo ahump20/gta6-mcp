@@ -103,3 +103,54 @@ describe('easter_eggs topic filter', () => {
     expect(matching).toEqual(other);
   });
 });
+
+import { ManifestSchema } from '../src/evidence.js';
+import { getPage } from '../src/tools.js';
+import { synClaim, synVideoClaim, synVideoEvidence } from './synthetic.js';
+
+describe('second review round', () => {
+  const policy = (patch: Parameters<typeof synManifest>[0]): string => validatePolicy(synManifest(patch), SYNTHETIC_OK).join(' ');
+
+  it('requires a time-zone offset on a community post time', () => {
+    expect(policy({ community_reports: [synReport({ posted_at: '2026-11-19T00:30:00' })] })).toContain('offset');
+  });
+
+  it('does not count one video URL twice', () => {
+    const same = synVideoEvidence(2, { url: synVideoEvidence(1).url });
+    expect(policy({ confirmations: [synVideoClaim([synVideoEvidence(1), same])] })).toContain('no sufficient approval basis');
+  });
+
+  it('requires a cited registry video to carry its own frame review', () => {
+    const lead = synReport({ id: 'syn-lead', url: synVideoEvidence(1).url, evidence_type: 'gameplay_video', video_review: null });
+    expect(policy({ confirmations: [synVideoClaim([synVideoEvidence(1), synVideoEvidence(2)])], community_reports: [lead] })).toContain('community report');
+  });
+
+  it('rejects extra fields inside a community review record', () => {
+    const report = synReport();
+    const smuggled = { ...synManifest(), community_reports: [{ ...report, review: { ...report.review, post_text: 'copied' } }] };
+    expect(ManifestSchema.safeParse(smuggled).success).toBe(false);
+  });
+
+  it('keeps the Fandom notice when no Easter egg matches a topic', async () => {
+    const off: Route = { match: ['gta.fandom.com'], result: { ok: false, reason: 'not_permitted', detail: 'simulated' } };
+    const out = await easterEggs({ topic: 'zzzz', spoilers: 'discovery' }, { http: fakeHttp([off]), manifest: loadManifest() });
+    expect(out.results).toEqual([]);
+    expect(out.notices.some((n) => n.message.includes('GTA6_MCP_FANDOM_PERMISSION'))).toBe(true);
+  });
+
+  it('points to Wikipedia when gta.wiki is asked for', async () => {
+    const out = await getPage({ title: 'T', source: 'gtawiki', spoilers: 'hints' }, { http: fakeHttp([]), manifest: loadManifest() });
+    expect(out.notices[0]?.message).toContain('wikipedia');
+  });
+
+  it('does not show an unreviewed redirect alias below full', async () => {
+    const captured = fixtureJson('real/fandom-parse-cheats-gta-vi.json') as { parse: Record<string, unknown> };
+    const redirected = { parse: { ...captured.parse, redirects: [{ from: 'ALIASMARKER7Q', to: 'Cheats in GTA VI' }] } };
+    const deps: Deps = { http: fakeHttp([{ match: ['gta.fandom.com'], result: okJson(redirected) }]), manifest: loadManifest() };
+    const hints = await getPage({ title: 'ALIASMARKER7Q', source: 'fandom', spoilers: 'hints' }, deps);
+    expect(hints.status).toBe('ok');
+    expect(`${JSON.stringify(hints)}${renderText(hints)}`).not.toContain('ALIASMARKER7Q');
+    const full = await getPage({ title: 'ALIASMARKER7Q', source: 'fandom', spoilers: 'full' }, deps);
+    expect(full.summary).toContain('ALIASMARKER7Q');
+  });
+});

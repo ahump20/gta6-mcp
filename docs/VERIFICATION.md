@@ -270,12 +270,12 @@ What could be read on 2026-11-21:
 | X | Not read. The search tool returned HTTP 402, out of credits. |
 | YouTube | 22 leads captured by a helper agent through a third-party YouTube data plugin. How that plugin obtains its data was not checked against YouTube's API terms. Its notes are in `docs/research/community-leads-youtube-x.md`. |
 
-The reviewer then opened five watch pages in a browser at 2026-11-21T11:10Z and read each page's own metadata (title, channel, upload time, description). Frames were not inspected for any video.
+The reviewer then opened five watch pages in a browser at 2026-11-21T11:10Z and read each page's own metadata (title, channel, upload time and the start of the description), and at 11:36Z read the two registered videos' descriptions in full. Frames were not inspected for any video.
 
 | Video | Channel | Upload time on the page | UTC | Decision |
 |---|---|---|---|---|
-| https://www.youtube.com/watch?v=Hj23ZNatmZQ | @JOETHzz | 2026-11-18T19:00:22-08:00 | 2026-11-19T03:00:22Z | Registered. The description lists a nine-step D-pad sequence for Attack Force, the same as the PC Gamer variant. No test is claimed. |
-| https://www.youtube.com/watch?v=Mj_beVHUJE4 | @MrDalekJD | 2026-11-18T19:50:41-08:00 | 2026-11-19T03:50:41Z | Registered as an unverified Easter egg report, shown from `discovery` up because its description names a location. |
+| https://www.youtube.com/watch?v=Hj23ZNatmZQ | @JOETHzz | 2026-11-18T19:00:22-08:00 | 2026-11-19T03:00:22Z | Registered. The description lists a nine-step D-pad sequence for Attack Force, the same as the PC Gamer variant. The description mentions no test; what the footage shows was not checked. |
+| https://www.youtube.com/watch?v=Mj_beVHUJE4 | @MrDalekJD | 2026-11-18T19:50:41-08:00 | 2026-11-19T03:50:41Z | Registered as an unverified Easter egg report, shown from `discovery` up because it names a location. The title claims an Easter egg with a secret cutscene; the description says the video is about the climb and the view, and only that "reports mention a bird nest easter egg nearby". A weak lead, labelled as one. |
 | https://www.youtube.com/watch?v=C7wrTvoDnww | @GoldxLeaf | 2026-11-18T17:55:55-08:00 | 2026-11-19T01:55:55Z | Not registered. A general guide whose description says it is captured footage with no commentary; it makes no single claim to register. A candidate for frame inspection. |
 | https://www.youtube.com/watch?v=c-UFvg-X8O0 | @JackedBillGaming | 2026-11-18T17:54:32-08:00 | 2026-11-19T01:54:32Z | Not registered. Its description calls the codes "reported". |
 | https://www.youtube.com/watch?v=a78-WeEiTRs | @dpjsc08 | 2026-11-18T15:19:24-08:00 | 2026-11-18T23:19:24Z | Excluded by the date rule, applied in UTC: it was posted 41 minutes before 2026-11-19. Its description is the only one that says the uploader demonstrates the codes. |
@@ -295,3 +295,25 @@ Two Claude Code sessions worked on this release. The first, on an earlier versio
 | A wiki to supply gameplay text at run time | Neither GTA Wiki host is open | Out of the box the server reads Wikipedia, its recorded conflict and its reviewed community reports. |
 | Community posts from 2026-11-19 onward | Upload times carry a zone offset | The cutoff is applied in UTC and each time is stored in UTC. |
 | A re-checkable binding for confirming evidence | No guide host permits automated re-reading (section 10) | Such evidence would be offline-reviewed only and its claims stay unverified, as the brief directs. |
+
+## 13. Install routes, tested before the tag
+
+Tested on 2026-11-21 against the pull request's head commit, each from an empty npm cache.
+
+| Route | Node 20.20.2, npm 10.8.2 | Node 24.5.0, npm 11.18.0 |
+|---|---|---|
+| `npx -y <tarball URL>` (the packed release file, served over HTTP locally) | Starts in about 2 seconds cold. The live protocol test passes through it on both eras. | Not run. |
+| `npx -y github:ahump20/gta6-mcp#<commit>` (builds on install) | Fails: "GitFetcher requires an Arborist constructor to pack a tarball". | Starts in about 9 seconds cold and about 7 on later starts. |
+
+The README therefore leads with the release file. The same two routes are tested again against the published release.
+
+## 14. Review findings left open in v0.1.0
+
+Two automated reviewers read the pull request. The findings that touched evidence rulings, spoiler clearance, data strictness and crashes were fixed with tests. These were read and left for a later version:
+
+- A wiki error returned with HTTP 200 is cached like a success, so a short wiki read-only window can replace a good cached copy for the cache's lifetime. This affects availability, not correctness.
+- Cache entries are not separated by response type; an invalid redirect target has no typed failure; `Retry-After` given as a date is not honoured; unread response bodies are not released early.
+- A page that qualifies only by its category is not accepted by `get_page`; only the first batch of categories is read.
+- Whitespace normalisation for fingerprints covers ASCII whitespace only. Mixed video and guide evidence has no stated binding rule. A resolution cannot rest on a video pair.
+- The wire recorder used by the live test can split a multi-byte character across chunks and can miss a final unterminated line.
+

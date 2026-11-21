@@ -101,9 +101,9 @@
       "url": "https://www.youtube.com/watch?v=Hj23ZNatmZQ",
       "author_handle": "@JOETHzz",
       "posted_at": "2026-11-19T03:00:22Z",
-      "captured_at": "2026-11-21T11:10:08Z",
+      "captured_at": "2026-11-21T11:36:52Z",
       "evidence_type": "text_claim",
-      "description": "Thai-language cheat video. Its description lists a nine-step D-pad sequence for Attack Force, the same as the PC Gamer variant. It names PS5 and Xbox Series and claims no test.",
+      "description": "Thai-language cheat video. Its description lists a nine-step D-pad sequence for Attack Force, the same as the PC Gamer variant, for PS5 and Xbox Series. The description mentions no test. Frames not inspected.",
       "min_level": "hints",
       "subject": {
         "kind": "cheat",
@@ -128,7 +128,7 @@
           "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session finishing gta6-mcp v0.1.0",
           "type": "ai_agent"
         },
-        "reviewed_at": "2026-11-21T11:12:00Z"
+        "reviewed_at": "2026-11-21T11:38:00Z"
       }
     },
     {
@@ -137,9 +137,9 @@
       "url": "https://www.youtube.com/watch?v=Mj_beVHUJE4",
       "author_handle": "@MrDalekJD",
       "posted_at": "2026-11-19T03:50:41Z",
-      "captured_at": "2026-11-21T11:10:15Z",
+      "captured_at": "2026-11-21T11:36:54Z",
       "evidence_type": "gameplay_video",
-      "description": "Video titled as the first Easter egg found, with a secret cutscene. Its description places the egg at the top of a city radio tower and says the video shows the climb. Frames were not inspected.",
+      "description": "Title claims a first Easter egg with a secret cutscene. The description says the video is a climb of the tallest radio tower and that reports mention a bird-nest egg nearby; the egg is not its stated focus. Frames not inspected.",
       "min_level": "discovery",
       "subject": {
         "kind": "easter_egg",
@@ -152,7 +152,7 @@
           "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session finishing gta6-mcp v0.1.0",
           "type": "ai_agent"
         },
-        "reviewed_at": "2026-11-21T11:12:00Z"
+        "reviewed_at": "2026-11-21T11:38:00Z"
       }
     }
   ],

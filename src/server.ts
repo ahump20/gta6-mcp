@@ -42,7 +42,7 @@ export function createServer(deps: Deps): McpServer {
     'search_gta6',
     {
       title: 'Search GTA VI wikis',
-      description: `Search the GTA Wiki (gameplay) and Wikipedia (background) for Grand Theft Auto VI. Returns ranked hits with links and labels. Wiki content is source-reported, not confirmed. Unreviewed titles and snippets are withheld unless spoilers is "full". ${CARRY}`,
+      description: `Search the approved wikis for Grand Theft Auto VI: Wikipedia (background), and the GTA Wiki on Fandom (gameplay) only where the operator has recorded Fandom's permission. Returns ranked hits with links and labels. Wiki content is source-reported, not confirmed. Unreviewed titles and snippets are withheld unless spoilers is "full". ${CARRY}`,
       inputSchema: SearchInput,
       outputSchema: SearchOutput,
       annotations: READ_ONLY,

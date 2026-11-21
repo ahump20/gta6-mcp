@@ -180,7 +180,7 @@ const CommunityReport = z.strictObject({
   min_level: SpoilerLevel,
   subject: ReportSubject,
   video_review: VideoReview.nullable(),
-  review: z.object({ reviewer: Reviewer, reviewed_at: z.string().min(1) }),
+  review: z.strictObject({ reviewer: z.strictObject({ identity: z.string().min(1), type: z.enum(['ai_agent', 'human']) }), reviewed_at: z.string().min(1) }),
 });
 export type CommunityReport = z.infer<typeof CommunityReport>;
 
@@ -220,6 +220,7 @@ const OWN_TEST_REQUIRED = ['input', 'effect', 'platform'] as const;
 /** Hosts of community posts. They can carry frame-inspected gameplay video and nothing else, and are never fetched. */
 const SOCIAL_HOSTS: ReadonlySet<string> = new Set(['www.reddit.com', 'x.com', 'www.youtube.com', 'youtu.be', 'www.tiktok.com']);
 const LAUNCH_DAY = '2026-11-19';
+const HAS_OFFSET = /(Z|[+-]\d{2}:\d{2})$/;
 
 /** Collapses all whitespace runs to single spaces. */
 export function normaliseText(text: string): string {
@@ -272,7 +273,8 @@ function evidenceErrors(claim: Claim, recorded: ReadonlySet<string>, registry: R
     if (host === null) return [`${where} is not an HTTPS URL`];
     const isVideo = item.evidence_type === 'gameplay_video';
     const report = registry.get(item.url);
-    if (report && !(isVideo && report.evidence_type === 'gameplay_video')) {
+    const reportFramesOk = report?.evidence_type === 'gameplay_video' && report.video_review?.review_basis === 'frames' && report.video_review.continuous_footage;
+    if (report && !(isVideo && reportFramesOk)) {
       return [`${where} is a community report and cannot be used as an approval`];
     }
     if (SOCIAL_HOSTS.has(host)) {
@@ -298,6 +300,7 @@ export function isVideoBacked(claim: Claim): boolean {
 
 function communityErrors(manifest: Manifest): string[] {
   return manifest.community_reports.flatMap((report) => {
+    if (!HAS_OFFSET.test(report.posted_at)) return [`${report.id}: posted_at needs Z or a UTC offset, so the cutoff means the same everywhere`];
     const posted = Date.parse(report.posted_at);
     if (Number.isNaN(posted)) return [`${report.id}: posted_at is not an absolute time`];
     return posted < Date.parse(`${LAUNCH_DAY}T00:00:00Z`) ? [`${report.id}: posted before ${LAUNCH_DAY}, so it cannot be about the released game`] : [];
@@ -328,6 +331,7 @@ function hasApprovalBasis(claim: Claim): boolean {
   const origins = new Set(claim.evidence.filter((item) => item.evidence_type === 'independent_report').map((item) => item.origin));
   const videos = claim.evidence.filter(meetsVideoRule);
   const videoPair =
+    new Set(videos.map((item) => item.url)).size >= MIN_INDEPENDENT &&
     new Set(videos.map((item) => item.origin)).size >= MIN_INDEPENDENT &&
     new Set(videos.map((item) => item.video?.account)).size >= MIN_INDEPENDENT;
   return official || ownTest || origins.size >= MIN_INDEPENDENT || videoPair;
