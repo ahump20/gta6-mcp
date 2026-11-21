@@ -54,10 +54,10 @@ function main() {
       lines.write(chunk);
     });
     stream.on('end', () => lines.end());
+    return lines;
   }
 
-  tap(process.stdin, 'client_to_server', child.stdin);
-  tap(child.stdout, 'server_to_client', process.stdout);
+  const taps = [tap(process.stdin, 'client_to_server', child.stdin), tap(child.stdout, 'server_to_client', process.stdout)];
   process.stdin.on('end', () => child.stdin.end());
   // A client may end a probe process with a signal instead of closing stdin.
   for (const signal of ['SIGTERM', 'SIGINT', 'SIGHUP']) {
@@ -70,6 +70,8 @@ function main() {
   const finish = (code, signal) => {
     if (finished) return;
     finished = true;
+    // A stream that never ended may still hold a last line with no newline.
+    for (const lines of taps) lines.end();
     record({ event: 'exit', code, signal });
     process.exit(code ?? 0);
   };

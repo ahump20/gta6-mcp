@@ -376,11 +376,18 @@ Community platforms, tried again at about 12:48Z: the browser extension still re
 | `Retry-After` given as a date is not honoured | Fixed, capped at five seconds. |
 | Unread response bodies are not released early | Fixed. |
 | A page that qualifies only by its category is not accepted by `get_page` | Fixed. Spoiler clearance still applies afterwards. If the categories cannot be read, the tool says the wiki was unreachable instead of calling the page out of scope. |
-| Only the first batch of categories is read | Fixed, up to five batches. The continuation format follows the MediaWiki documentation; no real continued response was captured, since Fandom is not requested. |
+| Only the first batch of categories is read | Fixed, up to five batches; a list still unfinished after five is treated as unread, not as complete. The continuation format follows the MediaWiki documentation; no real continued response was captured, since Fandom is not requested. |
 | Whitespace normalisation covers ASCII only | Fixed and renamed `collapse-unicode-whitespace-v2`. Every recorded fingerprint still matches: the 18 reviewed rows and the entry steps are returned from the real capture as before. |
 | Mixed video and guide evidence has no binding rule | Ruled: it is not video-backed. Re-readable items must match; one item that cannot be re-read keeps the claim unverified. |
-| A resolution cannot rest on a video pair | Fixed. Two frame-inspected videos with different URLs, origins and accounts can settle a dispute; anything less is rejected. |
+| A resolution cannot rest on a video pair | Fixed. Two frame-inspected videos that share no URL, origin or account can settle a dispute; anything less is rejected. |
 | The wire recorder can split a multi-byte character and miss a final line | Fixed. It also no longer waits forever when a process its child started keeps the output open. |
+
+The automated reviewers read the v0.1.1 pull request as well. One found four things, all fixed before the tag, each with a test:
+
+- Three videos could pass as "two independent" while every pair of them shared a URL, an origin or an account. The rule now needs one pair that shares none.
+- A category list cut off at the five-batch bound was reported as complete.
+- Categories served from an expired cache entry carried no stale notice.
+- The recorder's new exit path could drop a last line that had no newline.
 
 Still open:
 

@@ -186,6 +186,14 @@ describe('get_page category applicability', () => {
     expect(`${JSON.stringify(out)}${renderText(out)}`).not.toContain('BEACHMARKER7Q');
   });
 
+  it('adds a stale notice when the categories that qualify the page came from an expired cache entry', async () => {
+    const body = { query: { pages: [{ title: 'Vice Beach', categories: [{ title: 'Category:Locations in GTA VI' }] }] } };
+    const out = await ask([beach, { match: ['prop=categories'], result: okJson(body, true) }], 'full');
+    expect(out.status).toBe('ok');
+    expect(types(out)).toContain('stale_cache');
+    expect(types(await ask([beach, inCategory('Locations in GTA VI')], 'full'))).not.toContain('stale_cache');
+  });
+
   it('refuses a page whose categories name another game', async () => {
     expect((await ask([beach, inCategory('Locations in GTA V')], 'full')).status).toBe('no_verified_results');
   });

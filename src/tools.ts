@@ -148,7 +148,7 @@ async function fandomHits(http: Http, query: string): Promise<ProviderHits | Una
   const hits = candidates
     .filter((hit) => mentionsGtaVi(hit.title) || (cats.byTitle.get(hit.title) ?? []).some(mentionsGtaVi))
     .map((hit) => ({ provider: 'fandom' as const, ...hit }));
-  return { hits, source: searchSource('fandom', found.retrieved_at), stale: found.stale };
+  return { hits, source: searchSource('fandom', found.retrieved_at), stale: found.stale || cats.stale };
 }
 
 async function wikipediaHits(http: Http, query: string, limit: number): Promise<ProviderHits | Unavailable> {
@@ -221,12 +221,6 @@ function sectionScope(sections: readonly Section[], wanted: string | undefined):
 
 const sectionWikitext = (s: Section): string => (s.heading === '' ? s.wikitext : `${'='.repeat(s.level)}${s.heading}${'='.repeat(s.level)}\n${s.wikitext}`);
 
-// A category that names the game counts as the title or text naming it, as in search. A failed read is passed back, since it establishes nothing.
-async function inGtaViCategory(http: Http, provider: Provider, title: string): Promise<boolean | Unavailable> {
-  const cats = await categories(http, provider, [title]);
-  return cats.kind === 'ok' ? (cats.byTitle.get(title) ?? []).some(mentionsGtaVi) : cats;
-}
-
 export async function getPage(
   args: { readonly title: string; readonly section?: string | undefined; readonly source: PageSource; readonly spoilers: SpoilerLevel },
   deps: Deps,
@@ -246,10 +240,13 @@ export async function getPage(
       notice('coverage_gap', 'The page does not establish that it is about Grand Theft Auto VI, or it is leak material, so it is not returned.'),
     ]);
   if (isLeak(page.title)) return outside();
+  // A category that names the game counts as the title or text naming it, as in search. A failed read establishes nothing.
+  let categoriesStaleSince: string | null = null;
   if (!(mentionsGtaVi(page.title) || mentionsGtaVi(page.wikitext))) {
-    const byCategory = await inGtaViCategory(deps.http, source, page.title);
-    if (typeof byCategory !== 'boolean') return unavailable('The page', byCategory);
-    if (!byCategory) return outside();
+    const cats = await categories(deps.http, source, [page.title]);
+    if (cats.kind === 'unavailable') return unavailable('The page', cats);
+    if (!(cats.byTitle.get(page.title) ?? []).some(mentionsGtaVi)) return outside();
+    categoriesStaleSince = cats.stale ? cats.retrieved_at : null;
   }
   if (!titleAllowed(registry, source, page.title, args.spoilers)) return withheldOnly();
   const scope = sectionScope(splitSections(page.wikitext), args.section);
@@ -269,6 +266,7 @@ export async function getPage(
   };
   const notices = [
     ...staleNotices(page.stale, page.retrieved_at),
+    ...(categoriesStaleSince !== null && !page.stale ? staleNotices(true, categoriesStaleSince) : []),
     ...(truncated ? [notice('truncated', `Text was cut at ${MAX_PAGE_CHARS} characters. Ask for a section to read further.`)] : []),
     ...(allowed.length < scope.length ? [notice('spoiler_withheld')] : []),
   ];

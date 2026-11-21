@@ -263,15 +263,19 @@ type VideoRecord = z.infer<typeof VideoReview>;
 const framesReviewed = (review: VideoRecord | null | undefined): boolean => review?.review_basis === 'frames' && review.continuous_footage;
 const meetsVideoRule = (item: Evidence): boolean => item.evidence_type === 'gameplay_video' && framesReviewed(item.video);
 
-/** How many separate captures a set of videos amounts to: a shared URL, origin or account collapses them. */
 interface VideoSource {
   readonly url: string;
   readonly origin: string;
   readonly video?: VideoRecord | undefined;
 }
+/**
+ * How many separate captures a set of videos amounts to. It is two only when some pair shares no URL, origin or account.
+ * Counting distinct values per field is not enough: three videos can show two of each while every pair still shares one.
+ */
 function independentVideos(videos: readonly VideoSource[]): number {
-  const distinct = (key: (v: VideoSource) => string | undefined): number => new Set(videos.map(key)).size;
-  return Math.min(distinct((v) => v.url), distinct((v) => v.origin), distinct((v) => v.video?.account));
+  const separate = (a: VideoSource, b: VideoSource): boolean => a.url !== b.url && a.origin !== b.origin && a.video?.account !== b.video?.account;
+  const pair = videos.some((a, index) => videos.slice(index + 1).some((b) => separate(a, b)));
+  return pair ? MIN_INDEPENDENT : Number(videos.length > 0);
 }
 
 function videoErrors(where: string, item: Evidence): string[] {

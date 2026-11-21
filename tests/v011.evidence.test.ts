@@ -61,6 +61,20 @@ describe('a conflict resolved by gameplay video', () => {
     expect(problems(resolved([videoSupport(1), relabelled]))).toContain('two independent direct verifications');
   });
 
+  it('rejects three videos in which every pair shares a URL, an origin or an account', () => {
+    const one = videoSupport(1);
+    const two = videoSupport(TWO);
+    const trio = [one, { ...two, url: one.url }, { ...two, origin: one.origin }];
+    expect(problems(resolved(trio))).toContain('two independent direct verifications');
+  });
+
+  it('does not approve a claim on three such videos either', () => {
+    const one = synVideoEvidence(1);
+    const two = synVideoEvidence(TWO);
+    const claim = synVideoClaim([one, { ...two, url: one.url }, { ...two, origin: one.origin }], { claim_id: 'syn-confirmed-ps5' });
+    expect(problems(synManifest({ confirmations: [claim] }))).toContain('no sufficient approval basis');
+  });
+
   it('rejects a video reviewed from its transcript', () => {
     expect(problems(resolved([videoSupport(1), videoSupport(TWO, { review_basis: 'transcript' })]))).toContain('not its frames');
   });

@@ -56,6 +56,9 @@ export interface SearchOk {
 export interface CategoriesOk {
   readonly kind: 'ok';
   readonly byTitle: ReadonlyMap<string, readonly string[]>;
+  /** True when any batch came from an expired cache entry; retrieved_at is then that entry's original time. */
+  readonly stale: boolean;
+  readonly retrieved_at: string | null;
 }
 
 const ApiError = z.object({ error: z.object({ code: z.string(), info: z.string().optional() }) });
@@ -129,8 +132,9 @@ export async function search(http: Http, provider: Provider, query: string, limi
 }
 
 export async function categories(http: Http, provider: Provider, titles: readonly string[]): Promise<CategoriesOk | Unavailable> {
-  if (titles.length === 0) return { kind: 'ok', byTitle: new Map() };
+  if (titles.length === 0) return { kind: 'ok', byTitle: new Map(), stale: false, retrieved_at: null };
   const byTitle = new Map<string, readonly string[]>();
+  let staleSince: string | null = null;
   // Continuation keys go first so a response can never replace the fixed parameters.
   let more: Readonly<Record<string, string>> = {};
   for (let batch = 0; batch < MAX_CATEGORY_BATCHES; batch += 1) {
@@ -138,11 +142,13 @@ export async function categories(http: Http, provider: Provider, titles: readonl
     if (!res.ok) return unavailable(res.reason, res.detail);
     const parsed = CategoriesResponse.safeParse(res.json);
     if (!parsed.success) return unavailable('api_error', 'unsupported categories response');
+    if (res.stale && (staleSince === null || res.fetched_at < staleSince)) staleSince = res.fetched_at;
     for (const page of parsed.data.query.pages) {
       byTitle.set(page.title, [...(byTitle.get(page.title) ?? []), ...(page.categories ?? []).map((c) => c.title.replace(CATEGORY_PREFIX, ''))]);
     }
-    if (!parsed.data.continue) break;
+    if (!parsed.data.continue) return { kind: 'ok', byTitle, stale: staleSince !== null, retrieved_at: staleSince ?? res.fetched_at };
     more = parsed.data.continue;
   }
-  return { kind: 'ok', byTitle };
+  // A list cut off at the bound is not a complete list, so it is not reported as one.
+  return unavailable('api_error', `categories did not finish within ${MAX_CATEGORY_BATCHES} batches`);
 }

@@ -59,10 +59,12 @@ At most 3 redirects. User input travels only inside API query parameters.
 A page applies when one of its categories matches `GTA VI`, or its own wikitext
 names the game (`{{VI}}`, "Grand Theft Auto VI", "GTA VI", "GTA 6"). Search hits
 from other games are dropped. Titles containing "leak" are never returned.
-All of a page's categories are read, across continuation batches. When only a
+A page's categories are read across continuation batches, up to five; a list
+still unfinished at that bound counts as unread, not as complete. When only a
 category could tie a page to the game and the categories cannot be read,
 `get_page` reports the wiki as unavailable and returns nothing; it does not
-judge the page.
+judge the page. Categories served from an expired cache entry add a
+`stale_cache` notice.
 
 ## Evidence
 

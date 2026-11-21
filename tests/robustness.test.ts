@@ -41,16 +41,18 @@ describe('wire recorder line splitting', () => {
 describe('wire recorder shutdown', () => {
   const GIVE_UP_MS = 10_000;
 
-  it('exits once the server has gone, even while something the server started still holds its output open', () => {
+  it('exits once the server has gone, even while something the server started still holds its output open, and keeps its last line', () => {
     const log = join(mkdtempSync(join(tmpdir(), 'gta6-tee-')), 'wire.jsonl');
     // The shell exits at once; the sleep it leaves behind keeps the shell's stdout open.
-    const run = spawnSync(process.execPath, [fileURLToPath(script), log, '--', 'sh', '-c', 'sleep 15 & exit 0'], {
+    const run = spawnSync(process.execPath, [fileURLToPath(script), log, '--', 'sh', '-c', 'printf lastline; sleep 15 & exit 0'], {
       input: '',
       stdio: ['pipe', 'pipe', 'ignore'],
       timeout: GIVE_UP_MS,
     });
     expect(run.error).toBeUndefined();
     expect(run.status).toBe(0);
-    expect(readFileSync(log, 'utf8')).toContain('"event":"exit"');
+    const recorded = readFileSync(log, 'utf8');
+    expect(recorded).toContain('"line":"lastline"');
+    expect(recorded.indexOf('"line":"lastline"')).toBeLessThan(recorded.indexOf('"event":"exit"'));
   }, GIVE_UP_MS * 2);
 });
