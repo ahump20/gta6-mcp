@@ -317,3 +317,22 @@ Two automated reviewers read the pull request. The findings that touched evidenc
 - Whitespace normalisation for fingerprints covers ASCII whitespace only. Mixed video and guide evidence has no stated binding rule. A resolution cannot rest on a video pair.
 - The wire recorder used by the live test can split a multi-byte character across chunks and can miss a final unterminated line.
 
+## 15. The published release, verified
+
+Run on 2026-11-21 after the release was created. The Fandom permission setting was not set in any run.
+
+| Item | Result |
+|---|---|
+| Release | https://github.com/ahump20/gta6-mcp/releases/tag/v0.1.0 |
+| Shipped commit | `3e3b0d1776c92cba07be0a14b4386c103e89954e` (merge of pull request 1), tagged `v0.1.0` |
+| CI | Pass on Node 20 and 22 for the pull request head, for `main` at the shipped commit, and in the release run |
+| Tarball | `gta6-mcp-0.1.0.tgz`, SHA-256 `9811c6fe105b469461e9f2569e309206ad6e3f3701135fd78ebe547e2bc757a9`. A fresh download matched the published checksum. |
+| `npx -y <release tarball URL>` | Node 20.20.2, npm 10.8.2, empty cache: live protocol test passed on both eras (`2025-11-25` and `2026-07-28`) |
+| `npx -y github:ahump20/gta6-mcp#v0.1.0` | Node 20.20.2, npm 10.8.2, empty cache: live protocol test passed on both eras. Node 24.5.0, npm 11.18.0: started cleanly. |
+| Claude Code headless call | Claude Code 2.1.330, isolated configuration with `--strict-mcp-config`, only the four tools allowed: the server connected, the four tools were listed, and `list_cheats`, `easter_eggs` and `get_page` each returned a labelled result |
+| Claude Code install | Local scope in the `gta6-mcp` checkout, release tarball command. `claude mcp get gta6` reported it connected, and a `list_cheats` call from that folder returned 3 reports and 0 confirmed cheats |
+
+Correction to section 13: that test used a full commit hash as the address. With the tag, the build-on-install route works on npm 10 as well. The failure is specific to a commit-hash address on npm 10.
+
+The filtered record of these runs is attached to the release as `gta6-mcp-0.1.0-verification.json`, with the wire logs beside it.
+
