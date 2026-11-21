@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-21T11:32:31.679Z",
-  "tested_sha": "1bded089eaf546bf424e65fe23b6f74d85162b35",
+  "generated_at": "2026-11-21T11:38:55.453Z",
+  "tested_sha": "e1daaae1d687c185f8c69c1faf14323161b53bee",
   "launcher": "~/.nvm/versions/node/v20.20.2/bin/node ./dist/index.js",
   "versions": {
     "node": "v20.20.2",
@@ -38,7 +38,7 @@
     {
       "label": "legacy",
       "requested_mode": "legacy",
-      "wire_log": "/tmp/claude-501/gta6-wire-pre/legacy.wire.jsonl",
+      "wire_log": "$TMPDIR/gta6-mcp-smoke-WuQbzO/legacy.wire.jsonl",
       "calls": [
         {
           "label": "cheat lookup (default: confirmed only)",
@@ -107,7 +107,7 @@
             {
               "title": "youtube post by @JOETHzz",
               "url": "https://www.youtube.com/watch?v=Hj23ZNatmZQ",
-              "retrieved_at": "2026-11-21T11:10:08Z",
+              "retrieved_at": "2026-11-21T11:36:52Z",
               "license": "Community post, all rights reserved by its author. Linked and described, never copied.",
               "attribution": "@JOETHzz"
             }
@@ -200,7 +200,7 @@
             {
               "title": "youtube post by @MrDalekJD",
               "url": "https://www.youtube.com/watch?v=Mj_beVHUJE4",
-              "retrieved_at": "2026-11-21T11:10:15Z",
+              "retrieved_at": "2026-11-21T11:36:54Z",
               "license": "Community post, all rights reserved by its author. Linked and described, never copied.",
               "attribution": "@MrDalekJD"
             }
@@ -208,7 +208,7 @@
           "first_result": {
             "title": "Radio tower Easter egg (reported)",
             "hint": null,
-            "detail": "Video titled as the first Easter egg found, with a secret cutscene. Its description places the egg at the top of a city radio tower and says the video shows the climb. Frames were not inspected.",
+            "detail": "Title claims a first Easter egg with a secret cutscene. The description says the video is a climb of the tallest radio tower and that reports mention a bird-nest egg nearby; the egg is not its stated focus. Frames not inspected.",
             "location": null,
             "prerequisites": null,
             "spoiler_class": "discovery",
@@ -351,7 +351,7 @@
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
               "revision_id": 1386912958,
-              "retrieved_at": "2026-11-21T11:32:24.277Z",
+              "retrieved_at": "2026-11-21T11:38:48.006Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -394,7 +394,7 @@
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
               "revision_id": 1386912958,
-              "retrieved_at": "2026-11-21T11:32:24.277Z",
+              "retrieved_at": "2026-11-21T11:38:48.007Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -445,7 +445,7 @@
           "notices": [
             {
               "type": "coverage_gap",
-              "message": "gta.wiki, where the GTA Wiki community now maintains its GTA VI pages, is not queried: its host requires prior consent for automated use and none has been given. Ask for source \"fandom\" instead."
+              "message": "gta.wiki, where the GTA Wiki community now maintains its GTA VI pages, is not queried: its host requires prior consent for automated use and none has been given. Use source \"wikipedia\", or \"fandom\" where its operator has recorded Fandom's permission."
             }
           ],
           "sources": [],
@@ -479,7 +479,7 @@
             {
               "title": "Wikipedia search",
               "url": "https://en.wikipedia.org/wiki/Special:Search",
-              "retrieved_at": "2026-11-21T11:32:26.105Z",
+              "retrieved_at": "2026-11-21T11:38:49.866Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -514,14 +514,10 @@
       ],
       "per_request_meta_keys": [],
       "per_request_protocol_versions": [],
-      "server_processes": 2,
+      "server_processes": 1,
       "stdout_protocol_only": true,
-      "stdout_lines": 32,
+      "stdout_lines": 16,
       "exit_events": [
-        {
-          "code": 0,
-          "signal": null
-        },
         {
           "code": 0,
           "signal": null
@@ -537,7 +533,7 @@
       "requested_mode": {
         "pin": "2026-07-28"
       },
-      "wire_log": "/tmp/claude-501/gta6-wire-pre/modern.wire.jsonl",
+      "wire_log": "$TMPDIR/gta6-mcp-smoke-G6jklw/modern.wire.jsonl",
       "calls": [
         {
           "label": "cheat lookup (default: confirmed only)",
@@ -606,7 +602,7 @@
             {
               "title": "youtube post by @JOETHzz",
               "url": "https://www.youtube.com/watch?v=Hj23ZNatmZQ",
-              "retrieved_at": "2026-11-21T11:10:08Z",
+              "retrieved_at": "2026-11-21T11:36:52Z",
               "license": "Community post, all rights reserved by its author. Linked and described, never copied.",
               "attribution": "@JOETHzz"
             }
@@ -699,7 +695,7 @@
             {
               "title": "youtube post by @MrDalekJD",
               "url": "https://www.youtube.com/watch?v=Mj_beVHUJE4",
-              "retrieved_at": "2026-11-21T11:10:15Z",
+              "retrieved_at": "2026-11-21T11:36:54Z",
               "license": "Community post, all rights reserved by its author. Linked and described, never copied.",
               "attribution": "@MrDalekJD"
             }
@@ -707,7 +703,7 @@
           "first_result": {
             "title": "Radio tower Easter egg (reported)",
             "hint": null,
-            "detail": "Video titled as the first Easter egg found, with a secret cutscene. Its description places the egg at the top of a city radio tower and says the video shows the climb. Frames were not inspected.",
+            "detail": "Title claims a first Easter egg with a secret cutscene. The description says the video is a climb of the tallest radio tower and that reports mention a bird-nest egg nearby; the egg is not its stated focus. Frames not inspected.",
             "location": null,
             "prerequisites": null,
             "spoiler_class": "discovery",
@@ -850,7 +846,7 @@
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
               "revision_id": 1386912958,
-              "retrieved_at": "2026-11-21T11:32:28.413Z",
+              "retrieved_at": "2026-11-21T11:38:52.137Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -893,7 +889,7 @@
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
               "revision_id": 1386912958,
-              "retrieved_at": "2026-11-21T11:32:28.414Z",
+              "retrieved_at": "2026-11-21T11:38:52.137Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -944,7 +940,7 @@
           "notices": [
             {
               "type": "coverage_gap",
-              "message": "gta.wiki, where the GTA Wiki community now maintains its GTA VI pages, is not queried: its host requires prior consent for automated use and none has been given. Ask for source \"fandom\" instead."
+              "message": "gta.wiki, where the GTA Wiki community now maintains its GTA VI pages, is not queried: its host requires prior consent for automated use and none has been given. Use source \"wikipedia\", or \"fandom\" where its operator has recorded Fandom's permission."
             }
           ],
           "sources": [],
@@ -978,7 +974,7 @@
             {
               "title": "Wikipedia search",
               "url": "https://en.wikipedia.org/wiki/Special:Search",
-              "retrieved_at": "2026-11-21T11:32:30.142Z",
+              "retrieved_at": "2026-11-21T11:38:53.928Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -1018,18 +1014,10 @@
       "per_request_protocol_versions": [
         "2026-07-28"
       ],
-      "server_processes": 4,
+      "server_processes": 2,
       "stdout_protocol_only": true,
-      "stdout_lines": 32,
+      "stdout_lines": 16,
       "exit_events": [
-        {
-          "code": null,
-          "signal": "SIGTERM"
-        },
-        {
-          "code": 0,
-          "signal": null
-        },
         {
           "code": null,
           "signal": "SIGTERM"
