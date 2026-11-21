@@ -29,7 +29,7 @@ Requires Node.js 20 or newer.
 claude mcp add --scope local gta6 -- npx -y https://github.com/ahump20/gta6-mcp/releases/download/v0.1.1/gta6-mcp-0.1.1.tgz
 ```
 
-That installs the release file. Its SHA-256 checksum is published beside it on the [release page](https://github.com/ahump20/gta6-mcp/releases/tag/v0.1.1).
+That installs the release file. Its SHA-256 checksum is `1df2676f8ad136a9fa4dd2a45985b448c2d30ea722e5ebe494017cdd911279e0`, published beside it on the [release page](https://github.com/ahump20/gta6-mcp/releases/tag/v0.1.1).
 
 Already installed v0.1.0? Run `claude mcp remove gta6 --scope local` first, then the command above.
 
@@ -39,7 +39,7 @@ Straight from the tagged source, which builds on install, also works:
 claude mcp add --scope local gta6 -- npx -y github:ahump20/gta6-mcp#v0.1.1
 ```
 
-The release file was tested on Node 20 before the tag and passed the live protocol test on both protocol versions; see [docs/VERIFICATION.md](docs/VERIFICATION.md), section 18. One limit: on npm 10, the source route works with the tag but fails if you replace the tag with a full commit hash.
+Both commands were tested against the published release on Node 20 and passed the live protocol test on both protocol versions; the record is the release's [verification log](https://github.com/ahump20/gta6-mcp/releases/download/v0.1.1/gta6-mcp-0.1.1-verification.json). One limit: on npm 10, the source route works with the tag but fails if you replace the tag with a full commit hash.
 
 The package is published to GitHub Releases only, not to the npm registry. It needs no account, key or hosted service.
 

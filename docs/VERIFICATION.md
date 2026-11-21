@@ -408,3 +408,19 @@ Run on 2026-11-21 at 13:01Z against commit `96a1539`, the last commit that chang
 
 The checksum of the published file and the test of the published release are added after the release exists, since a tagged file cannot describe its own release.
 
+## 19. The published v0.1.1 release, verified
+
+Run on 2026-11-21 between 13:02Z and 13:08Z, after the release was created. The Fandom permission setting was not set in any run. v0.1.0, its tag and its four files were left as they were.
+
+| Item | Result |
+|---|---|
+| Release | https://github.com/ahump20/gta6-mcp/releases/tag/v0.1.1 |
+| Shipped commit | `f06050381cc6aa42422a6adf70802130103f6c6c` (merge of pull request 3), tagged `v0.1.1`. Its tree is identical to the pull request head, and differs from the commit tested in section 18 only in two files under `docs/`, which are not in the package. |
+| CI | Pass on Node 20 and 22 for the pull request head, and in the release run |
+| Tarball | `gta6-mcp-0.1.1.tgz`, SHA-256 `1df2676f8ad136a9fa4dd2a45985b448c2d30ea722e5ebe494017cdd911279e0`. A fresh download matched the published checksum, which is also the checksum of the file packed before the tag. |
+| `npx -y <release tarball URL>` | Node 20.20.2, npm 10.8.2, empty cache: live protocol test passed on both protocol versions (`2025-11-25` and `2026-07-28`); the server reported 0.1.1 |
+| `npx -y github:ahump20/gta6-mcp#v0.1.1` | Node 20.20.2, npm 10.8.2, empty cache: live protocol test passed on both protocol versions |
+| Claude Code install | Claude Code 2.1.330, local scope in the `gta6-mcp` checkout: the v0.1.0 entry was removed and the v0.1.1 release tarball command added. `claude mcp get gta6` reported it connected. A `list_cheats` call from that folder with reports included returned 22 rows (17 unverified, 5 conflicting) and 0 confirmed. |
+
+The filtered record of these runs is attached to the release as `gta6-mcp-0.1.1-verification.json`, with the wire logs beside it.
+
