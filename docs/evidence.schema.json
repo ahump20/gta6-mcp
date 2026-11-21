@@ -10,6 +10,30 @@
       "type": "boolean",
       "description": "True only for test fixtures. Production data must be false."
     },
+    "binding": {
+      "type": "object",
+      "properties": {
+        "algorithm": {
+          "type": "string",
+          "const": "sha256"
+        },
+        "normalization": {
+          "type": "string",
+          "const": "collapse-whitespace-v1"
+        },
+        "scope": {
+          "type": "string",
+          "const": "reviewed_text_only"
+        }
+      },
+      "required": [
+        "algorithm",
+        "normalization",
+        "scope"
+      ],
+      "additionalProperties": false,
+      "description": "How fingerprints are made: over the reviewed quote or row only, never a whole page."
+    },
     "approved_hosts": {
       "type": "array",
       "items": {
@@ -128,7 +152,8 @@
                   "enum": [
                     "official_documentation",
                     "guide_own_test",
-                    "independent_report"
+                    "independent_report",
+                    "gameplay_video"
                   ]
                 },
                 "own_test_covers": {
@@ -163,6 +188,94 @@
                 "captured_at": {
                   "type": "string",
                   "minLength": 1
+                },
+                "runtime_recheck": {
+                  "type": "string",
+                  "enum": [
+                    "permitted",
+                    "not_permitted",
+                    "review_only"
+                  ],
+                  "description": "permitted: the host allows automated retrieval of this URL. not_permitted: offline-reviewed only. review_only: gameplay video."
+                },
+                "permission_basis": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "The robots rule or terms clause the re-check decision rests on."
+                },
+                "video": {
+                  "type": "object",
+                  "properties": {
+                    "account": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "posted_at": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "review_basis": {
+                      "type": "string",
+                      "enum": [
+                        "frames",
+                        "transcript",
+                        "title",
+                        "thumbnail",
+                        "description",
+                        "caption"
+                      ]
+                    },
+                    "inspection_method": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "How the frames were inspected."
+                    },
+                    "console_identified": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "What on screen identifies the platform."
+                    },
+                    "continuous_footage": {
+                      "type": "boolean"
+                    },
+                    "entry_timestamp": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "entry_visible": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "effect_timestamp": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "effect_visible": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "presses_visible": {
+                      "type": "string",
+                      "enum": [
+                        "button_presses",
+                        "on_screen_sequence_only"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "account",
+                    "posted_at",
+                    "review_basis",
+                    "inspection_method",
+                    "console_identified",
+                    "continuous_footage",
+                    "entry_timestamp",
+                    "entry_visible",
+                    "effect_timestamp",
+                    "effect_visible",
+                    "presses_visible"
+                  ],
+                  "additionalProperties": false
                 }
               },
               "required": [
@@ -173,7 +286,9 @@
                 "origin",
                 "independence",
                 "fingerprint",
-                "captured_at"
+                "captured_at",
+                "runtime_recheck",
+                "permission_basis"
               ],
               "additionalProperties": false
             }
@@ -531,6 +646,284 @@
         "additionalProperties": false
       }
     },
+    "community_reports": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "social_platform": {
+            "type": "string",
+            "enum": [
+              "reddit",
+              "x",
+              "youtube",
+              "tiktok",
+              "forum"
+            ]
+          },
+          "url": {
+            "type": "string",
+            "format": "starts_with",
+            "pattern": "^https:\\/\\/.*"
+          },
+          "author_handle": {
+            "type": "string",
+            "minLength": 1
+          },
+          "posted_at": {
+            "type": "string",
+            "minLength": 1
+          },
+          "captured_at": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_type": {
+            "type": "string",
+            "enum": [
+              "text_claim",
+              "screenshot",
+              "gameplay_video"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240,
+            "description": "One neutral line written by the reviewer."
+          },
+          "min_level": {
+            "type": "string",
+            "enum": [
+              "hints",
+              "discovery",
+              "full"
+            ]
+          },
+          "subject": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "cheat"
+                  },
+                  "cheat_name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "input": {
+                    "anyOf": [
+                      {
+                        "minItems": 1,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "Up",
+                            "Down",
+                            "Left",
+                            "Right"
+                          ]
+                        }
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "platform": {
+                    "type": "string",
+                    "enum": [
+                      "ps5",
+                      "xbox-series",
+                      "unattributed"
+                    ]
+                  },
+                  "effect": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "kind",
+                  "cheat_name",
+                  "input",
+                  "platform",
+                  "effect"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "easter_egg"
+                  },
+                  "title": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "evidence_status": {
+                    "type": "string",
+                    "enum": [
+                      "unverified",
+                      "theory"
+                    ]
+                  }
+                },
+                "required": [
+                  "kind",
+                  "title",
+                  "evidence_status"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "video_review": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "account": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "posted_at": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "review_basis": {
+                    "type": "string",
+                    "enum": [
+                      "frames",
+                      "transcript",
+                      "title",
+                      "thumbnail",
+                      "description",
+                      "caption"
+                    ]
+                  },
+                  "inspection_method": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "How the frames were inspected."
+                  },
+                  "console_identified": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "What on screen identifies the platform."
+                  },
+                  "continuous_footage": {
+                    "type": "boolean"
+                  },
+                  "entry_timestamp": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "entry_visible": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "effect_timestamp": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "effect_visible": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "presses_visible": {
+                    "type": "string",
+                    "enum": [
+                      "button_presses",
+                      "on_screen_sequence_only"
+                    ]
+                  }
+                },
+                "required": [
+                  "account",
+                  "posted_at",
+                  "review_basis",
+                  "inspection_method",
+                  "console_identified",
+                  "continuous_footage",
+                  "entry_timestamp",
+                  "entry_visible",
+                  "effect_timestamp",
+                  "effect_visible",
+                  "presses_visible"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "review": {
+            "type": "object",
+            "properties": {
+              "reviewer": {
+                "type": "object",
+                "properties": {
+                  "identity": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "ai_agent",
+                      "human"
+                    ]
+                  }
+                },
+                "required": [
+                  "identity",
+                  "type"
+                ],
+                "additionalProperties": false
+              },
+              "reviewed_at": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "reviewer",
+              "reviewed_at"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "id",
+          "social_platform",
+          "url",
+          "author_handle",
+          "posted_at",
+          "captured_at",
+          "evidence_type",
+          "description",
+          "min_level",
+          "subject",
+          "video_review",
+          "review"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Reviewed community leads. Never approval evidence on their own."
+    },
     "spoiler_registry": {
       "type": "object",
       "properties": {
@@ -863,10 +1256,12 @@
   "required": [
     "schema_version",
     "synthetic",
+    "binding",
     "approved_hosts",
     "confirmations",
     "conflict_groups",
     "resolutions",
+    "community_reports",
     "spoiler_registry"
   ],
   "additionalProperties": false

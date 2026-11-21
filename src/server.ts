@@ -53,7 +53,7 @@ export function createServer(deps: Deps): McpServer {
     'get_page',
     {
       title: 'Read a GTA VI wiki page',
-      description: `Read one GTA VI wiki page or section as bounded plain text with its revision, licence and references. Distinguishes a missing page, a missing section, and content withheld by the spoiler policy. Text is capped at 20,000 characters. ${CARRY}`,
+      description: `Read one GTA VI wiki page or section as bounded plain text with its revision, licence and references. source is fandom (default) or wikipedia; gtawiki is recognised but not queried, because gta.wiki requires consent for automated use. Distinguishes a missing page, a missing section, and content withheld by the spoiler policy. Text is capped at 20,000 characters. ${CARRY}`,
       inputSchema: PageInput,
       outputSchema: PageOutput,
       annotations: READ_ONLY,
@@ -65,7 +65,7 @@ export function createServer(deps: Deps): McpServer {
     'list_cheats',
     {
       title: 'List GTA VI cheats',
-      description: `List Grand Theft Auto VI cheats with evidence labels. By default only confirmed cheats are returned, and there may be none. With include_unverified=true it adds unverified and conflicting rows: present those as reports, never as working codes, and say when sources disagree. Unlock text is spoiler-filtered. ${CARRY}`,
+      description: `List Grand Theft Auto VI cheats with evidence labels. By default only confirmed cheats are returned, and there may be none. With include_unverified=true it adds unverified and conflicting rows, including reviewed community reports with their platform, author and post time: present those as reports, never as working codes, and say when sources disagree. Unlock text is spoiler-filtered. ${CARRY}`,
       inputSchema: CheatsInput,
       outputSchema: CheatsOutput,
       annotations: READ_ONLY,

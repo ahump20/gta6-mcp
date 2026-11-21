@@ -36,6 +36,8 @@ export function synClaim(overrides: Partial<Claim> = {}): Claim {
         independence: 'not applicable: one own test',
         fingerprint: fingerprint(SYN_QUOTE),
         captured_at: SYN_REVIEWED_AT,
+        runtime_recheck: 'permitted',
+        permission_basis: 'SYNTHETIC permission',
       },
     ],
     review,
@@ -54,9 +56,11 @@ export function synManifest(overrides: Partial<Manifest> = {}): Manifest {
       { host: 'www.polygon.com', role: 'guide', purpose: 'SYNTHETIC' },
       { host: 'www.rockstargames.com', role: 'official', purpose: 'SYNTHETIC' },
     ],
+    binding: { algorithm: 'sha256', normalization: 'collapse-whitespace-v1', scope: 'reviewed_text_only' },
     confirmations: [synClaim()],
     conflict_groups: [],
     resolutions: [],
+    community_reports: [],
     spoiler_registry: {
       review: { reviewer: review.reviewer, reviewed_at: SYN_REVIEWED_AT, scope_note: 'SYNTHETIC' },
       titles: [{ provider: 'fandom', title: 'Cheats in GTA VI', min_level: 'hints' }],
@@ -98,4 +102,64 @@ export function synResolution(supportingCount: number): Manifest['resolutions'][
     ],
     review,
   };
+}
+
+type Evidence = Claim['evidence'][number];
+export type Report = Manifest['community_reports'][number];
+
+export const SYN_POST_URL = 'https://www.reddit.com/r/synthetic/comments/abc123/synthetic_post/';
+
+/** A SYNTHETIC community report about the synthetic cheat. */
+export function synReport(overrides: Partial<Report> = {}): Report {
+  return {
+    id: 'syn-report-1',
+    social_platform: 'reddit',
+    url: SYN_POST_URL,
+    author_handle: 'u/synthetic_author',
+    posted_at: '2026-11-20T12:00:00Z',
+    captured_at: SYN_REVIEWED_AT,
+    evidence_type: 'text_claim',
+    description: 'SYNTHETIC States a two-step sequence for the synthetic cheat on PS5.',
+    min_level: 'hints',
+    subject: { kind: 'cheat', cheat_name: 'Community Cheat', input: ['Left', 'Right'], platform: 'ps5', effect: null },
+    video_review: null,
+    review: { reviewer: review.reviewer, reviewed_at: SYN_REVIEWED_AT },
+    ...overrides,
+  };
+}
+
+/** SYNTHETIC frame-inspected video evidence; `n` picks one of two unrelated uploads. */
+export function synVideoEvidence(n: 1 | 2, patch: Partial<Evidence> = {}, video: Partial<NonNullable<Evidence['video']>> = {}): Evidence {
+  const quote = `SYNTHETIC video ${n}: frames show Up, Down entered on the phone and the effect right after.`;
+  return {
+    url: `https://www.youtube.com/watch?v=synthetic${n}`,
+    quote,
+    evidence_type: 'gameplay_video',
+    own_test_covers: [],
+    origin: `SYNTHETIC capture ${n}`,
+    independence: 'SYNTHETIC separate capture by a different account',
+    fingerprint: fingerprint(quote),
+    captured_at: SYN_REVIEWED_AT,
+    runtime_recheck: 'review_only',
+    permission_basis: 'SYNTHETIC social platforms are outside runtime retrieval',
+    video: {
+      account: `@synthetic-channel-${n}`,
+      posted_at: '2026-11-20T12:00:00Z',
+      review_basis: 'frames',
+      inspection_method: 'SYNTHETIC frame screenshots at the listed timestamps',
+      console_identified: 'SYNTHETIC PS5 button glyphs in the HUD',
+      continuous_footage: true,
+      entry_timestamp: '0:10',
+      entry_visible: 'SYNTHETIC sequence shown on the in-game phone',
+      effect_timestamp: '0:14',
+      effect_visible: 'SYNTHETIC effect appears',
+      presses_visible: 'on_screen_sequence_only',
+      ...video,
+    },
+    ...patch,
+  };
+}
+
+export function synVideoClaim(evidence: Evidence[], overrides: Partial<Claim> = {}): Claim {
+  return synClaim({ claim_id: 'syn-video-ps5', evidence, ...overrides });
 }

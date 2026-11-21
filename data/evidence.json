@@ -13,6 +13,11 @@
       "purpose": "MediaWiki API: background on the game."
     }
   ],
+  "binding": {
+    "algorithm": "sha256",
+    "normalization": "collapse-whitespace-v1",
+    "scope": "reviewed_text_only"
+  },
   "confirmations": [],
   "conflict_groups": [
     {
@@ -80,6 +85,7 @@
     }
   ],
   "resolutions": [],
+  "community_reports": [],
   "spoiler_registry": {
     "review": {
       "reviewer": {

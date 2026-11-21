@@ -46,8 +46,16 @@ export const Source = z.object({
 });
 export type Source = z.infer<typeof Source>;
 
+/** Providers the server queries. */
 export const Provider = z.enum(['fandom', 'wikipedia']);
 export type Provider = z.infer<typeof Provider>;
+
+/** Sources `get_page` accepts. `gtawiki` is recognised and never queried: its host requires consent for automated use. */
+export const PageSource = z.enum(['gtawiki', 'fandom', 'wikipedia']);
+export type PageSource = z.infer<typeof PageSource>;
+
+export const SocialPlatform = z.enum(['reddit', 'x', 'youtube', 'tiktok', 'forum']);
+export type SocialPlatform = z.infer<typeof SocialPlatform>;
 
 export const Platform = z.enum(['ps5', 'xbox-series']);
 export type Platform = z.infer<typeof Platform>;
@@ -61,7 +69,9 @@ export const SearchInput = z.object({
 export const PageInput = z.object({
   title: z.string().min(1).max(MAX_ARG_CHARS).describe('Wiki page title, for example "Cheats in GTA VI".'),
   section: z.string().min(1).max(MAX_ARG_CHARS).optional().describe('Section heading to return instead of the whole page.'),
-  source: Provider.default('fandom').describe('fandom for gameplay, wikipedia for background.'),
+  source: PageSource.default('fandom').describe(
+    'fandom for gameplay (default), wikipedia for background. gtawiki is recognised but not queried: gta.wiki requires consent for automated use.',
+  ),
   spoilers,
 });
 
@@ -103,7 +113,11 @@ export const EvidenceItem = z.object({
   url: z.string(),
   claim_text_reviewed: z.string().nullable(),
   revision_or_fetched_at: z.string(),
-  time_basis: z.enum(['revision', 'fetched_at', 'captured_at']),
+  time_basis: z.enum(['revision', 'fetched_at', 'captured_at', 'review']),
+  evidence_type: z.enum(['community_report', 'gameplay_video']).optional(),
+  social_platform: SocialPlatform.optional(),
+  author_handle: z.string().optional(),
+  posted_at: z.string().optional(),
 });
 export type EvidenceItem = z.infer<typeof EvidenceItem>;
 
@@ -143,6 +157,7 @@ export const EggResult = z.object({
   confidence: z.enum(['confirmed', 'unverified']),
   evidence_status: z.enum(['documented', 'theory', 'unverified']),
   source_url: z.string(),
+  community: z.object({ social_platform: SocialPlatform, author_handle: z.string(), posted_at: z.string() }).optional(),
 });
 export type EggResult = z.infer<typeof EggResult>;
 

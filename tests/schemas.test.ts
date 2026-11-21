@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CheatRow, CheatsInput, SearchInput, WITHHELD_MESSAGE, notice } from '../src/schemas.js';
+import { CheatRow, CheatsInput, EggResult, EvidenceItem, PageInput, SearchInput, WITHHELD_MESSAGE, notice } from '../src/schemas.js';
 
 const DEFAULT_LIMIT = 5;
 const OVER_MAX_LIMIT = 11;
@@ -51,5 +51,37 @@ describe('schemas', () => {
   it('builds the generic withheld notice', () => {
     expect(notice('spoiler_withheld')).toEqual({ type: 'spoiler_withheld', message: WITHHELD_MESSAGE });
     expect(WITHHELD_MESSAGE).toBe('Content withheld by spoiler policy.');
+  });
+});
+
+describe('revision 2 contract', () => {
+  it('accepts gtawiki as a page source and defaults to the primary provider', () => {
+    expect(PageInput.parse({ title: 'T' }).source).toBe('fandom');
+    expect(PageInput.parse({ title: 'T', source: 'gtawiki' }).source).toBe('gtawiki');
+    expect(PageInput.safeParse({ title: 'T', source: 'ign' }).success).toBe(false);
+  });
+
+  it('carries community and video fields on evidence items', () => {
+    const item = EvidenceItem.parse({
+      url: 'https://www.youtube.com/watch?v=x',
+      claim_text_reviewed: 'reviewer description',
+      revision_or_fetched_at: '2026-11-21T00:00:00Z',
+      time_basis: 'review',
+      evidence_type: 'gameplay_video',
+      social_platform: 'youtube',
+      author_handle: '@channel',
+      posted_at: '2026-11-20T00:00:00Z',
+    });
+    expect(item.time_basis).toBe('review');
+    expect(EvidenceItem.safeParse({ ...item, social_platform: 'myspace' }).success).toBe(false);
+  });
+
+  it('carries the community origin on an Easter egg report', () => {
+    const egg = EggResult.parse({
+      title: 'T', hint: null, detail: null, location: null, prerequisites: null, spoiler_class: 'hints',
+      confidence: 'unverified', evidence_status: 'theory', source_url: 'https://www.reddit.com/r/x/comments/1/',
+      community: { social_platform: 'reddit', author_handle: 'u/a', posted_at: '2026-11-20T00:00:00Z' },
+    });
+    expect(egg.community?.social_platform).toBe('reddit');
   });
 });
