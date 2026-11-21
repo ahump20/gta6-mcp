@@ -29,4 +29,4 @@ npm run smoke -- --out report.json -- node /path/to/node_modules/gta6-mcp/dist/i
 | `provider_statuses` | gta.wiki: never requested. gta.fandom.com: not permitted, no request made. en.wikipedia.org: reachable. |
 | `gameplay_coverage` | 0 confirmed cheats. 3 reports returned with `include_unverified` (the two Attack Force variants and one community report). 1 community Easter egg report at `discovery`. |
 
-The same test passed against the packed tarball installed into an empty folder with an empty npm cache under Node 20. After a release is published, the same test is run against the published package and its record is attached to the release by hand.
+The same test passed against the packed tarball installed into an empty folder with an empty npm cache under Node 20. After a release is published, the same test is run against the published package and its record is attached to the release by hand. For v0.1.0: [verification log](https://github.com/ahump20/gta6-mcp/releases/download/v0.1.0/gta6-mcp-0.1.0-verification.json) and [wire logs](https://github.com/ahump20/gta6-mcp/releases/download/v0.1.0/gta6-mcp-0.1.0-wire-logs.tar.gz).

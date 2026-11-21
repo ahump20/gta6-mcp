@@ -28,13 +28,15 @@ Requires Node.js 20 or newer.
 claude mcp add --scope local gta6 -- npx -y https://github.com/ahump20/gta6-mcp/releases/download/v0.1.0/gta6-mcp-0.1.0.tgz
 ```
 
-That installs the release file and works on every supported Node version. Its SHA-256 checksum is published beside it on the release page.
+That installs the release file. Its SHA-256 checksum is `9811c6fe105b469461e9f2569e309206ad6e3f3701135fd78ebe547e2bc757a9`, published beside it on the [release page](https://github.com/ahump20/gta6-mcp/releases/tag/v0.1.0).
 
-Straight from the tagged source, which builds on install, also works, but only with npm 11 or newer. On npm 10, which ships with Node 20, npm fails with "GitFetcher requires an Arborist constructor to pack a tarball":
+Straight from the tagged source, which builds on install, also works:
 
 ```sh
 claude mcp add --scope local gta6 -- npx -y github:ahump20/gta6-mcp#v0.1.0
 ```
+
+Both commands were tested against the published release on Node 20 and passed the live protocol test; the record is the release's [verification log](https://github.com/ahump20/gta6-mcp/releases/download/v0.1.0/gta6-mcp-0.1.0-verification.json). One limit: on npm 10, the source route works with the tag but fails if you replace the tag with a full commit hash.
 
 The package is published to GitHub Releases only, not to the npm registry. It needs no account, key or hosted service.
 
