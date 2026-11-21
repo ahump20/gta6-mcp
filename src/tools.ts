@@ -12,7 +12,7 @@ import {
   normaliseText,
   sameSequence,
 } from './evidence.js';
-import type { Http } from './net.js';
+import { FANDOM_PERMISSION_ENV, type Http } from './net.js';
 import {
   type CheatRow,
   type EggResult,
@@ -50,7 +50,9 @@ const NO_CONFIRMED =
   'No cheat currently meets the confirmation rules: no official documentation, and no eligible guide reporting its own test of an exact input, effect and platform.';
 
 const GTAWIKI_GAP =
-  'gta.wiki, where the GTA Wiki community now maintains its GTA VI pages, is not queried: its host requires prior consent for automated use and none has been given. Results come from the older Fandom copy, which may be behind.';
+  'gta.wiki, where the GTA Wiki community now maintains its GTA VI pages, is not queried: its host requires prior consent for automated use and none has been given.';
+const FANDOM_OFF = `The GTA Wiki on Fandom is switched off: Fandom's Terms of Use bar automated access without its express written permission. An operator who holds that permission records it by setting ${FANDOM_PERMISSION_ENV}=granted. Until then this server reads Wikipedia, its recorded conflicts and its reviewed community reports.`;
+const MANIFEST_URL = 'https://github.com/ahump20/gta6-mcp/blob/main/data/evidence.json';
 const COMMUNITY_LICENSE = 'Community post, all rights reserved by its author. Linked and described, never copied.';
 const COMMUNITY_REASON = 'Community report with no eligible confirmation: a post, a screenshot or a single video never confirms a code.';
 const REVIEW_ONLY_NOTICE = 'Video evidence for a confirmed row was last checked at review; this server cannot re-check social platforms.';
@@ -63,6 +65,10 @@ const HOST_PLATFORMS: Readonly<Record<string, SocialPlatform>> = {
 };
 
 const isLeak = (title: string): boolean => title.toLowerCase().includes('leak');
+// Wiki plumbing and media galleries, not articles. List taken from Ro25v04/gta6-mcp (MIT).
+const HELPER_SUBPAGES: ReadonlySet<string> = new Set(['infobox', 'artwork', 'screenshots', 'trailers', 'gallery']);
+const isHelperSubpage = (title: string): boolean =>
+  title.includes('/') && HELPER_SUBPAGES.has(title.slice(title.lastIndexOf('/') + 1).trim().toLowerCase());
 const gtawikiGap = (): Notice => notice('coverage_gap', GTAWIKI_GAP);
 const socialPlatformOf = (url: string): SocialPlatform => HOST_PLATFORMS[new URL(url).host] ?? 'forum';
 
@@ -87,10 +93,15 @@ function envelope<T>(status: Status, summary: string, results: readonly T[], sou
 
 const withheldOnly = <T>(): Envelope<T> => envelope<T>('partial', WITHHELD_MESSAGE, [], [], [notice('spoiler_withheld')]);
 
+const gapNotice = (what: string, reason: Unavailable['reason']): Notice =>
+  reason === 'not_permitted' ? notice('coverage_gap', FANDOM_OFF) : notice('coverage_gap', `${what} is unavailable right now: ${reason}.`);
+
 function unavailable<T>(what: string, failure: Unavailable): Envelope<T> {
-  return envelope<T>('upstream_unavailable', `${what} could not be retrieved (${failure.reason}). Nothing was returned.`, [], [], [
-    notice('coverage_gap', `${what} is unavailable right now: ${failure.reason}.`),
-  ]);
+  const summary =
+    failure.reason === 'not_permitted'
+      ? `${what} was not requested: the Fandom wiki is switched off. Nothing was returned.`
+      : `${what} could not be retrieved (${failure.reason}). Nothing was returned.`;
+  return envelope<T>('upstream_unavailable', summary, [], [], [gapNotice(what, failure.reason)]);
 }
 
 function pageSource(provider: Provider, page: PageOk): Source {
@@ -130,7 +141,7 @@ function searchSource(provider: Provider, retrievedAt: string): Source {
 async function fandomHits(http: Http, query: string): Promise<ProviderHits | Unavailable> {
   const found = await search(http, 'fandom', query, FANDOM_FETCH_LIMIT);
   if (found.kind === 'unavailable') return found;
-  const candidates = found.hits.filter((hit) => !isLeak(hit.title));
+  const candidates = found.hits.filter((hit) => !isLeak(hit.title) && !isHelperSubpage(hit.title));
   const cats = await categories(http, 'fandom', candidates.map((hit) => hit.title));
   if (cats.kind === 'unavailable') return cats;
   const hits = candidates
@@ -159,6 +170,7 @@ export async function searchGta6(
   if (ok.length === 0) {
     return envelope('upstream_unavailable', 'Neither wiki could be searched. Nothing was returned.', [], [], [
       notice('coverage_gap', `Search is unavailable right now: ${failed.map((f) => f.reason).join(', ')}.`),
+      ...(failed.some((f) => f.reason === 'not_permitted') ? [notice('coverage_gap', FANDOM_OFF)] : []),
     ]);
   }
   const candidates = ok.flatMap((a) => a.hits);
@@ -178,7 +190,9 @@ export async function searchGta6(
   const withheld = allowed.length < candidates.length || snippetWithheld;
   const notices = [
     gtawikiGap(),
-    ...failed.map((f) => notice('coverage_gap', `One wiki could not be searched (${f.reason}); results cover the other only.`)),
+    ...failed.map((f) =>
+      f.reason === 'not_permitted' ? notice('coverage_gap', FANDOM_OFF) : notice('coverage_gap', `One wiki could not be searched (${f.reason}); results cover the other only.`),
+    ),
     ...ok.flatMap((a) => staleNotices(a.stale, a.source.retrieved_at)),
     ...(withheld ? [notice('spoiler_withheld')] : []),
   ];
@@ -499,7 +513,7 @@ export async function listCheats(
   deps: Deps,
 ): Promise<Envelope<CheatRow>> {
   const page = await fetchPage(deps.http, 'fandom', CHEATS_PAGE);
-  if (page.kind === 'unavailable') return unavailable('The cheats page', page);
+  if (page.kind === 'unavailable') return args.include_unverified ? recordedOnly(args, deps.manifest, page) : unavailable('The cheats page', page);
   if (page.kind === 'missing') {
     return envelope('no_verified_results', '0 confirmed cheats. The wiki has no GTA VI cheats page.', [], [], [notice('coverage_gap', NO_CONFIRMED), gtawikiGap()]);
   }
@@ -553,6 +567,69 @@ export async function listCheats(
   const sources = [pageSource('fandom', page), ...shown.flatMap((s) => s.built.extraSources)];
   const uniqueSources = sources.filter((source, index) => sources.findIndex((other) => other.url === source.url) === index);
   return envelope(status, `${confirmed} confirmed cheat(s). ${tail}`, results, uniqueSources, notices);
+}
+
+/** Rows the manifest itself records for an unresolved conflict: each variant is a report, shown at the group's reviewed level. */
+function conflictRows(manifest: Manifest): Built[] {
+  const resolved = new Set(manifest.resolutions.map((r) => r.conflict_group_id));
+  return manifest.conflict_groups
+    .filter((group) => !resolved.has(group.conflict_group_id))
+    .flatMap((group) =>
+      group.variants.map((variant): Built => {
+        const evidence = variant.evidence.map((e): EvidenceItem => ({ url: e.url, claim_text_reviewed: e.quote, revision_or_fetched_at: e.captured_at, time_basis: 'captured_at' }));
+        const row: CheatRow = {
+          claim_id: variant.claim_id,
+          name: group.cheat_name,
+          input: variant.input,
+          input_status: 'known',
+          input_method: 'unknown',
+          entry_steps: null,
+          platform: variant.platform,
+          effect: null,
+          unlock_requirement: null,
+          unlock_spoiler_class: 'unclassified',
+          game_version: null,
+          confidence: 'conflicting',
+          conflict_group_id: group.conflict_group_id,
+          evidence,
+          reason: variant.reason,
+          source_page_url: evidence[0]?.url ?? MANIFEST_URL,
+        };
+        return {
+          row,
+          rowText: '',
+          unresolved: [],
+          manifestBacked: true,
+          extraSources: evidence.map((e) => publisherSource(e.url, e.revision_or_fetched_at)),
+          communityMinLevel: group.min_level ?? 'full',
+        };
+      }),
+    );
+}
+
+/** What list_cheats can still say when the wiki's cheat table was not retrieved: recorded conflicts and community reports. */
+function recordedOnly(
+  args: { readonly platform?: 'ps5' | 'xbox-series' | undefined; readonly spoilers: SpoilerLevel },
+  manifest: Manifest,
+  failure: Unavailable,
+): Envelope<CheatRow> {
+  const built = [...conflictRows(manifest), ...communityRows(manifest)].filter((b) => args.platform === undefined || b.row.platform === args.platform);
+  const shown = built.filter((b) => allows(b.communityMinLevel ?? 'full', args.spoilers));
+  if (built.length === 0) return unavailable('The cheats page', failure);
+  const conflictNames = [...new Set(shown.filter((b) => b.row.confidence === 'conflicting').map((b) => b.row.name))];
+  const notices = [
+    gapNotice('The cheats page', failure.reason),
+    notice('coverage_gap', NO_CONFIRMED),
+    gtawikiGap(),
+    ...(conflictNames.length > 0
+      ? [notice('conflict', `${conflictNames.join(', ')}: sources disagree on the input. Each variant is a report, not a working code.`)]
+      : []),
+    ...(shown.length < built.length ? [notice('spoiler_withheld')] : []),
+  ];
+  const sources = shown.flatMap((b) => b.extraSources);
+  const uniqueSources = sources.filter((source, index) => sources.findIndex((other) => other.url === source.url) === index);
+  const summary = `0 confirmed cheats. The wiki's cheat table was not retrieved, so only the ${shown.length} report(s) this server records itself are returned; they are reports, not working codes.`;
+  return envelope('partial', summary, shown.map((b) => b.row), uniqueSources, notices);
 }
 
 // --------------------------------------------------------------- easter_eggs
@@ -647,7 +724,9 @@ export async function easterEggs(args: { readonly topic?: string | undefined; re
   const notices = [
     ...shownPages.flatMap((page) => staleNotices(page.stale, page.retrieved_at)),
     ...(reviewed.length === 0 ? [notice('coverage_gap', 'No reviewed hint exists; these entries are community reports or unreviewed wiki sections.')] : []),
-    ...failures.map((f) => notice('coverage_gap', `The wiki could not be read (${f.reason}); wiki sections are missing from this result.`)),
+    ...failures.map((f) =>
+      f.reason === 'not_permitted' ? notice('coverage_gap', FANDOM_OFF) : notice('coverage_gap', `The wiki could not be read (${f.reason}); wiki sections are missing from this result.`),
+    ),
     gtawikiGap(),
     ...(withheld ? [notice('spoiler_withheld')] : []),
   ];

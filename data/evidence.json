@@ -24,6 +24,15 @@
       "conflict_group_id": "cg-attack-force",
       "cheat_name": "Attack Force",
       "summary": "GameSpot (archived 2026-11-18) and the wiki, which cites GameSpot, list 8 inputs; PC Gamer (read 2026-11-21) lists 9. Neither guide says it entered this code.",
+      "min_level": "hints",
+      "level_review": {
+        "reviewer": {
+          "identity": "Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session finishing gta6-mcp v0.1.0",
+          "type": "ai_agent"
+        },
+        "reviewed_at": "2026-11-21T11:08:36Z",
+        "reason": "Both recorded quotes are a cheat name and a D-pad sequence only. Neither names a story event, character, location, mission or unlock condition."
+      },
       "variants": [
         {
           "claim_id": "gta6-attack-force-unattributed-8-input",

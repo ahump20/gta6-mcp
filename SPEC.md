@@ -27,13 +27,16 @@ cheat rows until a source documents them for GTA VI.
 | --- | --- | --- |
 | Research lead | G2A, Gizdev, gta6cheatcodes.com | Offline research and documenting disagreement only. Never fetched at runtime, never confirming. |
 | Community report | Reddit, X, YouTube, TikTok and forum posts | Captured offline, reviewed into the community registry shipped in `data/evidence.json`: link, author handle, post and capture times, evidence type and a reviewer-written one-line description. Never post text, images or video. Never fetched at runtime. Returned as `unverified` (or `theory`) reports. |
-| Runtime retrieval | `gta.fandom.com/api.php` (primary GTA Wiki provider), `en.wikipedia.org/w/api.php` | Fandom: gameplay discovery and wikitext. Wikipedia: background. |
+| Runtime retrieval, always on | `en.wikipedia.org/w/api.php` | Background on the game. Wikimedia's User-Agent policy and API etiquette permit identified API clients. |
+| Runtime retrieval, off by default | `gta.fandom.com/api.php` (primary GTA Wiki provider) | Gameplay discovery and wikitext. Fandom's Terms of Use bar automated access without express written permission, and Fandom publishes no API policy granting it. The server requests Fandom only when its operator sets `GTA6_MCP_FANDOM_PERMISSION=granted`, which is a statement that Fandom has given that permission. |
 | Known, not queried | `gta.wiki` (Weird Gloop) | The wiki the GTA Wiki community moved to on 15 March 2026 and where its GTA VI cheats and Easter egg pages are maintained. Its host's Terms of Use bar automated use without prior consent and none has been given, so the server never requests it. See [docs/VERIFICATION.md](docs/VERIFICATION.md) section 7. |
 | Confirming evidence | Rockstar, Take-Two, PlayStation, Xbox, IGN, GameSpot, Eurogamer, Polygon, PC Gamer; gameplay videos in pairs under the video rule | Only through reviewed entries in the evidence manifest. Wikis supply candidates. |
 
 ## Network policy
 
-Requests go only to the two API endpoints above, plus exact URLs listed in an
+Requests go only to the Wikipedia endpoint, to the Fandom endpoint when its
+permission is recorded (otherwise the request is refused with `not_permitted`
+before any network call), plus exact URLs listed in an
 approved manifest entry whose host permits automated retrieval of that URL
 (`runtime_recheck: "permitted"`). `gta.wiki` and every social platform are
 absent from the allow-list, so a request to them is refused before any network
@@ -185,7 +188,9 @@ null when the provider gave none or when it is withheld.
 ### `get_page(title, section?, source?, spoilers?)`
 
 `source` is `gtawiki`, `fandom` (default: the primary gameplay provider chosen
-in Phase 0) or `wikipedia`. `gtawiki` makes no request and returns
+in Phase 0) or `wikipedia`. Without recorded Fandom permission the default
+returns `upstream_unavailable` with a `coverage_gap` notice that names the
+setting and points to `wikipedia`. `gtawiki` makes no request and returns
 `upstream_unavailable` with a `coverage_gap` notice saying why. Follows
 redirects and reports the resolved title. Result: `{ title, section, heading_path, text, references,
 review_status, truncated }`. Text is capped at 20,000 characters. Missing page,
@@ -218,6 +223,13 @@ as `unverified` rows: the evidence item carries `evidence_type`
 post time and link, and `reason` says the claim is a community report with no
 eligible confirmation.
 
+When the wiki's cheat table is not retrieved (Fandom off, or down) and
+`include_unverified` is true, the tool still returns what the manifest itself
+records: the variants of each unresolved conflict group (shown at the group's
+reviewed `min_level`) and the community reports, with status `partial`. Without
+the flag it returns `upstream_unavailable`, since a confirmation needs a live
+candidate row.
+
 `known`: a complete ordered sequence. `unknown`: omitted or failed extraction.
 `undiscovered`: only when the source says so in words. `unattributed`: the
 source names no platform; a `coverage_gap` notice says so, and a `platform`
@@ -234,7 +246,10 @@ When no reviewed hint exists the tool says so.
 
 ## Known coverage at release
 
-Zero confirmed cheats. One recorded conflict (Attack Force). `gta.wiki`, which
+Zero confirmed cheats. One recorded conflict (Attack Force). Out of the box
+only Wikipedia is queried; the Fandom wiki needs its operator's recorded
+permission, so the 18 source-reported cheat rows on its page are not returned
+by default. `gta.wiki`, which
 has GTA VI cheats and Easter egg pages, is not queried (consent required). No
 GTA VI Easter egg page exists on the Fandom wiki, and no Easter egg has been
 reviewed. Rockstar Support and GameSpot's live page were unreachable during

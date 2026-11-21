@@ -5,7 +5,7 @@ import { loadManifest } from '../src/evidence.js';
 import { isAllowed } from '../src/net.js';
 import { type Deps, easterEggs, getPage, listCheats, renderText, searchGta6 } from '../src/tools.js';
 import { type Route, fakeHttp, fixtureJson, okJson } from './helpers.js';
-import { SYN_POST_URL, SYN_REVIEWED_AT, SYN_WIKITEXT, synManifest, synReport, synVideoClaim, synVideoEvidence } from './synthetic.js';
+import { SYN_POST_URL, SYN_REVIEWED_AT, SYN_WIKITEXT, synConflict, synManifest, synReport, synVideoClaim, synVideoEvidence } from './synthetic.js';
 
 const NONE: ReadonlySet<string> = new Set();
 const SEARCH_LIMIT = 5;
@@ -153,5 +153,74 @@ describe('video-backed confirmation', () => {
     const stale: Route = { match: ['page=Cheats in GTA VI'], result: okJson({ parse: { title: 'Cheats in GTA VI', revid: 1, wikitext: SYN_WIKITEXT } }, true) };
     const out = await listCheats({ include_unverified: true, spoilers: 'full' }, { http: fakeHttp([stale]), manifest });
     expect(out.results.find((r) => r.name === 'Confirmed Cheat')?.confidence).toBe('unverified');
+  });
+});
+
+describe('Fandom off (no recorded permission)', () => {
+  const off: Route = { match: ['gta.fandom.com'], result: { ok: false, reason: 'not_permitted', detail: 'simulated' } };
+  const SETTING = 'GTA6_MCP_FANDOM_PERMISSION';
+  const names = (out: { notices: readonly { message: string }[] }): boolean => out.notices.some((n) => n.message.includes(SETTING));
+
+  it('says how to turn the wiki on instead of reporting an outage', async () => {
+    const deps: Deps = { http: fakeHttp([off, ...searchRoutes]), manifest: real };
+    const page = await getPage({ title: 'Cheats in GTA VI', source: 'fandom', spoilers: 'hints' }, deps);
+    expect(page.status).toBe('upstream_unavailable');
+    expect(names(page)).toBe(true);
+    const search = await searchGta6({ query: 'GTA VI cheats', limit: SEARCH_LIMIT, spoilers: 'hints' }, deps);
+    expect(search.status).toBe('partial');
+    expect(search.results.every((r) => r.provider === 'wikipedia')).toBe(true);
+    expect(names(search)).toBe(true);
+    const confirmedOnly = await listCheats({ include_unverified: false, spoilers: 'hints' }, deps);
+    expect(confirmedOnly.status).toBe('upstream_unavailable');
+    expect(names(confirmedOnly)).toBe(true);
+  });
+
+  it('still returns the recorded Attack Force dispute as reports', async () => {
+    const out = await listCheats({ include_unverified: true, spoilers: 'hints' }, { http: fakeHttp([off]), manifest: real });
+    expect(out.status).toBe('partial');
+    expect(out.results.map((r) => [r.name, r.confidence, r.conflict_group_id, r.input?.length])).toEqual([
+      ['Attack Force', 'conflicting', 'cg-attack-force', 8],
+      ['Attack Force', 'conflicting', 'cg-attack-force', 9],
+    ]);
+    expect(out.results.map((r) => new URL(r.evidence[0]?.url ?? '').host)).toEqual(['www.gamespot.com', 'www.pcgamer.com']);
+    expect(out.notices.map((n) => n.type)).toContain('conflict');
+    expect(names(out)).toBe(true);
+    expect(out.summary).toContain('0 confirmed');
+  });
+
+  it('returns community reports alongside, and withholds a dispute below its reviewed level', async () => {
+    const manifest = synManifest({ confirmations: [], community_reports: [synReport()], conflict_groups: [{ ...synConflict, min_level: 'discovery' }] });
+    const hints = await listCheats({ include_unverified: true, spoilers: 'hints' }, { http: fakeHttp([off]), manifest });
+    expect(hints.results.map((r) => r.claim_id)).toEqual(['syn-report-1']);
+    expect(hints.notices.map((n) => n.type)).toContain('spoiler_withheld');
+    const discovery = await listCheats({ include_unverified: true, spoilers: 'discovery' }, { http: fakeHttp([off]), manifest });
+    expect(discovery.results.map((r) => r.claim_id)).toEqual(['syn-confirmed-ps5', 'syn-confirmed-ps5-b', 'syn-report-1']);
+  });
+});
+
+describe('borrowed filter cases (Ro25v04/gta6-mcp, MIT)', () => {
+  const hit = (title: string): Route[] => [
+    { match: ['gta.fandom.com', 'list=search'], result: okJson({ query: { search: [{ title }] } }) },
+    { match: ['gta.fandom.com', 'prop=categories'], result: okJson({ query: { pages: [{ title, categories: [{ title: 'Category:Characters in GTA VI' }] }] } }) },
+    { match: ['en.wikipedia.org', 'list=search'], result: okJson({ query: { search: [] } }) },
+  ];
+  const titles = async (routes: readonly Route[]): Promise<string[]> =>
+    (await searchGta6({ query: 'q', limit: SEARCH_LIMIT, spoilers: 'full' }, { http: fakeHttp(routes), manifest: real })).results.map((r) => r.title);
+
+  it.each(['infobox', 'artwork', 'screenshots', 'trailers', 'gallery'])('skips the %s helper sub-page', async (sub) => {
+    expect(await titles(hit(`Lucia Caminos/${sub}`))).toEqual([]);
+  });
+
+  it('keeps an ordinary GTA VI article', async () => {
+    expect(await titles(hit('Lucia Caminos'))).toEqual(['Lucia Caminos']);
+  });
+
+  it('does not take Vice City for GTA VI', async () => {
+    const routes: Route[] = [
+      { match: ['gta.fandom.com', 'list=search'], result: okJson({ query: { search: [{ title: 'Ocean Drive' }] } }) },
+      { match: ['gta.fandom.com', 'prop=categories'], result: okJson({ query: { pages: [{ title: 'Ocean Drive', categories: [{ title: 'Category:Streets in GTA Vice City' }] }] } }) },
+      { match: ['en.wikipedia.org', 'list=search'], result: okJson({ query: { search: [] } }) },
+    ];
+    expect(await titles(routes)).toEqual([]);
   });
 });

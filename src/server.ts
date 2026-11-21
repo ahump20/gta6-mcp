@@ -1,7 +1,7 @@
 // Registers the four tools. The same factory serves the legacy and modern eras.
 import { type CallToolResult, McpServer } from '@modelcontextprotocol/server';
 import { approvedEvidenceUrls, loadManifest } from './evidence.js';
-import { createHttp } from './net.js';
+import { createHttp, fandomPermittedBy } from './net.js';
 import { CheatsInput, CheatsOutput, type Envelope, EggsInput, EggsOutput, PageInput, PageOutput, SearchInput, SearchOutput } from './schemas.js';
 import { type Deps, easterEggs, getPage, listCheats, renderText, searchGta6 } from './tools.js';
 
@@ -20,6 +20,7 @@ export function defaultDeps(): Deps {
     now: () => Date.now(),
     sleep: (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
     exactUrls: approvedEvidenceUrls(manifest),
+    fandomPermitted: fandomPermittedBy(process.env),
   });
   return { http, manifest };
 }
@@ -53,7 +54,7 @@ export function createServer(deps: Deps): McpServer {
     'get_page',
     {
       title: 'Read a GTA VI wiki page',
-      description: `Read one GTA VI wiki page or section as bounded plain text with its revision, licence and references. source is fandom (default) or wikipedia; gtawiki is recognised but not queried, because gta.wiki requires consent for automated use. Distinguishes a missing page, a missing section, and content withheld by the spoiler policy. Text is capped at 20,000 characters. ${CARRY}`,
+      description: `Read one GTA VI wiki page or section as bounded plain text with its revision, licence and references. source is fandom (default) or wikipedia. Fandom is off unless the operator has recorded Fandom's written permission (GTA6_MCP_FANDOM_PERMISSION=granted); without it use wikipedia. gtawiki is recognised but never queried. Distinguishes a missing page, a missing section, and content withheld by the spoiler policy. Text is capped at 20,000 characters. ${CARRY}`,
       inputSchema: PageInput,
       outputSchema: PageOutput,
       annotations: READ_ONLY,

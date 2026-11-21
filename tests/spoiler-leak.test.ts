@@ -106,6 +106,7 @@ describe('warm cache', () => {
       now: (): number => 0,
       sleep: async (): Promise<void> => {},
       exactUrls: new Set(),
+      fandomPermitted: true,
     });
     const args = { title: 'Cheats in GTA VI', section: 'Secret ending', source: 'fandom' } as const;
     const full = await getPage({ ...args, spoilers: 'full' }, { http, manifest });

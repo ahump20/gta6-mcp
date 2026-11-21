@@ -139,3 +139,17 @@ robots rule disallowing `api.php` for every crawler.
 - Video evidence reuses the confirmation entry shape with a `video` review
   record. The runtime never fetches a social host; a video-backed approval is
   trusted as reviewed and labelled so.
+
+## Revision 3: Fandom is off by default
+
+Read first-hand on 2026-11-21: Fandom's Terms of Use (last revised December 19, 2025) say a user must "not use any robot, spider, scraper or other automated means to access the Services for any purpose without our express written permission". Fandom publishes no API policy that grants it (Help:API does not exist on Community Central; Help:Bots covers editing bots only). Both GTA Wiki hosts are therefore closed to this server by their terms.
+
+Approaches:
+
+1. Keep Fandom on and note the conflict. Rejected: the brief says to follow each host's published policy.
+2. Remove the Fandom provider. Rejected: it discards tested work, and an operator who holds permission would have no way to use it.
+3. Keep the provider, refuse every Fandom request before the network unless the operator records the permission. Chosen.
+
+This is the consent switch Revision 2 rejected for gta.wiki. The two hosts differ in one way that matters: the Fandom path is built and tested against captured responses, while gta.wiki's page-read call was never probed, so a gta.wiki switch would ship code no test has exercised. gta.wiki stays unqueried in v0.1.0.
+
+Consequences: the setting is never set in the smoke run, CI, the Claude Code proof or the installed configuration, because nobody holds the permission. `list_cheats` with `include_unverified` still returns what the manifest records itself (unresolved conflict groups at their own reviewed level, and community reports). A conflict group with no reviewed level is shown at `full` only.

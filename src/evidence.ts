@@ -78,6 +78,8 @@ const ConflictGroup = z.object({
   conflict_group_id: z.string().min(1),
   cheat_name: z.string().min(1),
   summary: z.string().min(1),
+  min_level: SpoilerLevel.optional().describe('Spoiler level a reviewer cleared this group for when it is returned from the manifest alone. Absent means full only.'),
+  level_review: z.object({ reviewer: Reviewer, reviewed_at: z.string().min(1), reason: z.string().min(1) }).optional(),
   variants: z
     .array(
       z.object({
@@ -367,6 +369,7 @@ export function validatePolicy(manifest: Manifest, opts: { readonly allowSynthet
     new Set(ids).size === ids.length ? '' : 'claim and conflict group ids must be unique',
     ...approved.flatMap((claim) => evidenceErrors(claim, recorded, registry)),
     ...communityErrors(manifest),
+    ...manifest.conflict_groups.flatMap((g) => (g.min_level !== undefined && !g.level_review ? [`${g.conflict_group_id}: min_level needs its own level_review`] : [])),
     ...disagreementErrors(approved, manifest),
     ...approved.map((claim) => (hasApprovalBasis(claim) ? '' : `${claim.claim_id}: no sufficient approval basis`)),
     ...manifest.conflict_groups.map((group) =>

@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { type Http, type HttpResult, createHttp, isAllowed } from '../src/net.js';
+import { type Http, type HttpResult, createHttp, fandomPermittedBy, isAllowed } from '../src/net.js';
 
 const FANDOM = 'https://gta.fandom.com/api.php?action=query&format=json';
 const FANDOM_B = 'https://gta.fandom.com/api.php?action=parse&format=json';
@@ -29,7 +29,7 @@ interface Rig {
   advance(ms: number): void;
 }
 
-function rig(responder: Responder, exactUrls: ReadonlySet<string> = NONE): Rig {
+function rig(responder: Responder, exactUrls: ReadonlySet<string> = NONE, fandomPermitted = true): Rig {
   let t = 0;
   const calls: string[] = [];
   const sleeps: number[] = [];
@@ -45,6 +45,7 @@ function rig(responder: Responder, exactUrls: ReadonlySet<string> = NONE): Rig {
       t += ms;
     },
     exactUrls,
+    fandomPermitted,
   });
   return {
     http,
@@ -233,8 +234,25 @@ describe('createHttp', () => {
       now: (): number => 0,
       sleep: async (): Promise<void> => {},
       exactUrls: NONE,
+      fandomPermitted: true,
     });
     await http.get(FANDOM);
     expect(seen).toBe('gta6-mcp/0.1 (+https://github.com/ahump20/gta6-mcp)');
+  });
+});
+
+describe('Fandom permission gate', () => {
+  it('makes no Fandom request unless permission is recorded', async () => {
+    const r = rig(() => json({ ok: true }), NONE, false);
+    const refused = await r.http.get(FANDOM);
+    expect(refused).toMatchObject({ ok: false, reason: 'not_permitted' });
+    expect(r.calls).toEqual([]);
+    expect((await r.http.get(WIKIPEDIA)).ok).toBe(true);
+  });
+
+  it('reads permission only from the exact setting', () => {
+    expect(fandomPermittedBy({})).toBe(false);
+    expect(fandomPermittedBy({ GTA6_MCP_FANDOM_PERMISSION: '1' })).toBe(false);
+    expect(fandomPermittedBy({ GTA6_MCP_FANDOM_PERMISSION: 'granted' })).toBe(true);
   });
 });

@@ -26,6 +26,7 @@ const HTTP_UNAVAILABLE = 503;
 
 export type FailReason =
   | 'blocked'
+  | 'not_permitted'
   | 'timeout'
   | 'http'
   | 'rate_limited'
@@ -65,6 +66,8 @@ export interface HttpDeps {
   readonly now: () => number;
   readonly sleep: (ms: number) => Promise<void>;
   readonly exactUrls: ReadonlySet<string>;
+  /** True only when the operator has recorded Fandom's written permission for automated access. */
+  readonly fandomPermitted: boolean;
 }
 
 interface CacheEntry {
@@ -74,6 +77,13 @@ interface CacheEntry {
 }
 
 const fail = (reason: FailReason, detail: string): HttpFailure => ({ ok: false, reason, detail });
+
+export const FANDOM_PERMISSION_ENV = 'GTA6_MCP_FANDOM_PERMISSION';
+
+/** Fandom's Terms of Use bar automated access without express written permission; this setting records that it was given. */
+export function fandomPermittedBy(env: Readonly<Record<string, string | undefined>>): boolean {
+  return env[FANDOM_PERMISSION_ENV] === 'granted';
+}
 
 export function isAllowed(raw: string, exactUrls: ReadonlySet<string>): boolean {
   let url: URL;
@@ -114,6 +124,14 @@ export function createHttp(deps: HttpDeps): Http {
   const hostLastStart = new Map<string, number>();
 
   const iso = (ms: number): string => new Date(ms).toISOString();
+  const fandomHost = new URL(FANDOM_API).host;
+
+  // Refused before any network call: off the allow-list, or Fandom without recorded permission.
+  function refusal(url: string): HttpFailure | null {
+    if (!isAllowed(url, deps.exactUrls)) return fail('blocked', 'URL is not on the allow-list');
+    if (new URL(url).host === fandomHost && !deps.fandomPermitted) return fail('not_permitted', `${FANDOM_PERMISSION_ENV} is not set to granted`);
+    return null;
+  }
 
   // Serialises requests per host and keeps them HOST_SPACING_MS apart.
   async function send(url: string): Promise<Response> {
@@ -154,7 +172,8 @@ export function createHttp(deps: HttpDeps): Http {
 
   // One attempt; redirects and retries recurse with their counters.
   async function fetchOnce(url: string, expect: 'json' | 'text', retries = 0, hops = 0): Promise<HttpResult> {
-    if (!isAllowed(url, deps.exactUrls)) return fail('blocked', 'URL is not on the allow-list');
+    const refused = refusal(url);
+    if (refused) return refused;
     let res: Response;
     try {
       res = await send(url);
@@ -203,7 +222,8 @@ export function createHttp(deps: HttpDeps): Http {
 
   return {
     async get(url: string, opts: GetOptions = {}): Promise<HttpResult> {
-      if (!isAllowed(url, deps.exactUrls)) return fail('blocked', 'URL is not on the allow-list');
+      const refused = refusal(url);
+    if (refused) return refused;
       const key = `${opts.fresh ? 'fresh' : 'cached'}:${opts.expect ?? 'json'}:${url}`;
       const running = inFlight.get(key);
       if (running) return running;

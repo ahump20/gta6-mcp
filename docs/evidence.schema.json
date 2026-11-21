@@ -375,6 +375,55 @@
             "type": "string",
             "minLength": 1
           },
+          "min_level": {
+            "description": "Spoiler level a reviewer cleared this group for when it is returned from the manifest alone. Absent means full only.",
+            "type": "string",
+            "enum": [
+              "hints",
+              "discovery",
+              "full"
+            ]
+          },
+          "level_review": {
+            "type": "object",
+            "properties": {
+              "reviewer": {
+                "type": "object",
+                "properties": {
+                  "identity": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "ai_agent",
+                      "human"
+                    ]
+                  }
+                },
+                "required": [
+                  "identity",
+                  "type"
+                ],
+                "additionalProperties": false
+              },
+              "reviewed_at": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "reviewer",
+              "reviewed_at",
+              "reason"
+            ],
+            "additionalProperties": false
+          },
           "variants": {
             "minItems": 2,
             "type": "array",

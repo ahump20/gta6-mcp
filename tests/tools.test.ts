@@ -221,9 +221,16 @@ describe('list_cheats', () => {
     expect(out.notices.find((n) => n.type === 'coverage_gap')?.message).toContain('platform');
   });
 
-  it('is unavailable when the wiki cannot be reached', async () => {
-    const out = await listCheats({ include_unverified: true, spoilers: 'hints' }, real([{ match: ['action=parse'], result: down() }]));
+  it('is unavailable for confirmed-only requests when the wiki cannot be reached', async () => {
+    const out = await listCheats({ include_unverified: false, spoilers: 'hints' }, real([{ match: ['action=parse'], result: down() }]));
     expect(out).toMatchObject({ status: 'upstream_unavailable', results: [] });
+  });
+
+  it('falls back to its own recorded reports when the wiki cannot be reached', async () => {
+    const out = await listCheats({ include_unverified: true, spoilers: 'hints' }, real([{ match: ['action=parse'], result: down() }]));
+    expect(out.status).toBe('partial');
+    expect(out.results.every((r) => r.confidence === 'conflicting')).toBe(true);
+    expect(types(out)).toContain('coverage_gap');
   });
 
   it('adds a stale notice for a stale page', async () => {
