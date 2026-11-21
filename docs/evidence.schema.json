@@ -1,0 +1,873 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "number",
+      "const": 1
+    },
+    "synthetic": {
+      "type": "boolean",
+      "description": "True only for test fixtures. Production data must be false."
+    },
+    "approved_hosts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "host": {
+            "type": "string",
+            "minLength": 1
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "runtime_api",
+              "official",
+              "guide"
+            ]
+          },
+          "purpose": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "host",
+          "role",
+          "purpose"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "confirmations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "claim_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "game": {
+            "type": "string",
+            "const": "Grand Theft Auto VI"
+          },
+          "cheat_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "input": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Up",
+                "Down",
+                "Left",
+                "Right"
+              ]
+            }
+          },
+          "effect": {
+            "type": "string",
+            "minLength": 1
+          },
+          "platform": {
+            "type": "string",
+            "enum": [
+              "ps5",
+              "xbox-series"
+            ]
+          },
+          "input_method": {
+            "type": "string",
+            "enum": [
+              "d-pad",
+              "phone",
+              "unknown"
+            ]
+          },
+          "entry_steps": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "game_version": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "evidence": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "quote": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 400
+                },
+                "evidence_type": {
+                  "type": "string",
+                  "enum": [
+                    "official_documentation",
+                    "guide_own_test",
+                    "independent_report"
+                  ]
+                },
+                "own_test_covers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "input",
+                      "effect",
+                      "platform",
+                      "unlock_timing",
+                      "entry_method"
+                    ]
+                  }
+                },
+                "origin": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Who originally produced this information."
+                },
+                "independence": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Why this is independent of the other evidence, or why that does not apply."
+                },
+                "fingerprint": {
+                  "type": "string",
+                  "format": "starts_with",
+                  "pattern": "^sha256:.*",
+                  "description": "Fingerprint of the reviewed quote."
+                },
+                "captured_at": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "url",
+                "quote",
+                "evidence_type",
+                "own_test_covers",
+                "origin",
+                "independence",
+                "fingerprint",
+                "captured_at"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "review": {
+            "type": "object",
+            "properties": {
+              "reviewer": {
+                "type": "object",
+                "properties": {
+                  "identity": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "ai_agent",
+                      "human"
+                    ]
+                  }
+                },
+                "required": [
+                  "identity",
+                  "type"
+                ],
+                "additionalProperties": false
+              },
+              "reviewed_at": {
+                "type": "string",
+                "minLength": 1
+              },
+              "decision": {
+                "type": "string",
+                "enum": [
+                  "approved",
+                  "rejected"
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "reviewer",
+              "reviewed_at",
+              "decision",
+              "reason"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "claim_id",
+          "game",
+          "cheat_name",
+          "input",
+          "effect",
+          "platform",
+          "input_method",
+          "entry_steps",
+          "game_version",
+          "evidence",
+          "review"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "conflict_groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "conflict_group_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cheat_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "variants": {
+            "minItems": 2,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "claim_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "input": {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "Up",
+                      "Down",
+                      "Left",
+                      "Right"
+                    ]
+                  }
+                },
+                "platform": {
+                  "type": "string",
+                  "enum": [
+                    "ps5",
+                    "xbox-series",
+                    "unattributed"
+                  ]
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "evidence": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "url": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "archive_url": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "quote": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 400
+                      },
+                      "captured_at": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "lineage": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "url",
+                      "archive_url",
+                      "quote",
+                      "captured_at",
+                      "lineage"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "claim_id",
+                "input",
+                "platform",
+                "reason",
+                "evidence"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "review": {
+            "type": "object",
+            "properties": {
+              "reviewer": {
+                "type": "object",
+                "properties": {
+                  "identity": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "ai_agent",
+                      "human"
+                    ]
+                  }
+                },
+                "required": [
+                  "identity",
+                  "type"
+                ],
+                "additionalProperties": false
+              },
+              "reviewed_at": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "reviewer",
+              "reviewed_at"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "conflict_group_id",
+          "cheat_name",
+          "summary",
+          "variants",
+          "review"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "resolutions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "conflict_group_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "winning_claim_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "basis": {
+            "type": "string",
+            "enum": [
+              "official_documentation",
+              "independent_direct_verifications"
+            ]
+          },
+          "supporting": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "quote": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "origin": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "verified_directly": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "url",
+                "quote",
+                "origin",
+                "verified_directly"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 1
+          },
+          "dispositions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "claim_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "disposition": {
+                  "type": "string",
+                  "enum": [
+                    "upheld",
+                    "rejected"
+                  ]
+                }
+              },
+              "required": [
+                "claim_id",
+                "disposition"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "review": {
+            "type": "object",
+            "properties": {
+              "reviewer": {
+                "type": "object",
+                "properties": {
+                  "identity": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "ai_agent",
+                      "human"
+                    ]
+                  }
+                },
+                "required": [
+                  "identity",
+                  "type"
+                ],
+                "additionalProperties": false
+              },
+              "reviewed_at": {
+                "type": "string",
+                "minLength": 1
+              },
+              "decision": {
+                "type": "string",
+                "enum": [
+                  "approved",
+                  "rejected"
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "reviewer",
+              "reviewed_at",
+              "decision",
+              "reason"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "conflict_group_id",
+          "winning_claim_id",
+          "basis",
+          "supporting",
+          "rationale",
+          "dispositions",
+          "review"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "spoiler_registry": {
+      "type": "object",
+      "properties": {
+        "review": {
+          "type": "object",
+          "properties": {
+            "reviewer": {
+              "type": "object",
+              "properties": {
+                "identity": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "ai_agent",
+                    "human"
+                  ]
+                }
+              },
+              "required": [
+                "identity",
+                "type"
+              ],
+              "additionalProperties": false
+            },
+            "reviewed_at": {
+              "type": "string",
+              "minLength": 1
+            },
+            "scope_note": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "reviewer",
+            "reviewed_at",
+            "scope_note"
+          ],
+          "additionalProperties": false
+        },
+        "titles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "provider": {
+                "type": "string",
+                "enum": [
+                  "fandom",
+                  "wikipedia"
+                ]
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "min_level": {
+                "type": "string",
+                "enum": [
+                  "hints",
+                  "discovery",
+                  "full"
+                ]
+              }
+            },
+            "required": [
+              "provider",
+              "title",
+              "min_level"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "sections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "provider": {
+                "type": "string",
+                "enum": [
+                  "fandom",
+                  "wikipedia"
+                ]
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "heading": {
+                "type": "string"
+              },
+              "min_level": {
+                "type": "string",
+                "enum": [
+                  "hints",
+                  "discovery",
+                  "full"
+                ]
+              },
+              "fingerprint": {
+                "type": "string",
+                "format": "starts_with",
+                "pattern": "^sha256:.*"
+              }
+            },
+            "required": [
+              "provider",
+              "title",
+              "heading",
+              "min_level",
+              "fingerprint"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "cheat_rows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "row_fingerprint": {
+                "type": "string",
+                "format": "starts_with",
+                "pattern": "^sha256:.*"
+              },
+              "min_level": {
+                "type": "string",
+                "enum": [
+                  "hints",
+                  "discovery",
+                  "full"
+                ]
+              },
+              "unlock_min_level": {
+                "type": "string",
+                "enum": [
+                  "hints",
+                  "discovery",
+                  "full"
+                ]
+              }
+            },
+            "required": [
+              "name",
+              "row_fingerprint",
+              "min_level",
+              "unlock_min_level"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "entry_steps": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "provider": {
+                  "type": "string",
+                  "enum": [
+                    "fandom",
+                    "wikipedia"
+                  ]
+                },
+                "title": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "heading": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "fingerprint": {
+                  "type": "string",
+                  "format": "starts_with",
+                  "pattern": "^sha256:.*"
+                },
+                "min_level": {
+                  "type": "string",
+                  "enum": [
+                    "hints",
+                    "discovery",
+                    "full"
+                  ]
+                },
+                "input_method": {
+                  "type": "string",
+                  "enum": [
+                    "d-pad",
+                    "phone",
+                    "unknown"
+                  ]
+                },
+                "steps": {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              "required": [
+                "provider",
+                "title",
+                "heading",
+                "fingerprint",
+                "min_level",
+                "input_method",
+                "steps"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "easter_eggs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "title_min_level": {
+                "type": "string",
+                "enum": [
+                  "hints",
+                  "discovery",
+                  "full"
+                ]
+              },
+              "hint": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "detail": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "location": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "prerequisites": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "evidence_status": {
+                "type": "string",
+                "enum": [
+                  "documented",
+                  "theory",
+                  "unverified"
+                ]
+              },
+              "source_url": {
+                "type": "string",
+                "minLength": 1
+              },
+              "quote": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              },
+              "fingerprint": {
+                "type": "string",
+                "format": "starts_with",
+                "pattern": "^sha256:.*"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "title_min_level",
+              "hint",
+              "detail",
+              "location",
+              "prerequisites",
+              "evidence_status",
+              "source_url",
+              "quote",
+              "fingerprint"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "easter_egg_page_titles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "review",
+        "titles",
+        "sections",
+        "cheat_rows",
+        "entry_steps",
+        "easter_eggs",
+        "easter_egg_page_titles"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "synthetic",
+    "approved_hosts",
+    "confirmations",
+    "conflict_groups",
+    "resolutions",
+    "spoiler_registry"
+  ],
+  "additionalProperties": false
+}

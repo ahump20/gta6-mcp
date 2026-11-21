@@ -1,0 +1,317 @@
+{
+  "schema_version": 1,
+  "synthetic": false,
+  "approved_hosts": [
+    {
+      "host": "gta.fandom.com",
+      "role": "runtime_api",
+      "purpose": "MediaWiki API: gameplay discovery and wikitext. Candidates only, never confirming evidence."
+    },
+    {
+      "host": "en.wikipedia.org",
+      "role": "runtime_api",
+      "purpose": "MediaWiki API: background on the game."
+    }
+  ],
+  "confirmations": [],
+  "conflict_groups": [
+    {
+      "conflict_group_id": "cg-attack-force",
+      "cheat_name": "Attack Force",
+      "summary": "GameSpot (archived 2026-11-18) and the wiki, which cites GameSpot, list 8 inputs; PC Gamer (read 2026-11-21) lists 9. Neither guide says it entered this code.",
+      "variants": [
+        {
+          "claim_id": "gta6-attack-force-unattributed-8-input",
+          "input": [
+            "Down",
+            "Up",
+            "Left",
+            "Right",
+            "Down",
+            "Down",
+            "Up",
+            "Down"
+          ],
+          "platform": "unattributed",
+          "reason": "Reported by GameSpot in an archive capture of 2026-11-18. The live page returned HTTP 403 on 2026-11-21, so its current wording is unknown. No test of this code is claimed and no platform is named.",
+          "evidence": [
+            {
+              "url": "https://www.gamespot.com/articles/all-gta-6-cheats-and-how-to-unlock-them/",
+              "archive_url": "https://web.archive.org/web/20261118184639id_/https://www.gamespot.com/articles/all-gta-6-cheats-and-how-to-unlock-them/",
+              "quote": "Attack Force cheat code: Down, Up, Left, Right, Down, Down, Up, Down.",
+              "captured_at": "2026-11-18T18:46:39Z",
+              "lineage": "GameSpot guide by Cheri Faulkner, published 2026-11-18. The GTA Wiki row cites this article and repeats it."
+            }
+          ]
+        },
+        {
+          "claim_id": "gta6-attack-force-unattributed-9-input",
+          "input": [
+            "Down",
+            "Up",
+            "Left",
+            "Left",
+            "Right",
+            "Down",
+            "Down",
+            "Up",
+            "Down"
+          ],
+          "platform": "unattributed",
+          "reason": "Reported by PC Gamer, read 2026-11-21 (page modified 2026-11-19). Its only stated test is of when cheats unlock. No test of this code is claimed and no platform is named.",
+          "evidence": [
+            {
+              "url": "https://www.pcgamer.com/games/grand-theft-auto/gta-6-cheats-list/",
+              "archive_url": null,
+              "quote": "Attack force | ??? | Down, Up, Left, Left, Right, Down, Down, Up, Down",
+              "captured_at": "2026-11-21T10:10:35.267Z",
+              "lineage": "PC Gamer guide by Sean Martin and Christopher Livingston, published 2026-11-18, modified 2026-11-19."
+            }
+          ]
+        }
+      ],
+      "review": {
+        "reviewer": {
+          "identity": "Claude (AI agent, Anthropic), implementing agent for gta6-mcp v0.1.0",
+          "type": "ai_agent"
+        },
+        "reviewed_at": "2026-11-21T10:35:00Z"
+      }
+    }
+  ],
+  "resolutions": [],
+  "spoiler_registry": {
+    "review": {
+      "reviewer": {
+        "identity": "Claude (AI agent, Anthropic), implementing agent for gta6-mcp v0.1.0",
+        "type": "ai_agent"
+      },
+      "reviewed_at": "2026-11-21T10:35:00Z",
+      "scope_note": "Reviewed for spoiler class only, not for truth. Covers index-level page titles, two sections of the GTA Wiki cheats page at revision 2089363, and its 18 cheat rows."
+    },
+    "titles": [
+      {
+        "provider": "fandom",
+        "title": "Cheats in GTA VI",
+        "min_level": "hints"
+      },
+      {
+        "provider": "fandom",
+        "title": "Grand Theft Auto VI",
+        "min_level": "hints"
+      },
+      {
+        "provider": "fandom",
+        "title": "State of Leonida",
+        "min_level": "hints"
+      },
+      {
+        "provider": "fandom",
+        "title": "Characters in GTA VI",
+        "min_level": "hints"
+      },
+      {
+        "provider": "fandom",
+        "title": "Gangs in GTA VI",
+        "min_level": "hints"
+      },
+      {
+        "provider": "fandom",
+        "title": "Vice City (HD Universe)",
+        "min_level": "hints"
+      },
+      {
+        "provider": "fandom",
+        "title": "Leonida Keys",
+        "min_level": "hints"
+      },
+      {
+        "provider": "fandom",
+        "title": "Lake Leonida",
+        "min_level": "hints"
+      },
+      {
+        "provider": "fandom",
+        "title": "Focus in Grand Theft Auto VI",
+        "min_level": "hints"
+      },
+      {
+        "provider": "fandom",
+        "title": "Character Switching in GTA VI",
+        "min_level": "hints"
+      },
+      {
+        "provider": "fandom",
+        "title": "Criminal Profile",
+        "min_level": "hints"
+      },
+      {
+        "provider": "wikipedia",
+        "title": "Grand Theft Auto VI",
+        "min_level": "hints"
+      },
+      {
+        "provider": "wikipedia",
+        "title": "Grand Theft Auto VI: The Album",
+        "min_level": "hints"
+      },
+      {
+        "provider": "wikipedia",
+        "title": "Grand Theft Auto VI: An Extended Look",
+        "min_level": "hints"
+      }
+    ],
+    "sections": [
+      {
+        "provider": "fandom",
+        "title": "Cheats in GTA VI",
+        "heading": "",
+        "min_level": "hints",
+        "fingerprint": "sha256:24170c29b483b494bbda783d7a6dd4aaf03bb5acb194959992ce9cad0828096d"
+      },
+      {
+        "provider": "fandom",
+        "title": "Cheats in GTA VI",
+        "heading": "Activating cheats",
+        "min_level": "hints",
+        "fingerprint": "sha256:740f2473b524086dca85a953258104d9a7095cc31643684f9dac47322f985eec"
+      },
+      {
+        "provider": "fandom",
+        "title": "Cheats in GTA VI",
+        "heading": "Cheats",
+        "min_level": "discovery",
+        "fingerprint": "sha256:2a65979c5a88198f8b18cc8b7f116b453de384a748e564a514c1c5464da9abff"
+      }
+    ],
+    "cheat_rows": [
+      {
+        "name": "$250,000",
+        "row_fingerprint": "sha256:5c21d9a3eef2c36dfe8d8383f2fa304a1f85ab7bcdaace53d71ee7f00d6984c0",
+        "min_level": "hints",
+        "unlock_min_level": "hints"
+      },
+      {
+        "name": "Raise Heat Level",
+        "row_fingerprint": "sha256:0cd291042f25e89bd6e76177dd1b5eb3ca994d99eb61994ba90c4fb1170090b8",
+        "min_level": "hints",
+        "unlock_min_level": "hints"
+      },
+      {
+        "name": "Raise Wanted Level",
+        "row_fingerprint": "sha256:efa47f22884d4fd690d91f5daa5b5bde3d75d2c038f0666a7cb1a2031e163cbf",
+        "min_level": "hints",
+        "unlock_min_level": "hints"
+      },
+      {
+        "name": "Unlimited Focus",
+        "row_fingerprint": "sha256:86b52a77385311984ffc5fcc40220da5b9c0dd10544e359cfc4ad730d2bd1a90",
+        "min_level": "hints",
+        "unlock_min_level": "hints"
+      },
+      {
+        "name": "Body Armor",
+        "row_fingerprint": "sha256:b32b7e3d86d7cb9fceb0a0696869e43cb1dda4b8f49bfd8b1afef0de14362cc4",
+        "min_level": "hints",
+        "unlock_min_level": "hints"
+      },
+      {
+        "name": "Max Ammo",
+        "row_fingerprint": "sha256:3d902c07c35756e049ae3cdb110b506a9ce461d6388cba617dd64db4817f9b53",
+        "min_level": "hints",
+        "unlock_min_level": "hints"
+      },
+      {
+        "name": "Infinite Ammo",
+        "row_fingerprint": "sha256:cb4f98c30f830b4a517800c8425925a01ce556e667941b2b0cb29e7e774df9e7",
+        "min_level": "hints",
+        "unlock_min_level": "hints"
+      },
+      {
+        "name": "No Reload",
+        "row_fingerprint": "sha256:8f33338ef90844e30e7951430f2c03d1c2c0897f0a7865c25df38452a793b94b",
+        "min_level": "hints",
+        "unlock_min_level": "hints"
+      },
+      {
+        "name": "Attack Force",
+        "row_fingerprint": "sha256:dfa3ac02002c7ba1364ba594b540579161e4a6bd741e85b442eb47f0862f48c7",
+        "min_level": "hints",
+        "unlock_min_level": "hints"
+      },
+      {
+        "name": "Exploding Balls",
+        "row_fingerprint": "sha256:789ea72f28783f8058b4ba9e16145721fcf4dc84883c98200d5374fa89c7a3f3",
+        "min_level": "hints",
+        "unlock_min_level": "hints"
+      },
+      {
+        "name": "Vehicle Force",
+        "row_fingerprint": "sha256:5f62bbfea3d1369fae5f3ab93f70619e8122f43a296ab8022b41395a9b44108b",
+        "min_level": "hints",
+        "unlock_min_level": "hints"
+      },
+      {
+        "name": "Maibatsu Boomazoom",
+        "row_fingerprint": "sha256:a5df9c3311b6fe3ad423ae536d94e4c9a1d7ebde6746308b490d1481c6666893",
+        "min_level": "hints",
+        "unlock_min_level": "hints"
+      },
+      {
+        "name": "MTL Pumper",
+        "row_fingerprint": "sha256:c2f90123b87578d9d2660561c4ea5a44d4ac6cdc1ed5489839caf052146466c4",
+        "min_level": "hints",
+        "unlock_min_level": "hints"
+      },
+      {
+        "name": "HVY Bulldozer",
+        "row_fingerprint": "sha256:52276f5d1832571de2502f865b43d2d51418ccf5ea5708d1d96926120fc4844e",
+        "min_level": "hints",
+        "unlock_min_level": "hints"
+      },
+      {
+        "name": "Cycle Weather",
+        "row_fingerprint": "sha256:898ca9143321dabde860928f9c424ef3ada330c77b2f860fee75f5206d1a447d",
+        "min_level": "hints",
+        "unlock_min_level": "hints"
+      },
+      {
+        "name": "Cataclysm",
+        "row_fingerprint": "sha256:35ce390d9001ba0ca5f6dd1a46698f03342c76dc5194b8807c5cf74ecdf37f1d",
+        "min_level": "hints",
+        "unlock_min_level": "discovery"
+      },
+      {
+        "name": "Dollhouse",
+        "row_fingerprint": "sha256:aeefc9e539a3a0a65b9e998357f9e06fd4fcff25dd673d17051d7f12059c78da",
+        "min_level": "hints",
+        "unlock_min_level": "discovery"
+      },
+      {
+        "name": "Faded Glory",
+        "row_fingerprint": "sha256:720036ea1a1a2ce4a781125277021541997a725b4cb00d747545a2e4cd35a4cf",
+        "min_level": "hints",
+        "unlock_min_level": "discovery"
+      }
+    ],
+    "entry_steps": {
+      "provider": "fandom",
+      "title": "Cheats in GTA VI",
+      "heading": "Activating cheats",
+      "fingerprint": "sha256:740f2473b524086dca85a953258104d9a7095cc31643684f9dac47322f985eec",
+      "min_level": "hints",
+      "input_method": "d-pad",
+      "steps": [
+        "Complete the main story and unlock the relevant cheat.",
+        "Open the in-game phone.",
+        "Hold L1 + R1.",
+        "Enter the directional inputs using the D-pad."
+      ]
+    },
+    "easter_eggs": [],
+    "easter_egg_page_titles": [
+      "Secrets and Easter Eggs in GTA VI",
+      "Easter Eggs in GTA VI"
+    ]
+  }
+}
