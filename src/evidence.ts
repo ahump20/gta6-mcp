@@ -162,10 +162,14 @@ const ELIGIBLE_HOSTS: Readonly<Record<string, 'official' | 'guide'>> = {
 
 const OWN_TEST_REQUIRED = ['input', 'effect', 'platform'] as const;
 
-export function fingerprint(text: string): string {
+/** Collapses all whitespace runs to single spaces. */
+export function normaliseText(text: string): string {
   const spaced = ['\n', '\r', '\t'].reduce((out, char) => out.replaceAll(char, ' '), text);
-  const normalised = spaced.split(' ').filter((part) => part !== '').join(' ');
-  return `sha256:${createHash('sha256').update(normalised).digest('hex')}`;
+  return spaced.split(' ').filter((part) => part !== '').join(' ');
+}
+
+export function fingerprint(text: string): string {
+  return `sha256:${createHash('sha256').update(normaliseText(text)).digest('hex')}`;
 }
 
 export function manifestJsonSchema(): unknown {
@@ -281,16 +285,19 @@ export interface Decision {
 const sameName = (a: string, b: string): boolean => a.trim().toLowerCase() === b.trim().toLowerCase();
 const sameInput = (a: readonly string[] | null, b: readonly string[]): boolean => a !== null && a.join(',') === b.join(',');
 
-export function findApproval(manifest: Manifest, candidate: Candidate): Claim | null {
-  return (
-    manifest.confirmations.find(
-      (claim) =>
-        claim.review.decision === 'approved' &&
-        sameName(claim.cheat_name, candidate.name) &&
-        sameInput(candidate.input, claim.input) &&
-        claim.platform === candidate.platform,
-    ) ?? null
+/** Approved claims for this exact name and input, one per platform. */
+export function approvalsMatching(manifest: Manifest, name: string, input: readonly string[] | null): Claim[] {
+  return manifest.confirmations.filter(
+    (claim) => claim.review.decision === 'approved' && sameName(claim.cheat_name, name) && sameInput(input, claim.input),
   );
+}
+
+export function findApproval(manifest: Manifest, candidate: Candidate): Claim | null {
+  return approvalsMatching(manifest, candidate.name, candidate.input).find((claim) => claim.platform === candidate.platform) ?? null;
+}
+
+export function sameSequence(a: readonly string[] | null, b: readonly string[]): boolean {
+  return sameInput(a, b);
 }
 
 const BINDING_REASONS: Readonly<Record<Exclude<Binding, 'match'>, string>> = {

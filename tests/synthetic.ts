@@ -70,13 +70,13 @@ export function synManifest(overrides: Partial<Manifest> = {}): Manifest {
   };
 }
 
-export const synConflict = {
+export const synConflict: Manifest['conflict_groups'][number] = {
   conflict_group_id: 'cg-syn-confirmed',
   cheat_name: 'Confirmed Cheat',
   summary: 'SYNTHETIC disagreement',
   variants: [
-    { claim_id: 'syn-confirmed-ps5', input: ['Up', 'Down'] as const, platform: 'ps5' as const, reason: 'SYNTHETIC variant A', evidence: [] },
-    { claim_id: 'syn-confirmed-ps5-b', input: ['Down', 'Up'] as const, platform: 'ps5' as const, reason: 'SYNTHETIC variant B', evidence: [] },
+    { claim_id: 'syn-confirmed-ps5', input: ['Up', 'Down'], platform: 'ps5', reason: 'SYNTHETIC variant A', evidence: [] },
+    { claim_id: 'syn-confirmed-ps5-b', input: ['Down', 'Up'], platform: 'ps5', reason: 'SYNTHETIC variant B', evidence: [] },
   ],
   review: { reviewer: review.reviewer, reviewed_at: SYN_REVIEWED_AT },
 };

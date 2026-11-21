@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import {
+  type Claim,
   type Manifest,
   approvedEvidenceUrls,
   decideConfidence,
@@ -16,10 +17,10 @@ import { SYN_GUIDE_URL, synClaim, synConflict, synManifest, synResolution } from
 const SYNTHETIC_OK = { allowSynthetic: true };
 const ONE = 1;
 const TWO = 2;
-const firstEvidence = synClaim().evidence[0];
-if (!firstEvidence) throw new Error('synthetic claim needs evidence');
+type Evidence = Claim['evidence'][number];
+const [firstEvidence] = synClaim().evidence as [Evidence];
 
-function withEvidence(patch: Partial<typeof firstEvidence>, extra: (typeof firstEvidence)[] = []): Manifest {
+function withEvidence(patch: Partial<Evidence>, extra: Evidence[] = []): Manifest {
   return synManifest({ confirmations: [synClaim({ evidence: [{ ...firstEvidence, ...patch }, ...extra] })] });
 }
 

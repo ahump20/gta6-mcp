@@ -76,6 +76,7 @@ const ENTITIES: Readonly<Record<string, string>> = {
   '&gt;': '>',
   '&quot;': '"',
   '&#39;': "'",
+  '&#039;': "'",
 };
 
 const ALT_TO_DIRECTION: Readonly<Record<string, Direction>> = {
