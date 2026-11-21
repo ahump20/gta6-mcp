@@ -1,8 +1,8 @@
 # gta6-mcp
 
-A small MCP server for a player using Claude Code while playing Grand Theft Auto VI. It looks up cheats, Easter eggs and background on the game, and labels every answer with where it came from, how well it is supported, and what was held back.
+A small MCP server for a player using Claude Code or Codex while playing Grand Theft Auto VI. It looks up cheats, Easter eggs and background on the game, and labels every answer with where it came from, how well it is supported, and what was held back.
 
-The server retrieves, extracts, filters and labels. Claude explains. It never invents a cheat, an input or a source.
+The server retrieves, extracts, filters and labels. Your assistant explains. The server never invents a cheat, an input or a source.
 
 Unofficial. Not affiliated with Rockstar Games or Take-Two Interactive.
 
@@ -42,6 +42,39 @@ claude mcp add --scope local gta6 -- npx -y github:ahump20/gta6-mcp#v0.1.1
 Both commands were tested against the published release on Node 20 and passed the live protocol test on both protocol versions; the record is the release's [verification log](https://github.com/ahump20/gta6-mcp/releases/download/v0.1.1/gta6-mcp-0.1.1-verification.json). One limit: on npm 10, the source route works with the tag but fails if you replace the tag with a full commit hash.
 
 The package is published to GitHub Releases only, not to the npm registry. It needs no account, key or hosted service.
+
+## Install in Codex
+
+Requires Node.js 20 or newer. Install the same release file once, then point Codex at it:
+
+```sh
+npm install -g https://github.com/ahump20/gta6-mcp/releases/download/v0.1.1/gta6-mcp-0.1.1.tgz
+codex mcp add gta6 -- gta6-mcp
+```
+
+`codex mcp list` shows it, and `/mcp` shows it inside Codex. npm 11 prints a note that the package's build script was skipped. That is expected: the release file is already built.
+
+Codex saves this in `~/.codex/config.toml`. OpenAI's documentation says the Codex CLI, the ChatGPT desktop app and the IDE extension share that file.
+
+Install first, because Codex gives a server about one second to start before it answers. Installed, this one starts in a tenth of a second. Through `npx` it took 5 seconds, and 11 on the first download, so Codex answered without the tools.
+
+To run it through `npx` anyway, with nothing installed, put this in `~/.codex/config.toml` instead:
+
+```toml
+[mcp_servers.gta6]
+command = "npx"
+args = ["-y", "https://github.com/ahump20/gta6-mcp/releases/download/v0.1.1/gta6-mcp-0.1.1.tgz"]
+required = true
+startup_timeout_sec = 60
+```
+
+`required` makes Codex wait for the server. It also means Codex reports a startup failure whenever the server cannot start, for example with no network.
+
+An operator who holds Fandom's permission passes the setting with `--env`: `codex mcp add gta6 --env GTA6_MCP_FANDOM_PERMISSION=granted -- gta6-mcp`.
+
+To remove it: `codex mcp remove gta6`, then `npm uninstall -g gta6-mcp`.
+
+Both routes were tested with Codex CLI 0.166.0 and returned the same 22 reports Claude Code gets. The server needed no change. The desktop app and the IDE extension were not run. The record is section 20 of [docs/VERIFICATION.md](docs/VERIFICATION.md).
 
 ## Tools
 
