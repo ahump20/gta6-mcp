@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-21T11:18:49.775Z",
-  "tested_sha": "2e4e1a9693d06ed4e10350785f7a07ae40166807",
+  "generated_at": "2026-11-21T11:32:31.679Z",
+  "tested_sha": "1bded089eaf546bf424e65fe23b6f74d85162b35",
   "launcher": "~/.nvm/versions/node/v20.20.2/bin/node ./dist/index.js",
   "versions": {
     "node": "v20.20.2",
@@ -351,7 +351,7 @@
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
               "revision_id": 1386912958,
-              "retrieved_at": "2026-11-21T11:18:42.347Z",
+              "retrieved_at": "2026-11-21T11:32:24.277Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -394,7 +394,7 @@
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
               "revision_id": 1386912958,
-              "retrieved_at": "2026-11-21T11:18:42.348Z",
+              "retrieved_at": "2026-11-21T11:32:24.277Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -479,7 +479,7 @@
             {
               "title": "Wikipedia search",
               "url": "https://en.wikipedia.org/wiki/Special:Search",
-              "retrieved_at": "2026-11-21T11:18:44.178Z",
+              "retrieved_at": "2026-11-21T11:32:26.105Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -514,10 +514,14 @@
       ],
       "per_request_meta_keys": [],
       "per_request_protocol_versions": [],
-      "server_processes": 1,
+      "server_processes": 2,
       "stdout_protocol_only": true,
-      "stdout_lines": 16,
+      "stdout_lines": 32,
       "exit_events": [
+        {
+          "code": 0,
+          "signal": null
+        },
         {
           "code": 0,
           "signal": null
@@ -846,7 +850,7 @@
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
               "revision_id": 1386912958,
-              "retrieved_at": "2026-11-21T11:18:46.400Z",
+              "retrieved_at": "2026-11-21T11:32:28.413Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -889,7 +893,7 @@
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
               "revision_id": 1386912958,
-              "retrieved_at": "2026-11-21T11:18:46.400Z",
+              "retrieved_at": "2026-11-21T11:32:28.414Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -974,7 +978,7 @@
             {
               "title": "Wikipedia search",
               "url": "https://en.wikipedia.org/wiki/Special:Search",
-              "retrieved_at": "2026-11-21T11:18:48.240Z",
+              "retrieved_at": "2026-11-21T11:32:30.142Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -1014,10 +1018,18 @@
       "per_request_protocol_versions": [
         "2026-07-28"
       ],
-      "server_processes": 2,
+      "server_processes": 4,
       "stdout_protocol_only": true,
-      "stdout_lines": 16,
+      "stdout_lines": 32,
       "exit_events": [
+        {
+          "code": null,
+          "signal": "SIGTERM"
+        },
+        {
+          "code": 0,
+          "signal": null
+        },
         {
           "code": null,
           "signal": "SIGTERM"
