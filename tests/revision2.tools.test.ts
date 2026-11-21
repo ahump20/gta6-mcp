@@ -10,6 +10,8 @@ import { SYN_POST_URL, SYN_REVIEWED_AT, SYN_WIKITEXT, synConflict, synManifest, 
 const NONE: ReadonlySet<string> = new Set();
 const SEARCH_LIMIT = 5;
 const MARKER = 'COMMUNITYMARKER7Q';
+/** Cheats other than Attack Force that the reviewed community captions list. */
+const OTHER_REPORTED_CODES = 17;
 const real = loadManifest();
 const cheatsPage: Route = { match: ['gta.fandom.com', 'page=Cheats in GTA VI'], result: okJson(fixtureJson('real/fandom-parse-cheats-gta-vi.json')) };
 const missingPage: Route = { match: ['action=parse'], result: okJson(fixtureJson('real/fandom-parse-missingtitle.json')) };
@@ -175,16 +177,24 @@ describe('Fandom off (no recorded permission)', () => {
     expect(names(confirmedOnly)).toBe(true);
   });
 
-  it('still returns the recorded Attack Force dispute as reports', async () => {
+  it('still returns the recorded Attack Force dispute and the reported codes, none of them confirmed', async () => {
     const out = await listCheats({ include_unverified: true, spoilers: 'hints' }, { http: fakeHttp([off]), manifest: real });
     expect(out.status).toBe('partial');
-    expect(out.results.map((r) => [r.name, r.confidence, r.conflict_group_id, r.input?.length])).toEqual([
-      ['Attack Force', 'conflicting', 'cg-attack-force', 8],
-      ['Attack Force', 'conflicting', 'cg-attack-force', 9],
-      ['Attack Force', 'conflicting', 'cg-attack-force', 9],
+    const dispute = out.results.filter((r) => r.name === 'Attack Force');
+    expect(dispute.map((r) => [r.confidence, r.conflict_group_id, r.input?.length, new URL(r.evidence[0]?.url ?? '').host])).toEqual([
+      ['conflicting', 'cg-attack-force', 8, 'www.gamespot.com'],
+      ['conflicting', 'cg-attack-force', 9, 'www.pcgamer.com'],
+      ['conflicting', 'cg-attack-force', 9, 'www.youtube.com'],
+      ['conflicting', 'cg-attack-force', 9, 'www.youtube.com'],
+      ['conflicting', 'cg-attack-force', 9, 'www.youtube.com'],
     ]);
-    expect(out.results.map((r) => new URL(r.evidence[0]?.url ?? '').host)).toEqual(['www.gamespot.com', 'www.pcgamer.com', 'www.youtube.com']);
-    expect(out.results[2]?.evidence[0]).toMatchObject({ evidence_type: 'community_report', social_platform: 'youtube', author_handle: '@JOETHzz', posted_at: '2026-11-19T03:00:22Z' });
+    expect(dispute[2]?.evidence[0]).toMatchObject({ evidence_type: 'community_report', social_platform: 'youtube', author_handle: '@JOETHzz', posted_at: '2026-11-19T03:00:22Z' });
+    const others = out.results.filter((r) => r.name !== 'Attack Force');
+    expect(others).toHaveLength(OTHER_REPORTED_CODES);
+    expect(new Set(others.map((r) => r.name)).size).toBe(OTHER_REPORTED_CODES);
+    expect(others.every((r) => r.confidence === 'unverified' && r.conflict_group_id === null && r.platform === 'unattributed' && r.effect === null)).toBe(true);
+    expect(others.every((r) => r.evidence[0]?.evidence_type === 'community_report' && r.reason.toLowerCase().includes('community report'))).toBe(true);
+    expect(out.results.some((r) => r.confidence === 'confirmed')).toBe(false);
     expect(out.notices.map((n) => n.type)).toContain('conflict');
     expect(names(out)).toBe(true);
     expect(out.summary).toContain('0 confirmed');
@@ -237,6 +247,13 @@ describe('shipped community registry', () => {
     expect(discovery.status).toBe('ok');
     expect(discovery.results).toHaveLength(1);
     expect(discovery.results[0]).toMatchObject({ confidence: 'unverified', evidence_status: 'unverified', source_url: 'https://www.youtube.com/watch?v=Mj_beVHUJE4', community: { social_platform: 'youtube', author_handle: '@MrDalekJD' } });
+  });
+
+  it('records no video review, since no inspected video shows a code entered with its effect', () => {
+    expect(real.community_reports.every((r) => r.video_review === null)).toBe(true);
+    const cheats = real.community_reports.flatMap((r) => (r.subject.kind === 'cheat' ? [r.subject] : []));
+    expect(cheats.every((c) => c.platform === 'unattributed' && c.effect === null)).toBe(true);
+    expect(real.confirmations).toEqual([]);
   });
 
   it('stores no post text: every description is one reviewer-written line', () => {
