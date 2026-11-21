@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-21T12:49:58.776Z",
-  "tested_sha": "d85cd1bfa592fc52f906d4206dfbce4e55523a38",
+  "generated_at": "2026-11-21T13:00:44.983Z",
+  "tested_sha": "96a15396fc40e2fae93679c01a41050bbb8c730d",
   "launcher": "~/.nvm/versions/node/v20.20.2/bin/node ./dist/index.js",
   "versions": {
     "node": "v20.20.2",
@@ -365,7 +365,7 @@
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
               "revision_id": 1386921262,
-              "retrieved_at": "2026-11-21T12:49:51.385Z",
+              "retrieved_at": "2026-11-21T13:00:37.815Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -408,7 +408,7 @@
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
               "revision_id": 1386921262,
-              "retrieved_at": "2026-11-21T12:49:51.385Z",
+              "retrieved_at": "2026-11-21T13:00:37.815Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -493,7 +493,7 @@
             {
               "title": "Wikipedia search",
               "url": "https://en.wikipedia.org/wiki/Special:Search",
-              "retrieved_at": "2026-11-21T12:49:53.084Z",
+              "retrieved_at": "2026-11-21T13:00:39.349Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -874,7 +874,7 @@
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
               "revision_id": 1386921262,
-              "retrieved_at": "2026-11-21T12:49:55.342Z",
+              "retrieved_at": "2026-11-21T13:00:41.636Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -917,7 +917,7 @@
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
               "revision_id": 1386921262,
-              "retrieved_at": "2026-11-21T12:49:55.343Z",
+              "retrieved_at": "2026-11-21T13:00:41.637Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -1002,7 +1002,7 @@
             {
               "title": "Wikipedia search",
               "url": "https://en.wikipedia.org/wiki/Special:Search",
-              "retrieved_at": "2026-11-21T12:49:57.245Z",
+              "retrieved_at": "2026-11-21T13:00:43.456Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }

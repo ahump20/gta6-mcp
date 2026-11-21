@@ -396,11 +396,11 @@ Still open:
 
 ## 18. v0.1.1 release file, tested before the tag
 
-Run on 2026-11-21 at 12:51Z against commit `d85cd1b`, the last commit that changes anything inside the package. The Fandom permission setting was not set.
+Run on 2026-11-21 at 13:01Z against commit `96a1539`, the last commit that changes anything inside the package. An earlier run at 12:51Z, before the review fixes in section 17, passed the same way. The Fandom permission setting was not set.
 
 | Item | Result |
 |---|---|
-| Checks | Typecheck clean, 295 tests pass, evidence and fixture checks pass, on Node 20.20.2 |
+| Checks | Typecheck clean, 299 tests pass, evidence and fixture checks pass, on Node 20.20.2 |
 | Release file | Packed with `npm pack`, as the release workflow does: 15 files, version 0.1.1, 21 community entries in its data |
 | `npx -y <tarball URL>`, served over HTTP locally | Node 20.20.2, npm 10.8.2, empty npm cache: the live protocol test passed on both protocol versions (`2025-11-25` and `2026-07-28`). The server reported version 0.1.1 and shut down cleanly both times. The whole run took 13 seconds. |
 | What a player gets from that file | `list_cheats` with reports included: 22 rows, 0 confirmed. `easter_eggs` at `discovery`: 1 report. Wikipedia pages read normally. Fandom not requested. |
