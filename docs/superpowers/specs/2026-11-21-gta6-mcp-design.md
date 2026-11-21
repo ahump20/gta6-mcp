@@ -94,3 +94,48 @@ licence and trimming. Invented material lives in `tests/fixtures/synthetic`,
 marked `"synthetic": true`. A CI script fails if synthetic material appears
 outside that directory or in `data/`. `npm run smoke` is the only thing that
 talks to real upstreams.
+
+## Revision 2: revised brief (2026-11-21, second session)
+
+The build began in one Claude Code session from the first brief and was finished
+in a second session that received a revised brief. The first session was stopped
+at the owner's request; its commits are kept. The revision adds a third wiki
+host (gta.wiki), a community-reports registry, a gameplay-video confirmation
+rule, per-host permission checks, and a stricter client proof.
+
+### Approaches: what to do with gta.wiki
+
+Phase 0 found gta.wiki reachable, with GTA VI cheats and Easter egg pages that
+the Fandom copy lacks, and found that its host's Terms of Use list "use our
+Sites in an automated fashion without prior consent from the Company" among
+disallowed activities, with no published API policy granting that consent and a
+robots rule disallowing `api.php` for every crawler.
+
+1. **Query gta.wiki as the primary provider.** Best coverage. Rejected: it
+   breaks the host's published terms, and the brief says to drop unpermitted
+   hosts.
+2. **Ship the provider behind a consent switch** (an environment variable).
+   Rejected for v0.1.0: `action=parse` was never probed there (probing stopped
+   once the terms were read), so the code would be untested against the real
+   host, and a switch invites use without consent.
+3. **Keep `gtawiki` in the tool contract, make no request, say why.** Chosen.
+   `get_page(source: "gtawiki")` returns `upstream_unavailable` with a
+   `coverage_gap` notice; the gameplay tools name the gap; Fandom stays the
+   primary provider and Wikipedia the background provider. The provider can be
+   added in a later version once Weird Gloop consents.
+
+### Other decisions in this revision
+
+- The community registry is the `community_reports` array inside
+  `data/evidence.json`, so one schema file covers the evidence manifest and the
+  registry, and the package ships both in one reviewed file.
+- Registry entries are strict objects: an unknown key such as `text` or `quote`
+  fails validation. The only free text is the reviewer's own description.
+- Each entry carries a reviewer-set `min_level`. The description is written by
+  the reviewer, so disclosing it at or above that level cannot leak unreviewed
+  source text.
+- A lead without an absolute post time is not registered: applicability
+  ("posted on or after 2026-11-19") cannot be shown without it.
+- Video evidence reuses the confirmation entry shape with a `video` review
+  record. The runtime never fetches a social host; a video-backed approval is
+  trusted as reviewed and labelled so.
