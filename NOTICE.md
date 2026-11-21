@@ -23,7 +23,7 @@ Not used. `gta.wiki` content is licensed CC BY-NC-SA 3.0 and its host requires p
 
 ## Community posts
 
-`data/evidence.json` lists community posts by link, author handle and post time, with a one-line description written by the reviewer. No post text, image or video is stored. All rights remain with each author.
+`data/evidence.json` lists community posts by link, author handle and post time, with a one-line description written by the reviewer. Where a video shows a code as text, the cheat's name and its sequence of button names are recorded as facts that author reports. No other post text, and no image or video, is stored. All rights remain with each author.
 
 ## Code credits
 

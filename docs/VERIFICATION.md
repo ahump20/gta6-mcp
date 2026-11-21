@@ -149,6 +149,10 @@ run through the available X search tool at about 10:20Z. It returned HTTP 402,
 "developer account is out of credits". Zero posts were read. X stays outside
 runtime and outside confirmation.
 
+Retried once later on 2026-11-21 for v0.1.1: the same HTTP 402, while the
+tool's own usage report showed nothing spent that day. Zero posts read. The
+account needs credits added by its owner before X can be read.
+
 ## 6. Leads checked by a research pass
 
 These were read by a research subagent of the implementing agent between
@@ -270,7 +274,7 @@ What could be read on 2026-11-21:
 | X | Not read. The search tool returned HTTP 402, out of credits. |
 | YouTube | 22 leads captured by a helper agent through a third-party YouTube data plugin. How that plugin obtains its data was not checked against YouTube's API terms. Its notes are in `docs/research/community-leads-youtube-x.md`. |
 
-The reviewer then opened five watch pages in a browser at 2026-11-21T11:10Z and read each page's own metadata (title, channel, upload time and the start of the description), and at 11:36Z read the two registered videos' descriptions in full. Frames were not inspected for any video.
+The reviewer then opened five watch pages in a browser at 2026-11-21T11:10Z and read each page's own metadata (title, channel, upload time and the start of the description), and at 11:36Z read the two registered videos' descriptions in full. Frames were not inspected for any video in v0.1.0. They were for v0.1.1; section 16 has the result.
 
 | Video | Channel | Upload time on the page | UTC | Decision |
 |---|---|---|---|---|
@@ -280,7 +284,7 @@ The reviewer then opened five watch pages in a browser at 2026-11-21T11:10Z and 
 | https://www.youtube.com/watch?v=c-UFvg-X8O0 | @JackedBillGaming | 2026-11-18T17:54:32-08:00 | 2026-11-19T01:54:32Z | Not registered. Its description calls the codes "reported". |
 | https://www.youtube.com/watch?v=a78-WeEiTRs | @dpjsc08 | 2026-11-18T15:19:24-08:00 | 2026-11-18T23:19:24Z | Excluded by the date rule, applied in UTC: it was posted 41 minutes before 2026-11-19. Its description is the only one that says the uploader demonstrates the codes. |
 
-No video-backed approval exists. No pair of videos was frame-inspected, so whether a pair exists that would meet the video rule is unknown, not ruled out.
+No video-backed approval exists. No pair of videos was frame-inspected, so whether a pair exists that would meet the video rule is unknown, not ruled out. (State at v0.1.0. Section 16 replaces "unknown" with a checked result.)
 
 Platform API terms (helper agent, 2026-11-21T10:46:59Z to 10:54:11Z; full notes with quotes in `docs/research/platform-api-terms.md`): Reddit, X, YouTube and TikTok each require an account and an app credential for programmatic search or read access, and each one's terms prohibit unauthenticated automated access. X bills per post read. TikTok's keyword search is limited to approved research applicants. Two Reddit help pages could not be fetched directly and are marked unverified in the notes. A no-account runtime provider is therefore not possible on any of the four, which is why social platforms stay outside runtime retrieval.
 
@@ -309,6 +313,8 @@ The README therefore leads with the release file. The same two routes are tested
 
 ## 14. Review findings left open in v0.1.0
 
+Section 17 gives the state of each of these in v0.1.1.
+
 Two automated reviewers read the pull request. The findings that touched evidence rulings, spoiler clearance, data strictness and crashes were fixed with tests. These were read and left for a later version:
 
 - A wiki error returned with HTTP 200 is cached like a success, so a short wiki read-only window can replace a good cached copy for the cache's lifetime. This affects availability, not correctness.
@@ -335,4 +341,49 @@ Run on 2026-11-21 after the release was created. The Fandom permission setting w
 Correction to section 13: that test used a full commit hash as the address. With the tag, the build-on-install route works on npm 10 as well. The failure is specific to a commit-hash address on npm 10.
 
 The filtered record of these runs is attached to the release as `gta6-mcp-0.1.0-verification.json`, with the wire logs beside it.
+
+## 16. Video frames, inspected (v0.1.1)
+
+Reviewer: Claude Fable 5.2 (AI agent, Anthropic), main Claude Code session. 2026-11-21, 11:55Z to 12:46Z. Each watch page was opened in a browser, playback was muted and paused, the player was moved to chosen times, and the still frame was read from a screenshot, zoomed where arrows had to be counted. Frames were sampled; no video was watched end to end. No gameplay test was performed.
+
+| Video | Channel, length | What the frames show | Meets the video rule |
+|---|---|---|---|
+| https://www.youtube.com/watch?v=C7wrTvoDnww | @GoldxLeaf, 112 s | One character standing idle in a driveway for the whole video. Captions added in editing give a cheat name, an unlock line and a row of arrows, 18 in all; every caption was read. No phone, no code entry, no effect. The cash figure in the corner never changes. | No |
+| https://www.youtube.com/watch?v=Hj23ZNatmZQ | @JOETHzz, 253 s | Sampled from 1:00 to 3:35: the in-game phone held open, an inset camera on a DualSense controller, an on-screen list of steps and a web page table of codes. The cash figure is identical at 1:28, 1:52 and 1:56. No sequence is entered on the game's interface and no effect appears. | No |
+| https://www.youtube.com/watch?v=Peo_d4Oh-x0 | @FrameproofGaming, 360 s, uploaded 2026-11-19T00:32:41-08:00 (08:32:41Z) | Sampled from 0:30 to 5:30: an edited explainer with gameplay clips behind designed cards. The card at 2:55 sets Exploding Balls beside Attack Force and says the ninth input is the only difference. Several cards read "Input pending". The title says the codes were tested; no frame sampled shows one entered. | No |
+| https://www.youtube.com/watch?v=Mj_beVHUJE4 | @MrDalekJD, 482 s | Gameplay of a climb up a red radio tower. Near 5:22 a striped egg is shown in mid-air above the map; from 5:37 to 5:46 a character stands beside a nest on the top platform. Consistent with the title. | Not a cheat. One video, so the report stays unverified. |
+| https://www.youtube.com/watch?v=a78-WeEiTRs | @dpjsc08, 373 s | Sampled at 0:10, 1:02, 1:18, 1:29 to 1:37, 2:02, 3:35, 5:00 and 5:55: an opening clip, then designed cards over blurred footage, one per code, and a card of entry steps. No code entry and no effect. | No |
+
+The last video is the one section 11 excluded by the date rule. It was inspected only to learn whether that exclusion hid a demonstration. It did not, and the video stays unregistered.
+
+Outcome:
+
+- **No video meets the video rule, so there is no video-backed confirmation.** Section 11 called this unknown. It is now checked in five videos, by sampling: a demonstration shorter than the gaps between samples could have been missed in the three longer cheat videos.
+- **Registered as text claims**: the 18 captions in the @GoldxLeaf video, and the Attack Force card in the @FrameproofGaming video. Each has no platform and no effect, because the frames show neither. Unlock lines were left out. The two v0.1.0 entries now say what their frames show. No entry carries a video review record: such a record marks a video as usable evidence, and none of these is.
+- **Reading check**: the 18 caption sequences were compared with the wiki capture of 2026-11-21 (revision 2089363). Sixteen are identical. Attack Force differs (the caption has nine inputs, the wiki eight; section 2). Vehicle Force cannot be compared, because the wiki row uses a template this server cannot resolve. The first reading of the Body Armor caption counted four Ups where the frame has five; the comparison caught it, and the entry was corrected from a zoomed frame.
+- **Agreement is not confirmation.** Where these lists agree, their lineage is unknown and a shared source is likely (reasoned). Three videos and PC Gamer print the nine-input Attack Force; none shows it entered. The dispute stays unresolved.
+- **Not inspected**: the @JackedBillGaming video in section 11 and the other leads in `docs/research/community-leads-youtube-x.md`.
+
+Community platforms, tried again at about 12:48Z: the browser extension still refuses reddit.com ("This site is not allowed due to safety restrictions."), and TikTok search still shows "Log in to search for popular content". Neither was worked around. X is in section 5. Reading the owner-supplied Reddit thread needs its text pasted in by the owner.
+
+## 17. Review findings from section 14: state in v0.1.1
+
+| Finding | State |
+|---|---|
+| A wiki error returned with HTTP 200 is cached like a success | Fixed. Such a response is a failure, is never cached, and an expired good copy is served instead, labelled stale. A missing page is still an answer, not a failure. |
+| Cache entries are not separated by response type | Fixed. |
+| An invalid redirect target has no typed failure | Fixed. |
+| `Retry-After` given as a date is not honoured | Fixed, capped at five seconds. |
+| Unread response bodies are not released early | Fixed. |
+| A page that qualifies only by its category is not accepted by `get_page` | Fixed. Spoiler clearance still applies afterwards. If the categories cannot be read, the tool says the wiki was unreachable instead of calling the page out of scope. |
+| Only the first batch of categories is read | Fixed, up to five batches. The continuation format follows the MediaWiki documentation; no real continued response was captured, since Fandom is not requested. |
+| Whitespace normalisation covers ASCII only | Fixed and renamed `collapse-unicode-whitespace-v2`. Every recorded fingerprint still matches: the 18 reviewed rows and the entry steps are returned from the real capture as before. |
+| Mixed video and guide evidence has no binding rule | Ruled: it is not video-backed. Re-readable items must match; one item that cannot be re-read keeps the claim unverified. |
+| A resolution cannot rest on a video pair | Fixed. Two frame-inspected videos with different URLs, origins and accounts can settle a dispute; anything less is rejected. |
+| The wire recorder can split a multi-byte character and miss a final line | Fixed. It also no longer waits forever when a process its child started keeps the output open. |
+
+Still open:
+
+- `easter_eggs` decides whether a wiki page is about GTA VI from its title and text only, not its categories. Both page titles it reads name the game, so nothing is missed today.
+- With the category check, one search can make up to five category requests.
 

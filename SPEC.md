@@ -1,4 +1,4 @@
-# gta6-mcp v0.1.0 specification
+# gta6-mcp v0.1.1 specification
 
 A local, headless stdio MCP server for someone playing Grand Theft Auto VI with
 Claude Code open. It retrieves, extracts, normalises, filters and labels. Claude
@@ -59,12 +59,16 @@ At most 3 redirects. User input travels only inside API query parameters.
 A page applies when one of its categories matches `GTA VI`, or its own wikitext
 names the game (`{{VI}}`, "Grand Theft Auto VI", "GTA VI", "GTA 6"). Search hits
 from other games are dropped. Titles containing "leak" are never returned.
+All of a page's categories are read, across continuation batches. When only a
+category could tie a page to the game and the categories cannot be read,
+`get_page` reports the wiki as unavailable and returns nothing; it does not
+judge the page.
 
 ## Evidence
 
 `data/evidence.json` is the reviewed manifest; `docs/evidence.schema.json` is its
 JSON Schema. CI validates both structure and policy. An empty confirmation set is
-valid and is what v0.1.0 ships.
+valid and is what v0.1.1 ships.
 
 A confirmation entry records: `claim_id`, game, cheat name, exact ordered input,
 exact effect, one platform (`ps5` or `xbox-series`), input method, sourced
@@ -111,8 +115,8 @@ or `review_only` (gameplay video; social platforms are outside runtime).
 
 **Binding.** Fingerprints are SHA-256 over the reviewed quote or row only,
 never the whole page, after the normalisation named in the manifest
-(`collapse-whitespace-v1`: every run of whitespace becomes one space, ends
-trimmed).
+(`collapse-unicode-whitespace-v2`: every run of Unicode whitespace, no-break
+and wide spaces included, becomes one space, ends trimmed).
 
 A site's reputation, a site-wide "tested" label, duplicated reporting, a wiki
 citation and a GTA V reference do not count. Wiki hosts cannot be evidence.
@@ -126,13 +130,20 @@ with the reason stated. A video-backed approval is the one case that cannot be
 re-read: its evidence items carry `evidence_type: "gameplay_video"` and
 `time_basis: "review"`, and the result adds a notice that the evidence was last
 checked at review. It is downgraded in the manifest if a later review finds a
-video removed, edited or contradicted.
+video removed, edited or contradicted. An approval that mixes video with other
+evidence is not video-backed: its re-readable items must be fetched and still
+match, and one item on a host that cannot be re-read keeps the claim
+`unverified`.
 
 Conflicts: comparable variants have their own `claim_id` and share a
 `conflict_group_id`. An unresolved conflict overrides any approval. Resolution
 needs an explicit entry backed by official documentation or two independent
 direct verifications of the same variant, effect and platform. Videos that meet
-the video rule count as direct verifications.
+the video rule count as direct verifications: a video listed as support carries
+its review record, and two videos count as two only when their URLs, capture
+origins and accounts all differ. A transcript-based review, footage that is not
+continuous, a social link with no review record and a registry lead with no
+frame review of its own are each rejected as support.
 
 ## Spoilers: default deny
 
@@ -253,5 +264,8 @@ by default. `gta.wiki`, which
 has GTA VI cheats and Easter egg pages, is not queried (consent required). No
 GTA VI Easter egg page exists on the Fandom wiki, and no Easter egg has been
 reviewed. Rockstar Support and GameSpot's live page were unreachable during
-verification. The community registry and the results of the video review are
-listed in docs/VERIFICATION.md section 9.
+verification. The community registry holds 20 text claims about cheats (18
+codes captioned by one video, and two more leads on Attack Force) and one Easter
+egg report, all unverified. The frames of five videos were inspected and none
+shows a code entered with its effect; see docs/VERIFICATION.md sections 11
+and 16.
