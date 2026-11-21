@@ -99,6 +99,11 @@ function decodeEntities(text: string): string {
   return Object.entries(ENTITIES).reduce((out, [entity, char]) => out.replaceAll(entity, char), text);
 }
 
+/** Reduces an HTML fragment, such as a search snippet, to plain text. */
+export function stripHtml(html: string): string {
+  return decodeEntities(html.replace(TAG, '')).replace(INLINE_SPACE, ' ').trim();
+}
+
 export function mentionsGtaVi(text: string): boolean {
   return GTA_VI.test(text);
 }
