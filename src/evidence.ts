@@ -99,7 +99,15 @@ const Resolution = z.object({
   winning_claim_id: z.string().min(1),
   basis: z.enum(['official_documentation', 'independent_direct_verifications']),
   supporting: z
-    .array(z.object({ url: z.string().min(1), quote: z.string().min(1), origin: z.string().min(1), verified_directly: z.boolean() }))
+    .array(
+      z.object({
+        url: z.string().min(1),
+        quote: z.string().min(1),
+        origin: z.string().min(1),
+        verified_directly: z.boolean(),
+        video: VideoReview.optional().describe('Required when the supporting item is a gameplay video; such a video counts as a direct verification.'),
+      }),
+    )
     .min(1),
   rationale: z.string().min(1),
   dispositions: z.array(z.object({ claim_id: z.string().min(1), disposition: z.enum(['upheld', 'rejected']) })),
@@ -188,7 +196,7 @@ export const ManifestSchema = z.object({
   schema_version: z.literal(1),
   synthetic: z.boolean().describe('True only for test fixtures. Production data must be false.'),
   binding: z
-    .object({ algorithm: z.literal('sha256'), normalization: z.literal('collapse-whitespace-v1'), scope: z.literal('reviewed_text_only') })
+    .object({ algorithm: z.literal('sha256'), normalization: z.literal('collapse-unicode-whitespace-v2'), scope: z.literal('reviewed_text_only') })
     .describe('How fingerprints are made: over the reviewed quote or row only, never a whole page.'),
   approved_hosts: z.array(
     z.object({ host: z.string().min(1), role: z.enum(['runtime_api', 'official', 'guide']), purpose: z.string().min(1) }),
@@ -222,10 +230,9 @@ const SOCIAL_HOSTS: ReadonlySet<string> = new Set(['www.reddit.com', 'x.com', 'w
 const LAUNCH_DAY = '2026-11-19';
 const HAS_OFFSET = /(Z|[+-]\d{2}:\d{2})$/;
 
-/** Collapses all whitespace runs to single spaces. */
+/** collapse-unicode-whitespace-v2: every run of Unicode whitespace, no-break and wide spaces included, becomes one space and the ends are trimmed. */
 export function normaliseText(text: string): string {
-  const spaced = ['\n', '\r', '\t'].reduce((out, char) => out.replaceAll(char, ' '), text);
-  return spaced.split(' ').filter((part) => part !== '').join(' ');
+  return text.split(/\s+/u).filter((part) => part !== '').join(' ');
 }
 
 export function fingerprint(text: string): string {
@@ -252,8 +259,20 @@ function hostOf(url: string): string | null {
 
 type Evidence = Claim['evidence'][number];
 
-const meetsVideoRule = (item: Evidence): boolean =>
-  item.evidence_type === 'gameplay_video' && item.video?.review_basis === 'frames' && item.video.continuous_footage;
+type VideoRecord = z.infer<typeof VideoReview>;
+const framesReviewed = (review: VideoRecord | null | undefined): boolean => review?.review_basis === 'frames' && review.continuous_footage;
+const meetsVideoRule = (item: Evidence): boolean => item.evidence_type === 'gameplay_video' && framesReviewed(item.video);
+
+/** How many separate captures a set of videos amounts to: a shared URL, origin or account collapses them. */
+interface VideoSource {
+  readonly url: string;
+  readonly origin: string;
+  readonly video?: VideoRecord | undefined;
+}
+function independentVideos(videos: readonly VideoSource[]): number {
+  const distinct = (key: (v: VideoSource) => string | undefined): number => new Set(videos.map(key)).size;
+  return Math.min(distinct((v) => v.url), distinct((v) => v.origin), distinct((v) => v.video?.account));
+}
 
 function videoErrors(where: string, item: Evidence): string[] {
   const review = item.video;
@@ -273,8 +292,7 @@ function evidenceErrors(claim: Claim, recorded: ReadonlySet<string>, registry: R
     if (host === null) return [`${where} is not an HTTPS URL`];
     const isVideo = item.evidence_type === 'gameplay_video';
     const report = registry.get(item.url);
-    const reportFramesOk = report?.evidence_type === 'gameplay_video' && report.video_review?.review_basis === 'frames' && report.video_review.continuous_footage;
-    if (report && !(isVideo && reportFramesOk)) {
+    if (report && !(isVideo && report.evidence_type === 'gameplay_video' && framesReviewed(report.video_review))) {
       return [`${where} is a community report and cannot be used as an approval`];
     }
     if (SOCIAL_HOSTS.has(host)) {
@@ -293,7 +311,10 @@ function evidenceErrors(claim: Claim, recorded: ReadonlySet<string>, registry: R
   });
 }
 
-/** True when every piece of evidence is a gameplay video: such an approval is trusted as reviewed, never re-read. */
+/**
+ * True when every piece of evidence is a gameplay video: such an approval is trusted as reviewed, never re-read.
+ * Mixed evidence is not video-backed: its re-readable items must match, and one item that cannot be re-read keeps the claim unverified.
+ */
 export function isVideoBacked(claim: Claim): boolean {
   return claim.evidence.every((item) => item.evidence_type === 'gameplay_video');
 }
@@ -329,21 +350,40 @@ function hasApprovalBasis(claim: Claim): boolean {
     (item) => item.evidence_type === 'guide_own_test' && OWN_TEST_REQUIRED.every((part) => item.own_test_covers.includes(part)),
   );
   const origins = new Set(claim.evidence.filter((item) => item.evidence_type === 'independent_report').map((item) => item.origin));
-  const videos = claim.evidence.filter(meetsVideoRule);
-  const videoPair =
-    new Set(videos.map((item) => item.url)).size >= MIN_INDEPENDENT &&
-    new Set(videos.map((item) => item.origin)).size >= MIN_INDEPENDENT &&
-    new Set(videos.map((item) => item.video?.account)).size >= MIN_INDEPENDENT;
+  const videoPair = independentVideos(claim.evidence.filter(meetsVideoRule)) >= MIN_INDEPENDENT;
   return official || ownTest || origins.size >= MIN_INDEPENDENT || videoPair;
 }
 
-function resolutionErrors(manifest: Manifest): string[] {
+type Support = Manifest['resolutions'][number]['supporting'][number];
+
+/** Supporting material is a reviewed page on an eligible host or a gameplay video that meets the video rule. */
+function supportErrors(id: string, item: Support, registry: ReadonlyMap<string, CommunityReport>): string[] {
+  const host = hostOf(item.url) ?? '';
+  const where = `resolution ${id}: ${item.url}`;
+  if (ELIGIBLE_HOSTS[host] !== undefined) return item.video ? [`${where} is not a video, so it cannot carry a video review`] : [];
+  if (!SOCIAL_HOSTS.has(host)) return [`resolution ${id}: supporting material must come from eligible hosts`];
+  if (!item.video) return [`${where} is on a social host and needs a video review record`];
+  const report = registry.get(item.url);
+  return [
+    item.video.review_basis === 'frames' ? '' : `${where} was reviewed from its ${item.video.review_basis}, not its frames`,
+    item.video.continuous_footage ? '' : `${where} is not continuous footage`,
+    !report || (report.evidence_type === 'gameplay_video' && framesReviewed(report.video_review)) ? '' : `${where} is a community report and cannot be used as an approval`,
+  ].filter((problem) => problem !== '');
+}
+
+/** Direct verifications that are independent of each other: distinct origins, with videos also held to the video rule's separate-capture test. */
+function independentDirect(supporting: readonly Support[]): number {
+  const direct = supporting.filter((s) => s.verified_directly);
+  const pages = new Set(direct.filter((s) => !s.video).map((s) => s.origin)).size;
+  return Math.min(new Set(direct.map((s) => s.origin)).size, pages + independentVideos(direct.filter((s) => s.video)));
+}
+
+function resolutionErrors(manifest: Manifest, registry: ReadonlyMap<string, CommunityReport>): string[] {
   return manifest.resolutions.flatMap((resolution) => {
     const id = resolution.conflict_group_id;
     const group = manifest.conflict_groups.find((g) => g.conflict_group_id === id);
     if (!group) return [`resolution ${id}: no such conflict group`];
     const variantIds = group.variants.map((v) => v.claim_id);
-    const direct = new Set(resolution.supporting.filter((s) => s.verified_directly).map((s) => s.origin));
     const officialOnly = resolution.supporting.every((s) => ELIGIBLE_HOSTS[hostOf(s.url) ?? ''] === 'official');
     const problems = [
       variantIds.includes(resolution.winning_claim_id) ? '' : `resolution ${id}: winner is not a variant of the group`,
@@ -352,10 +392,10 @@ function resolutionErrors(manifest: Manifest): string[] {
         ? ''
         : `resolution ${id}: only the winner may have the upheld disposition, and it must have it`,
       resolution.basis === 'official_documentation' && !officialOnly ? `resolution ${id}: official_documentation needs official hosts` : '',
-      resolution.basis === 'independent_direct_verifications' && direct.size < MIN_INDEPENDENT
+      resolution.basis === 'independent_direct_verifications' && independentDirect(resolution.supporting) < MIN_INDEPENDENT
         ? `resolution ${id}: needs two independent direct verifications`
         : '',
-      resolution.supporting.every((s) => ELIGIBLE_HOSTS[hostOf(s.url) ?? ''] !== undefined) ? '' : `resolution ${id}: supporting material must come from eligible hosts`,
+      ...new Set(resolution.supporting.flatMap((s) => supportErrors(id, s, registry))),
     ];
     return problems.filter((problem) => problem !== '');
   });
@@ -384,7 +424,7 @@ export function validatePolicy(manifest: Manifest, opts: { readonly allowSynthet
         ? ''
         : `${group.conflict_group_id}: variants must differ in input`,
     ),
-    ...resolutionErrors(manifest),
+    ...resolutionErrors(manifest, registry),
   ].filter((problem) => problem !== '');
 }
 

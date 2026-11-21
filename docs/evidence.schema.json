@@ -19,7 +19,7 @@
         },
         "normalization": {
           "type": "string",
-          "const": "collapse-whitespace-v1"
+          "const": "collapse-unicode-whitespace-v2"
         },
         "scope": {
           "type": "string",
@@ -595,6 +595,81 @@
                 },
                 "verified_directly": {
                   "type": "boolean"
+                },
+                "video": {
+                  "description": "Required when the supporting item is a gameplay video; such a video counts as a direct verification.",
+                  "type": "object",
+                  "properties": {
+                    "account": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "posted_at": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "review_basis": {
+                      "type": "string",
+                      "enum": [
+                        "frames",
+                        "transcript",
+                        "title",
+                        "thumbnail",
+                        "description",
+                        "caption"
+                      ]
+                    },
+                    "inspection_method": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "How the frames were inspected."
+                    },
+                    "console_identified": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "What on screen identifies the platform."
+                    },
+                    "continuous_footage": {
+                      "type": "boolean"
+                    },
+                    "entry_timestamp": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "entry_visible": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "effect_timestamp": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "effect_visible": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "presses_visible": {
+                      "type": "string",
+                      "enum": [
+                        "button_presses",
+                        "on_screen_sequence_only"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "account",
+                    "posted_at",
+                    "review_basis",
+                    "inspection_method",
+                    "console_identified",
+                    "continuous_footage",
+                    "entry_timestamp",
+                    "entry_visible",
+                    "effect_timestamp",
+                    "effect_visible",
+                    "presses_visible"
+                  ],
+                  "additionalProperties": false
                 }
               },
               "required": [
