@@ -424,3 +424,22 @@ Run on 2026-11-21 between 13:02Z and 13:08Z, after the release was created. The 
 
 The filtered record of these runs is attached to the release as `gta6-mcp-0.1.1-verification.json`, with the wire logs beside it.
 
+
+## 20. Codex, tested (v0.1.1)
+
+Reviewer: Claude Fable 5.2 (AI agent, Anthropic), Claude Code session. 2026-11-21, 19:36Z to 19:47Z. Every run was a one-shot `codex exec` in a read-only sandbox with the user's own configuration ignored and the server set on the command line (`-c mcp_servers.gta6.*`). The server is the published v0.1.1 release file, unchanged.
+
+| Item | Result |
+|---|---|
+| Client | Codex CLI 0.166.0 on macOS, Node 24.5.0, npm 11.18.0 |
+| Handshake | Recorded through `scripts/tee.mjs`. Codex sent `initialize` as `codex-mcp-client` with protocol version `2025-06-18`. The server answered with the same version, and `tools/list` returned the four tools. |
+| Tool call | `list_cheats` with `include_unverified: true` returned status `partial` and 22 rows (17 unverified, 5 conflicting), 0 confirmed. These are the counts of the Claude Code call in section 19. |
+| Time to the `initialize` reply | Release file through `npx`: 10.9 s with an empty cache, 4.6 s cached. Tagged source through `npx`: 21.6 s empty, 5.4 s cached. Installed with `npm install -g`: 0.1 s. |
+| `npx`, default settings | Failed in 3 runs of 3: Codex answered that it had no gta6 tools. In the recorded run the tool list arrived 7.7 s after the server was started, after the answer. OpenAI's MCP page says an optional server gets `mcp_optional_startup_grace_ms`, 1000 ms by default, before the first tool list is built. |
+| `npx` with `required = true` and `startup_timeout_sec = 60` | Empty cache: the tool was called. Pass. |
+| Installed with `npm install -g <release file>`, command `gta6-mcp` | Optional server, default settings: the tool was called. Pass. |
+| `codex mcp add gta6 -- gta6-mcp` | Run in a throwaway `CODEX_HOME`. It wrote `[mcp_servers.gta6]` with `command = "gta6-mcp"`, and with `--env` it wrote the `env` table. `codex mcp add` has no flag for `required` or for the timeout. |
+| Startup timeout default | Sources disagree. OpenAI's MCP page says 10 seconds. `codex-rs/codex-mcp/src/rmcp_client.rs` on the main branch of `openai/codex` says 30. Not settled for 0.166.0, so the README sets the value. |
+| Not tested | The ChatGPT desktop app and the IDE extension. OpenAI's MCP page says they share `~/.codex/config.toml` with the CLI. A longer interactive session, where a slow server may become available after the first answer, was not tested either. |
+
+Source for the Codex settings: https://developers.openai.com/codex/mcp, read 2026-11-21.

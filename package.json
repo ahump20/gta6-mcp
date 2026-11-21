@@ -7,7 +7,7 @@
   "repository": { "type": "git", "url": "git+https://github.com/ahump20/gta6-mcp.git" },
   "homepage": "https://github.com/ahump20/gta6-mcp#readme",
   "bugs": "https://github.com/ahump20/gta6-mcp/issues",
-  "keywords": ["mcp", "gta6", "grand-theft-auto-vi", "claude-code"],
+  "keywords": ["mcp", "gta6", "grand-theft-auto-vi", "claude-code", "codex"],
   "bin": { "gta6-mcp": "dist/index.js" },
   "files": ["dist", "data", "docs/evidence.schema.json", "NOTICE.md"],
   "engines": { "node": ">=20" },

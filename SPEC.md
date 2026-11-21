@@ -1,8 +1,8 @@
 # gta6-mcp v0.1.1 specification
 
 A local, headless stdio MCP server for someone playing Grand Theft Auto VI with
-Claude Code open. It retrieves, extracts, normalises, filters and labels. Claude
-explains. Every returned claim carries where it came from, how well it is
+Claude Code or Codex open. It retrieves, extracts, normalises, filters and labels.
+The assistant explains. Every returned claim carries where it came from, how well it is
 evidenced, and what limits apply.
 
 Findings that shaped this spec are in [docs/VERIFICATION.md](docs/VERIFICATION.md).
