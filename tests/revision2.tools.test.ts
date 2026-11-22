@@ -244,7 +244,7 @@ describe('shipped community registry', () => {
     const hints = await easterEggs({ spoilers: 'hints' }, deps());
     expect(hints).toMatchObject({ status: 'partial', results: [] });
     // The default call says how many entries a higher level would show, and never what they are.
-    expect(hints.summary).toContain('19 recorded entries are held back');
+    expect(hints.summary).toContain('19 recorded entries are held back at this spoiler level. Ask again with spoilers set to discovery to see them.');
     expect(JSON.stringify(hints)).not.toMatch(/Dexter|Skunk|tower/i);
     const discovery = await easterEggs({ spoilers: 'discovery' }, deps());
     expect(discovery.status).toBe('ok');
@@ -276,6 +276,9 @@ describe('list_cheats default call with Fandom off', () => {
     const out = await listCheats({ include_unverified: false, spoilers: 'hints' }, { http: fakeHttp([off]), manifest: real });
     expect(out.results).toEqual([]);
     expect(out.summary).toContain('22 recorded report(s) are available with include_unverified=true');
+    // Every shipped report is unattributed, so a platform-filtered call has nothing to point at.
+    const ps5 = await listCheats({ platform: 'ps5', include_unverified: false, spoilers: 'hints' }, { http: fakeHttp([off]), manifest: real });
+    expect(ps5.summary).not.toContain('recorded report');
   });
 });
 
