@@ -347,8 +347,11 @@ describe('list_cheats confirmation path (synthetic manifest)', () => {
 });
 
 describe('easter_eggs', () => {
+  // These two cases are about the wiki path, so the shipped registry entries are set aside.
+  const noEggs = (routes: readonly Route[]): Deps => ({ ...real(routes), manifest: { ...manifest, spoiler_registry: { ...manifest.spoiler_registry, easter_eggs: [] } } });
+
   it('says plainly that nothing is reviewed and no page exists', async () => {
-    const out = await easterEggs({ spoilers: 'hints' }, real([missingPage]));
+    const out = await easterEggs({ spoilers: 'hints' }, noEggs([missingPage]));
     expect(out).toMatchObject({ status: 'no_verified_results', results: [] });
     expect(out.notices.find((n) => n.type === 'coverage_gap')?.message).toContain('No reviewed');
   });
@@ -361,9 +364,9 @@ describe('easter_eggs', () => {
   it('returns unreviewed sections as unverified in full mode only', async () => {
     const eggs = okJson(page('Secrets and Easter Eggs in GTA VI', 'Lead {{VI}}.\n==Ghost car==\nSeen near the bridge.\n==UFO==\nOver the swamp.'));
     const routes: Route[] = [{ match: ['page=Secrets and Easter Eggs in GTA VI'], result: eggs }, missingPage];
-    const full = await easterEggs({ spoilers: 'full' }, real(routes));
-    const hints = await easterEggs({ spoilers: 'hints' }, real(routes));
-    const topical = await easterEggs({ topic: 'ufo', spoilers: 'full' }, real(routes));
+    const full = await easterEggs({ spoilers: 'full' }, noEggs(routes));
+    const hints = await easterEggs({ spoilers: 'hints' }, noEggs(routes));
+    const topical = await easterEggs({ topic: 'ufo', spoilers: 'full' }, noEggs(routes));
     expect(full.results.map((r) => r.title)).toEqual(['Ghost car', 'UFO']);
     expect(full.results[0]).toMatchObject({ evidence_status: 'unverified', confidence: 'unverified', hint: null, spoiler_class: 'unclassified' });
     expect(hints).toMatchObject({ status: 'partial', results: [] });

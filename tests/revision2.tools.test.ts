@@ -243,10 +243,16 @@ describe('shipped community registry', () => {
   it('withholds the reported Easter egg at hints and returns it, labelled, at discovery', async () => {
     const hints = await easterEggs({ spoilers: 'hints' }, deps());
     expect(hints).toMatchObject({ status: 'partial', results: [] });
+    // The default call says how many entries a higher level would show, and never what they are.
+    expect(hints.summary).toContain('19 recorded entries are held back');
+    expect(JSON.stringify(hints)).not.toMatch(/Dexter|Skunk|tower/i);
     const discovery = await easterEggs({ spoilers: 'discovery' }, deps());
     expect(discovery.status).toBe('ok');
-    expect(discovery.results).toHaveLength(1);
-    expect(discovery.results[0]).toMatchObject({ confidence: 'unverified', evidence_status: 'unverified', source_url: 'https://www.youtube.com/watch?v=Mj_beVHUJE4', community: { social_platform: 'youtube', author_handle: '@MrDalekJD' } });
+    expect(discovery.results).toHaveLength(19);
+    const listed = discovery.results.filter((r) => r.community === undefined);
+    expect(listed).toHaveLength(18);
+    expect(listed.every((r) => r.evidence_status === 'unverified' && r.confidence === 'unverified' && r.detail?.includes('Not viewed in the game by this project.'))).toBe(true);
+    expect(discovery.results.find((r) => r.community !== undefined)).toMatchObject({ confidence: 'unverified', evidence_status: 'unverified', source_url: 'https://www.youtube.com/watch?v=Mj_beVHUJE4', community: { social_platform: 'youtube', author_handle: '@MrDalekJD' } });
   });
 
   it('records no video review, since no inspected video shows a code entered with its effect', () => {
@@ -264,6 +270,15 @@ describe('shipped community registry', () => {
   });
 });
 
+describe('list_cheats default call with Fandom off', () => {
+  it('returns no rows but says how many recorded reports can be asked for', async () => {
+    const off: Route = { match: ['gta.fandom.com'], result: { ok: false, reason: 'not_permitted', detail: 'simulated' } };
+    const out = await listCheats({ include_unverified: false, spoilers: 'hints' }, { http: fakeHttp([off]), manifest: real });
+    expect(out.results).toEqual([]);
+    expect(out.summary).toContain('22 recorded report(s) are available with include_unverified=true');
+  });
+});
+
 describe('easter_eggs with Fandom off', () => {
   const off: Route = { match: ['gta.fandom.com'], result: { ok: false, reason: 'not_permitted', detail: 'simulated' } };
 
@@ -276,7 +291,7 @@ describe('easter_eggs with Fandom off', () => {
 
   it('names the setting once when a report is returned', async () => {
     const out = await easterEggs({ spoilers: 'discovery' }, { http: fakeHttp([off]), manifest: real });
-    expect(out.results).toHaveLength(1);
+    expect(out.results).toHaveLength(19);
     expect(out.notices.filter((n) => n.message.includes('GTA6_MCP_FANDOM_PERMISSION'))).toHaveLength(1);
   });
 });

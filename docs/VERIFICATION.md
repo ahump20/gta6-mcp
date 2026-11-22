@@ -443,3 +443,23 @@ Reviewer: Claude Fable 5.2 (AI agent, Anthropic), Claude Code session. 2026-11-2
 | Not tested | The ChatGPT desktop app and the IDE extension. OpenAI's MCP page says they share `~/.codex/config.toml` with the CLI. A longer interactive session, where a slow server may become available after the first answer, was not tested either. |
 
 Source for the Codex settings: https://developers.openai.com/codex/mcp, read 2026-11-21.
+
+
+## 21. Easter egg listings and default calls (v0.1.2)
+
+Reviewer: Claude Fable 5.2 (AI agent, Anthropic), Claude Code session. 2026-11-22, 00:00Z to 00:55Z.
+
+The v0.1.1 release file was downloaded fresh, its checksum matched, and it was installed into an empty folder and asked for everything it had. It returned 22 cheat reports and one Easter egg. That was compared with what was published the same day (2026-11-21 in the United States).
+
+| Item | Result |
+|---|---|
+| Cheat codes | The server's 18 code names and their inputs match the RareThief table and the Red Bull table input for input: no name missing on either side, no input different. Attack Force keeps its second, 8-input variant on record. |
+| How many codes are known | Sources disagree. Tracker.gg and one video say 17, a social post says 16, and the two tables above give 18 between them: RareThief's table has no Cycle Weather row, and Tracker.gg shows Raise Wanted Level as not yet known. The server returns 18. |
+| Attack Force dispute | Still open. GameSpot's page, read through a third-party page reader on 2026-11-21, was reported to print 8 inputs; a direct request still returned HTTP 403, so the recorded reason is unchanged. Every other listing read that day prints 9. |
+| Easter eggs | The server had 1; published lists had dozens. This was the gap. |
+| Listings read | Polygon (8 entries), gta6bugs.com (more than 50 it calls verified and a handful it calls reported), DuvalWire (about 19) and MetaForge (11). The first three were downloaded and searched by script. MetaForge refused a direct download (HTTP 403), so its headings were read through a page reader. IGN's list could not be read by either route, and the GTAForums thread refused a direct download. |
+| Rule for entry | An Easter egg entered the registry only if a script found it in at least two of the four listings, and found its quoted heading word for word in the listing it links to. 18 passed. |
+| Left out | Entries only one listing carries (among them Weird Al, Jeremy Irons, Kodak Black, the Red Hulk, the meteorite and Niko Bellic), and two where the listings describe different things under one name (the Vercetti Estate and the Mount Chiliad talk). Videos titled as lists of 30 secrets were not frame-reviewed. |
+| What an entry says | A title and a description in the reviewer's words, a place where the listings give one, the listings by name, and that this project has not seen it in the game. Status `unverified`, level `discovery`. Where listings disagree, the entry says so: the colour of the Eclipse, the road of the UFO, and what the Belville house refers to. |
+| Default calls | In v0.1.1 a plain `list_cheats` call answered that nothing was returned, and a plain `easter_eggs` call answered only that content was withheld. Neither told an assistant what to ask for. Both now give the count on record and the argument that shows it. |
+| Not done | Effects and unlock conditions for cheats, and the 43 cheats that guides name without a code. Unlock conditions need a spoiler review each. No entry was checked in the game. |

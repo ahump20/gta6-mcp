@@ -412,6 +412,7 @@ export function validatePolicy(manifest: Manifest, opts: { readonly allowSynthet
     ...manifest.confirmations.map((c) => c.claim_id),
     ...manifest.conflict_groups.map((g) => g.conflict_group_id),
     ...manifest.community_reports.map((r) => r.id),
+    ...manifest.spoiler_registry.easter_eggs.map((egg) => egg.id),
   ];
   const approved = manifest.confirmations.filter((claim) => claim.review.decision === 'approved');
   const registry = new Map(manifest.community_reports.map((report) => [report.url, report]));
@@ -420,6 +421,10 @@ export function validatePolicy(manifest: Manifest, opts: { readonly allowSynthet
     new Set(ids).size === ids.length ? '' : 'claim and conflict group ids must be unique',
     ...approved.flatMap((claim) => evidenceErrors(claim, recorded, registry)),
     ...communityErrors(manifest),
+    ...manifest.spoiler_registry.easter_eggs.flatMap((egg) => [
+      egg.fingerprint === fingerprint(egg.quote) ? '' : `${egg.id}: fingerprint does not match its quote`,
+      egg.source_url.startsWith('https://') ? '' : `${egg.id}: source_url must be https`,
+    ]),
     ...manifest.conflict_groups.flatMap((g) => (g.min_level !== undefined && !g.level_review ? [`${g.conflict_group_id}: min_level needs its own level_review`] : [])),
     ...disagreementErrors(approved, manifest),
     ...approved.map((claim) => (hasApprovalBasis(claim) ? '' : `${claim.claim_id}: no sufficient approval basis`)),

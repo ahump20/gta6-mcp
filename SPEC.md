@@ -1,4 +1,4 @@
-# gta6-mcp v0.1.1 specification
+# gta6-mcp v0.1.2 specification
 
 A local, headless stdio MCP server for someone playing Grand Theft Auto VI with
 Claude Code or Codex open. It retrieves, extracts, normalises, filters and labels.
@@ -27,6 +27,7 @@ cheat rows until a source documents them for GTA VI.
 | --- | --- | --- |
 | Research lead | G2A, Gizdev, gta6cheatcodes.com | Offline research and documenting disagreement only. Never fetched at runtime, never confirming. |
 | Community report | Reddit, X, YouTube, TikTok and forum posts | Captured offline, reviewed into the community registry shipped in `data/evidence.json`: link, author handle, post and capture times, evidence type and a reviewer-written one-line description. Never post text, images or video. Never fetched at runtime. Returned as `unverified` (or `theory`) reports. |
+| Guide listing | Published Easter egg lists: Polygon, gta6bugs.com, DuvalWire, MetaForge | Read offline. An Easter egg that at least two of them list may enter the reviewed registry as `unverified`: a title and a description in the reviewer's words, the headings quoted as the minimal quote, a link to one listing and the names of the others. Never fetched at runtime, never confirming, and never used for cheats. |
 | Runtime retrieval, always on | `en.wikipedia.org/w/api.php` | Background on the game. Wikimedia's User-Agent policy and API etiquette permit identified API clients. |
 | Runtime retrieval, off by default | `gta.fandom.com/api.php` (primary GTA Wiki provider) | Gameplay discovery and wikitext. Fandom's Terms of Use bar automated access without express written permission, and Fandom publishes no API policy granting it. The server requests Fandom only when its operator sets `GTA6_MCP_FANDOM_PERMISSION=granted`, which is a statement that Fandom has given that permission. |
 | Known, not queried | `gta.wiki` (Weird Gloop) | The wiki the GTA Wiki community moved to on 15 March 2026 and where its GTA VI cheats and Easter egg pages are maintained. Its host's Terms of Use bar automated use without prior consent and none has been given, so the server never requests it. See [docs/VERIFICATION.md](docs/VERIFICATION.md) section 7. |
@@ -70,7 +71,7 @@ judge the page. Categories served from an expired cache entry add a
 
 `data/evidence.json` is the reviewed manifest; `docs/evidence.schema.json` is its
 JSON Schema. CI validates both structure and policy. An empty confirmation set is
-valid and is what v0.1.1 ships.
+valid and is what v0.1.2 ships.
 
 A confirmation entry records: `claim_id`, game, cheat name, exact ordered input,
 exact effect, one platform (`ps5` or `xbox-series`), input method, sourced
@@ -252,10 +253,10 @@ filter does not match such rows.
 
 Result: `{ title, hint, detail, location, prerequisites, spoiler_class,
 confidence, evidence_status: documented | theory | unverified, source_url,
-community? }`. `documented` needs a reviewed registry entry. Reviewed community
+community? }`. `documented` needs a reviewed registry entry whose reviewer saw the secret in the game; an entry that rests on guide listings alone is `unverified`, and its `detail` says so. Reviewed community
 reports are returned as `unverified` or `theory` with `community: {
 social_platform, author_handle, posted_at }` and the post link as `source_url`.
-When no reviewed hint exists the tool says so.
+When no reviewed hint exists the tool says so. When recorded entries sit above the requested level, the summary and the `spoiler_withheld` notice give their count and name the levels that show them, never their content. A default `list_cheats` call that returns no rows likewise gives the count of recorded reports and names `include_unverified=true`.
 
 ## Known coverage at release
 
@@ -264,8 +265,9 @@ only Wikipedia is queried; the Fandom wiki needs its operator's recorded
 permission, so the 18 source-reported cheat rows on its page are not returned
 by default. `gta.wiki`, which
 has GTA VI cheats and Easter egg pages, is not queried (consent required). No
-GTA VI Easter egg page exists on the Fandom wiki, and no Easter egg has been
-reviewed. Rockstar Support and GameSpot's live page were unreachable during
+GTA VI Easter egg page exists on the Fandom wiki. The reviewed registry holds 18
+Easter eggs, each listed by at least two published guides and none seen in the
+game by this project, so all are `unverified`. Rockstar Support and GameSpot's live page were unreachable during
 verification. The community registry holds 20 text claims about cheats (18
 codes captioned by one video, and two more leads on Attack Force) and one Easter
 egg report, all unverified. The frames of five videos were inspected and none
