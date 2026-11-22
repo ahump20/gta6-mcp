@@ -458,8 +458,8 @@ The v0.1.1 release file was downloaded fresh, its checksum matched, and it was i
 | Attack Force dispute | Still open. GameSpot's page, read through a third-party page reader on 2026-11-21, was reported to print 8 inputs; a direct request still returned HTTP 403, so the recorded reason is unchanged. Every other listing read that day prints 9. |
 | Easter eggs | The server had 1; published lists had dozens. This was the gap. |
 | Listings read | Polygon (8 entries), gta6bugs.com (more than 50 it calls verified and a handful it calls reported), DuvalWire (about 19) and MetaForge (11). The first three were downloaded and searched by script. MetaForge refused a direct download (HTTP 403), so its headings were read through a page reader. IGN's list could not be read by either route, and the GTAForums thread refused a direct download. |
-| Rule for entry | An Easter egg entered the registry only if a script found it in at least two of the four listings, and found its quoted heading word for word in the listing it links to. 18 passed. |
-| Left out | Entries only one listing carries (among them Weird Al, Jeremy Irons, Kodak Black, the Red Hulk, the meteorite and Niko Bellic), and two where the listings describe different things under one name (the Vercetti Estate and the Mount Chiliad talk). Videos titled as lists of 30 secrets were not frame-reviewed. |
+| Rule for entry | An Easter egg entered the registry only if a script found it in at least two of the four listings, and found its quoted heading word for word in the listing it links to. 18 passed in v0.1.2; one of them should not have, see section 23. |
+| Left out | Entries only one listing carries (among them Weird Al, Jeremy Irons, Kodak Black, the Red Hulk, the meteorite and Niko Bellic), the Vercetti Estate, which two listings describe differently, and the Mount Chiliad talk and the Wade podcast, whose second sighting was a forum thread rather than one of the four listings. Videos titled as lists of 30 secrets were not frame-reviewed. |
 | What an entry says | A title and a description in the reviewer's words, a place where the listings give one, the listings by name, and that this project has not seen it in the game. Status `unverified`, level `discovery`. Where listings disagree, the entry says so: the colour of the Eclipse, the road of the UFO, and what the Belville house refers to. |
 | Default calls | In v0.1.1 a plain `list_cheats` call answered that nothing was returned, and a plain `easter_eggs` call answered only that content was withheld. Neither told an assistant what to ask for. Both now give the count on record and the argument that shows it. |
 | Not done | Effects and unlock conditions for cheats, and the 43 cheats that guides name without a code. Unlock conditions need a spoiler review each. No entry was checked in the game. |
@@ -483,3 +483,12 @@ Reviewer: Claude Fable 5.2 (AI agent, Anthropic), Claude Code session. 2026-11-2
 | Not tested | Codex through `npx` on v0.1.2, the ChatGPT desktop app, the IDE extension, Windows and Linux desktops (CI runs on Linux). No entry was checked in the game. |
 
 The filtered record of the two `npx` runs is attached to the release as `gta6-mcp-0.1.2-verification.json`, with the wire logs beside it.
+
+
+## 23. Correction: one Easter egg removed (v0.1.3)
+
+Reviewer: Claude Fable 5.2 (AI agent, Anthropic), Claude Code session. 2026-11-22, 01:25Z to 01:45Z.
+
+v0.1.2 shipped an entry for the "before GTA 6" meme that said DuvalWire listed it. It does not. The script that checked second listings searched the whole downloaded page, scripts included, and the four matches for that phrase were all inside script code, not text a reader sees. The second sighting had been a forum thread, which is not one of the four listings.
+
+The check now ignores script and style blocks. Run again over visible text only, it passed the other 17 entries and failed that one, so the entry was removed. The text around each DuvalWire match for the 17 was also read by the reviewer. v0.1.3 returns 17 guide-listed Easter eggs and the one community report, 18 in all. Release files are never overwritten, so v0.1.2 keeps the wrong entry; the README points at v0.1.3.

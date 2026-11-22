@@ -244,13 +244,13 @@ describe('shipped community registry', () => {
     const hints = await easterEggs({ spoilers: 'hints' }, deps());
     expect(hints).toMatchObject({ status: 'partial', results: [] });
     // The default call says how many entries a higher level would show, and never what they are.
-    expect(hints.summary).toContain('19 recorded entries are held back at this spoiler level. Ask again with spoilers set to discovery to see them.');
+    expect(hints.summary).toContain('18 recorded entries are held back at this spoiler level. Ask again with spoilers set to discovery to see them.');
     expect(JSON.stringify(hints)).not.toMatch(/Dexter|Skunk|tower/i);
     const discovery = await easterEggs({ spoilers: 'discovery' }, deps());
     expect(discovery.status).toBe('ok');
-    expect(discovery.results).toHaveLength(19);
+    expect(discovery.results).toHaveLength(18);
     const listed = discovery.results.filter((r) => r.community === undefined);
-    expect(listed).toHaveLength(18);
+    expect(listed).toHaveLength(17);
     expect(listed.every((r) => r.evidence_status === 'unverified' && r.confidence === 'unverified' && r.detail?.includes('Not viewed in the game by this project.'))).toBe(true);
     expect(discovery.results.find((r) => r.community !== undefined)).toMatchObject({ confidence: 'unverified', evidence_status: 'unverified', source_url: 'https://www.youtube.com/watch?v=Mj_beVHUJE4', community: { social_platform: 'youtube', author_handle: '@MrDalekJD' } });
   });
@@ -294,7 +294,7 @@ describe('easter_eggs with Fandom off', () => {
 
   it('names the setting once when a report is returned', async () => {
     const out = await easterEggs({ spoilers: 'discovery' }, { http: fakeHttp([off]), manifest: real });
-    expect(out.results).toHaveLength(19);
+    expect(out.results).toHaveLength(18);
     expect(out.notices.filter((n) => n.message.includes('GTA6_MCP_FANDOM_PERMISSION'))).toHaveLength(1);
   });
 });

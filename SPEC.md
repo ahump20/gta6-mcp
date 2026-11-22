@@ -1,4 +1,4 @@
-# gta6-mcp v0.1.2 specification
+# gta6-mcp v0.1.3 specification
 
 A local, headless stdio MCP server for someone playing Grand Theft Auto VI with
 Claude Code or Codex open. It retrieves, extracts, normalises, filters and labels.
@@ -71,7 +71,7 @@ judge the page. Categories served from an expired cache entry add a
 
 `data/evidence.json` is the reviewed manifest; `docs/evidence.schema.json` is its
 JSON Schema. CI validates both structure and policy. An empty confirmation set is
-valid and is what v0.1.2 ships.
+valid and is what v0.1.3 ships.
 
 A confirmation entry records: `claim_id`, game, cheat name, exact ordered input,
 exact effect, one platform (`ps5` or `xbox-series`), input method, sourced
@@ -265,7 +265,7 @@ only Wikipedia is queried; the Fandom wiki needs its operator's recorded
 permission, so the 18 source-reported cheat rows on its page are not returned
 by default. `gta.wiki`, which
 has GTA VI cheats and Easter egg pages, is not queried (consent required). No
-GTA VI Easter egg page exists on the Fandom wiki. The reviewed registry holds 18
+GTA VI Easter egg page exists on the Fandom wiki. The reviewed registry holds 17
 Easter eggs, each listed by at least two published guides and none seen in the
 game by this project, so all are `unverified`. Rockstar Support and GameSpot's live page were unreachable during
 verification. The community registry holds 20 text claims about cheats (18

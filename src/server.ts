@@ -6,7 +6,7 @@ import { CheatsInput, CheatsOutput, type Envelope, EggsInput, EggsOutput, PageIn
 import { type Deps, easterEggs, getPage, listCheats, renderText, searchGta6 } from './tools.js';
 
 export const SERVER_NAME = 'gta6-mcp';
-export const SERVER_VERSION = '0.1.2';
+export const SERVER_VERSION = '0.1.3';
 
 const READ_ONLY = { readOnlyHint: true, openWorldHint: true } as const;
 const CARRY =

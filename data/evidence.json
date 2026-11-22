@@ -845,7 +845,7 @@
         "type": "ai_agent"
       },
       "reviewed_at": "2026-11-21T10:35:00Z",
-      "scope_note": "Reviewed for spoiler class only, not for truth. Covers index-level page titles, two sections of the GTA Wiki cheats page at revision 2089363, and its 18 cheat rows. For v0.1.2, Claude Fable 5.2 (AI agent, Anthropic) added 18 Easter egg entries on 2026-11-21, read from published guide listings and classed discovery; they were not seen in the game."
+      "scope_note": "Reviewed for spoiler class only, not for truth. Covers index-level page titles, two sections of the GTA Wiki cheats page at revision 2089363, and its 18 cheat rows. For v0.1.2, Claude Fable 5.2 (AI agent, Anthropic) added Easter egg entries on 2026-11-21, 17 of which remain after a v0.1.3 correction, read from published guide listings and classed discovery; they were not seen in the game."
     },
     "titles": [
       {
@@ -1287,19 +1287,6 @@
         "source_url": "https://www.polygon.com/gta-6-easter-eggs/",
         "quote": "The Saw franchise",
         "fingerprint": "sha256:83e2875e4c01b3ffde7f0d158164029e5691a8128d95053f269bde8a56d07f79"
-      },
-      {
-        "id": "egg-before-gta6-meme",
-        "title": "The 'before GTA 6' meme",
-        "title_min_level": "discovery",
-        "hint": null,
-        "detail": "An in-game post that plays on the real-world 'before GTA 6' meme. One listing files it as not yet verified. Listed by gta6bugs.com and DuvalWire. Not viewed in the game by this project.",
-        "location": "The in-game Snapmatic app",
-        "prerequisites": null,
-        "evidence_status": "unverified",
-        "source_url": "https://gta6bugs.com/easter-eggs",
-        "quote": "'We got X before GTA 6' on Snapmatic",
-        "fingerprint": "sha256:32beea182194d9243e0ece08667b7b9da2c4052fdf836c04b8ef1ac1b0c26684"
       }
     ],
     "easter_egg_page_titles": [
