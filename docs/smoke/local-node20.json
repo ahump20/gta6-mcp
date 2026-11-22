@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-21T13:00:44.983Z",
-  "tested_sha": "96a15396fc40e2fae93679c01a41050bbb8c730d",
+  "generated_at": "2026-11-22T01:02:16.630Z",
+  "tested_sha": "70746e5daa48098bbc4adf9caab591c38c8b18ee",
   "launcher": "~/.nvm/versions/node/v20.20.2/bin/node ./dist/index.js",
   "versions": {
     "node": "v20.20.2",
@@ -38,7 +38,7 @@
     {
       "label": "legacy",
       "requested_mode": "legacy",
-      "wire_log": "$TMPDIR/gta6-v011/wire-local/legacy.wire.jsonl",
+      "wire_log": "$TMPDIR/gta6-mcp-smoke-CAv3HD/legacy.wire.jsonl",
       "calls": [
         {
           "label": "cheat lookup (default: confirmed only)",
@@ -48,7 +48,7 @@
           "schema_valid": true,
           "text_matches_structured": true,
           "status": "upstream_unavailable",
-          "summary": "The cheats page was not requested: the Fandom wiki is switched off. Nothing was returned.",
+          "summary": "The cheats page was not requested: the Fandom wiki is switched off. Nothing was returned. 22 recorded report(s) are available with include_unverified=true, labelled as reports, not working codes.",
           "result_count": 0,
           "notices": [
             {
@@ -169,12 +169,12 @@
           "schema_valid": true,
           "text_matches_structured": true,
           "status": "partial",
-          "summary": "Content withheld by spoiler policy.",
+          "summary": "Content withheld by spoiler policy. 19 recorded entries are held back at this spoiler level. Ask again with spoilers set to discovery to see them.",
           "result_count": 0,
           "notices": [
             {
               "type": "spoiler_withheld",
-              "message": "Content withheld by spoiler policy."
+              "message": "19 recorded entries are held back at this spoiler level. Ask again with spoilers set to discovery to see them."
             },
             {
               "type": "coverage_gap",
@@ -194,12 +194,16 @@
           "schema_valid": true,
           "text_matches_structured": true,
           "status": "partial",
-          "summary": "1 secret(s): 0 reviewed, 1 community report(s), 0 unreviewed and unverified.",
-          "result_count": 1,
+          "summary": "19 secret(s): 18 from the reviewed registry, 1 community report(s), 0 unreviewed and unverified.",
+          "result_count": 19,
           "notices": [
             {
               "type": "coverage_gap",
-              "message": "No reviewed hint exists; these entries are community reports or unreviewed wiki sections."
+              "message": "No reviewed hint exists; these entries are guide listings, community reports or unreviewed wiki sections."
+            },
+            {
+              "type": "coverage_gap",
+              "message": "Registry entries marked unverified are listed by guides and were reviewed for spoiler level only. This project has not seen them in the game."
             },
             {
               "type": "coverage_gap",
@@ -220,20 +224,15 @@
             }
           ],
           "first_result": {
-            "title": "Radio tower Easter egg (reported)",
+            "title": "Skunk Ape, Leonida's Bigfoot",
             "hint": null,
-            "detail": "Frames inspected 2026-11-21: a climb up a red radio tower; near 5:22 a striped egg is shown in mid-air above the map, and near 5:40 a character stands beside a nest on the top platform. One video, so it stays unverified.",
-            "location": null,
+            "detail": "A Bigfoot-style creature. Guides say following it leads to an effigy and a blackout scene. Listed by gta6bugs.com and DuvalWire, MetaForge. Not viewed in the game by this project.",
+            "location": "South of Cottonmouth Lake",
             "prerequisites": null,
             "spoiler_class": "discovery",
             "confidence": "unverified",
             "evidence_status": "unverified",
-            "source_url": "https://www.youtube.com/watch?v=Mj_beVHUJE4",
-            "community": {
-              "social_platform": "youtube",
-              "author_handle": "@MrDalekJD",
-              "posted_at": "2026-11-19T03:50:41Z"
-            }
+            "source_url": "https://gta6bugs.com/easter-eggs"
           }
         },
         {
@@ -364,8 +363,8 @@
             {
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
-              "revision_id": 1386921262,
-              "retrieved_at": "2026-11-21T13:00:37.815Z",
+              "revision_id": 1387017398,
+              "retrieved_at": "2026-11-22T01:02:09.295Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -373,7 +372,7 @@
           "first_result": {
             "title": "Grand Theft Auto VI",
             "section": "Gameplay",
-            "text": "== Gameplay ==\nGrand Theft Auto VI is a single-player, action-adventure game set within an open world and played from a third-person view as either Jason Duval or Lucia Caminos. Players can choose to fight non-player characters (NPCs), steal vehicles, rob establishments or get in…",
+            "text": "== Gameplay ==\nGrand Theft Auto VI is a single-player action-adventure game set within an open world and played from a third-person view as either Jason Duval or Lucia Caminos. Players can choose to fight non-player characters (NPCs), steal vehicles, rob establishments or get int…",
             "references": [
               "https://www.ign.com/articles/gta-6-new-gameplay-details",
               "https://web.archive.org/web/20260827221707/https://www.ign.com/articles/gta-6-new-gameplay-details",
@@ -407,8 +406,8 @@
             {
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
-              "revision_id": 1386921262,
-              "retrieved_at": "2026-11-21T13:00:37.815Z",
+              "revision_id": 1387017398,
+              "retrieved_at": "2026-11-22T01:02:09.296Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -493,7 +492,7 @@
             {
               "title": "Wikipedia search",
               "url": "https://en.wikipedia.org/wiki/Special:Search",
-              "retrieved_at": "2026-11-21T13:00:39.349Z",
+              "retrieved_at": "2026-11-22T01:02:11.051Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -512,7 +511,7 @@
       "observed_era": "legacy",
       "server": {
         "name": "gta6-mcp",
-        "version": "0.1.1"
+        "version": "0.1.2"
       },
       "tools": [
         "easter_eggs",
@@ -547,7 +546,7 @@
       "requested_mode": {
         "pin": "2026-07-28"
       },
-      "wire_log": "$TMPDIR/gta6-v011/wire-local/modern.wire.jsonl",
+      "wire_log": "$TMPDIR/gta6-mcp-smoke-8lpsDv/modern.wire.jsonl",
       "calls": [
         {
           "label": "cheat lookup (default: confirmed only)",
@@ -557,7 +556,7 @@
           "schema_valid": true,
           "text_matches_structured": true,
           "status": "upstream_unavailable",
-          "summary": "The cheats page was not requested: the Fandom wiki is switched off. Nothing was returned.",
+          "summary": "The cheats page was not requested: the Fandom wiki is switched off. Nothing was returned. 22 recorded report(s) are available with include_unverified=true, labelled as reports, not working codes.",
           "result_count": 0,
           "notices": [
             {
@@ -678,12 +677,12 @@
           "schema_valid": true,
           "text_matches_structured": true,
           "status": "partial",
-          "summary": "Content withheld by spoiler policy.",
+          "summary": "Content withheld by spoiler policy. 19 recorded entries are held back at this spoiler level. Ask again with spoilers set to discovery to see them.",
           "result_count": 0,
           "notices": [
             {
               "type": "spoiler_withheld",
-              "message": "Content withheld by spoiler policy."
+              "message": "19 recorded entries are held back at this spoiler level. Ask again with spoilers set to discovery to see them."
             },
             {
               "type": "coverage_gap",
@@ -703,12 +702,16 @@
           "schema_valid": true,
           "text_matches_structured": true,
           "status": "partial",
-          "summary": "1 secret(s): 0 reviewed, 1 community report(s), 0 unreviewed and unverified.",
-          "result_count": 1,
+          "summary": "19 secret(s): 18 from the reviewed registry, 1 community report(s), 0 unreviewed and unverified.",
+          "result_count": 19,
           "notices": [
             {
               "type": "coverage_gap",
-              "message": "No reviewed hint exists; these entries are community reports or unreviewed wiki sections."
+              "message": "No reviewed hint exists; these entries are guide listings, community reports or unreviewed wiki sections."
+            },
+            {
+              "type": "coverage_gap",
+              "message": "Registry entries marked unverified are listed by guides and were reviewed for spoiler level only. This project has not seen them in the game."
             },
             {
               "type": "coverage_gap",
@@ -729,20 +732,15 @@
             }
           ],
           "first_result": {
-            "title": "Radio tower Easter egg (reported)",
+            "title": "Skunk Ape, Leonida's Bigfoot",
             "hint": null,
-            "detail": "Frames inspected 2026-11-21: a climb up a red radio tower; near 5:22 a striped egg is shown in mid-air above the map, and near 5:40 a character stands beside a nest on the top platform. One video, so it stays unverified.",
-            "location": null,
+            "detail": "A Bigfoot-style creature. Guides say following it leads to an effigy and a blackout scene. Listed by gta6bugs.com and DuvalWire, MetaForge. Not viewed in the game by this project.",
+            "location": "South of Cottonmouth Lake",
             "prerequisites": null,
             "spoiler_class": "discovery",
             "confidence": "unverified",
             "evidence_status": "unverified",
-            "source_url": "https://www.youtube.com/watch?v=Mj_beVHUJE4",
-            "community": {
-              "social_platform": "youtube",
-              "author_handle": "@MrDalekJD",
-              "posted_at": "2026-11-19T03:50:41Z"
-            }
+            "source_url": "https://gta6bugs.com/easter-eggs"
           }
         },
         {
@@ -873,8 +871,8 @@
             {
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
-              "revision_id": 1386921262,
-              "retrieved_at": "2026-11-21T13:00:41.636Z",
+              "revision_id": 1387017398,
+              "retrieved_at": "2026-11-22T01:02:13.245Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -882,7 +880,7 @@
           "first_result": {
             "title": "Grand Theft Auto VI",
             "section": "Gameplay",
-            "text": "== Gameplay ==\nGrand Theft Auto VI is a single-player, action-adventure game set within an open world and played from a third-person view as either Jason Duval or Lucia Caminos. Players can choose to fight non-player characters (NPCs), steal vehicles, rob establishments or get in…",
+            "text": "== Gameplay ==\nGrand Theft Auto VI is a single-player action-adventure game set within an open world and played from a third-person view as either Jason Duval or Lucia Caminos. Players can choose to fight non-player characters (NPCs), steal vehicles, rob establishments or get int…",
             "references": [
               "https://www.ign.com/articles/gta-6-new-gameplay-details",
               "https://web.archive.org/web/20260827221707/https://www.ign.com/articles/gta-6-new-gameplay-details",
@@ -916,8 +914,8 @@
             {
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
-              "revision_id": 1386921262,
-              "retrieved_at": "2026-11-21T13:00:41.637Z",
+              "revision_id": 1387017398,
+              "retrieved_at": "2026-11-22T01:02:13.246Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -1002,7 +1000,7 @@
             {
               "title": "Wikipedia search",
               "url": "https://en.wikipedia.org/wiki/Special:Search",
-              "retrieved_at": "2026-11-21T13:00:43.456Z",
+              "retrieved_at": "2026-11-22T01:02:15.106Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -1021,7 +1019,7 @@
       "observed_era": "modern",
       "server": {
         "name": "gta6-mcp",
-        "version": "0.1.1"
+        "version": "0.1.2"
       },
       "tools": [
         "easter_eggs",

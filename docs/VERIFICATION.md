@@ -463,3 +463,23 @@ The v0.1.1 release file was downloaded fresh, its checksum matched, and it was i
 | What an entry says | A title and a description in the reviewer's words, a place where the listings give one, the listings by name, and that this project has not seen it in the game. Status `unverified`, level `discovery`. Where listings disagree, the entry says so: the colour of the Eclipse, the road of the UFO, and what the Belville house refers to. |
 | Default calls | In v0.1.1 a plain `list_cheats` call answered that nothing was returned, and a plain `easter_eggs` call answered only that content was withheld. Neither told an assistant what to ask for. Both now give the count on record and the argument that shows it. |
 | Not done | Effects and unlock conditions for cheats, and the 43 cheats that guides name without a code. Unlock conditions need a spoiler review each. No entry was checked in the game. |
+
+
+## 22. The published v0.1.2 release, verified
+
+Reviewer: Claude Fable 5.2 (AI agent, Anthropic), Claude Code session. 2026-11-22, 01:00Z to 01:20Z.
+
+| Item | Result |
+|---|---|
+| Release | https://github.com/ahump20/gta6-mcp/releases/tag/v0.1.2 |
+| Shipped commit | `70746e5` (merge of pull request 6), tagged `v0.1.2` |
+| CI | Pass on Node 20 and 22 for the pull request head, and in the release run. An automated reviewer raised three points on the pull request (the count ignored the caller's platform, the message named `discovery` for entries that need `full`, and a held registry entry could be reported as a wiki outage); all three were fixed before the tag, with tests. |
+| Tarball | `gta6-mcp-0.1.2.tgz`, SHA-256 `2a7f5d88dab6c39ec6a30fd835fb54255450f4b17d9f437f524a50876b1761b8`. A fresh download matched the published checksum. |
+| Fresh install, hand-written client | Installed into an empty folder under Node 24.5.0. `list_cheats` with `include_unverified: true` returned 22 rows and 18 names, which match the two published tables of section 21 input for input. `easter_eggs` at `full` returned 19. The two default calls returned no rows and the new counts. |
+| `npx -y <release tarball URL>` | Node 20.20.2, npm 10.8.2, empty cache: live protocol test passed on both protocol versions (`2025-11-25` and `2026-07-28`); the server reported 0.1.2 |
+| `npx -y github:ahump20/gta6-mcp#v0.1.2` | Node 20.20.2, npm 10.8.2, empty cache: live protocol test passed on both protocol versions |
+| Claude Code, plain question | Claude Code headless on the v0.1.2 build before the tag, asked what cheat codes and Easter eggs have been reported. It called `easter_eggs` with no arguments, read the count, called again with `spoilers: "discovery"`, and answered with 18 code names and 19 Easter eggs. After the release the local entry was moved to the v0.1.2 tarball and `claude mcp get gta6` reported it connected. |
+| Codex, plain question | Codex CLI 0.166.0 with the user's own settings and the release installed by `npm install -g`. It called `list_cheats` with `include_unverified: true`, `easter_eggs` at `hints`, then `easter_eggs` at `discovery`, and ended with 18 code names and 19 Easter eggs. |
+| Not tested | Codex through `npx` on v0.1.2, the ChatGPT desktop app, the IDE extension, Windows and Linux desktops (CI runs on Linux). No entry was checked in the game. |
+
+The filtered record of the two `npx` runs is attached to the release as `gta6-mcp-0.1.2-verification.json`, with the wire logs beside it.
