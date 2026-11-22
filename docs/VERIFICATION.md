@@ -492,3 +492,22 @@ Reviewer: Claude Fable 5.2 (AI agent, Anthropic), Claude Code session. 2026-11-2
 v0.1.2 shipped an entry for the "before GTA 6" meme that said DuvalWire listed it. It does not. The script that checked second listings searched the whole downloaded page, scripts included, and the four matches for that phrase were all inside script code, not text a reader sees. The second sighting had been a forum thread, which is not one of the four listings.
 
 The check now ignores script and style blocks. Run again over visible text only, it passed the other 17 entries and failed that one, so the entry was removed. The text around each DuvalWire match for the 17 was also read by the reviewer. v0.1.3 returns 17 guide-listed Easter eggs and the one community report, 18 in all. Release files are never overwritten, so v0.1.2 keeps the wrong entry; the README points at v0.1.3.
+
+
+## 24. The published v0.1.3 release, verified
+
+Reviewer: Claude Fable 5.2 (AI agent, Anthropic), Claude Code session. 2026-11-22, 01:45Z to 02:10Z.
+
+| Item | Result |
+|---|---|
+| Release | https://github.com/ahump20/gta6-mcp/releases/tag/v0.1.3 |
+| CI | Pass on Node 20 and 22 for the shipped commit, and in the release run |
+| Tarball | `gta6-mcp-0.1.3.tgz`, SHA-256 `21dfeda594294a1ec5f68d7bbbe72a89793190c47ec529e69c1d8d82df8928ec`. A fresh download matched the published checksum. |
+| Fresh install, hand-written client | Empty folder, Node 24.5.0. 22 cheat rows and 18 names, matching the two published tables of section 21 input for input. 18 Easter eggs at `full`: 17 from the registry and 1 community report. The removed entry is absent. Default calls return no rows and the counts 22 and 18. |
+| `npx -y <release tarball URL>` | Node 20.20.2, npm 10.8.2, empty cache: live protocol test passed on both protocol versions; the server reported 0.1.3 |
+| `npx -y github:ahump20/gta6-mcp#v0.1.3` | Node 20.20.2, npm 10.8.2, empty cache: live protocol test passed on both protocol versions |
+| Claude Code | The local entry was moved to the v0.1.3 tarball; `claude mcp get gta6` reported it connected. The plain-question run of section 22 was not repeated on v0.1.3. |
+| Codex, plain question | Codex CLI 0.166.0, the user's own settings, v0.1.3 installed by `npm install -g`. It called both tools at `hints`, then both at `discovery`, and ended with 18 code names and 18 Easter eggs. |
+| Not tested | Codex through `npx` on v0.1.3, the ChatGPT desktop app, the IDE extension. No entry was checked in the game. |
+
+The filtered record of the two `npx` runs is attached to the release as `gta6-mcp-0.1.3-verification.json`, with the wire logs beside it.

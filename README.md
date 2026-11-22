@@ -27,20 +27,20 @@ Details and dated evidence for every line above are in [docs/VERIFICATION.md](do
 Requires Node.js 20 or newer.
 
 ```sh
-claude mcp add --scope local gta6 -- npx -y https://github.com/ahump20/gta6-mcp/releases/download/v0.1.2/gta6-mcp-0.1.2.tgz
+claude mcp add --scope local gta6 -- npx -y https://github.com/ahump20/gta6-mcp/releases/download/v0.1.3/gta6-mcp-0.1.3.tgz
 ```
 
-That installs the release file. Its SHA-256 checksum is `2a7f5d88dab6c39ec6a30fd835fb54255450f4b17d9f437f524a50876b1761b8`, published beside it on the [release page](https://github.com/ahump20/gta6-mcp/releases/tag/v0.1.2).
+That installs the release file. Its SHA-256 checksum is `21dfeda594294a1ec5f68d7bbbe72a89793190c47ec529e69c1d8d82df8928ec`, published beside it on the [release page](https://github.com/ahump20/gta6-mcp/releases/tag/v0.1.3).
 
 Already installed an earlier version? Run `claude mcp remove gta6 --scope local` first, then the command above.
 
 Straight from the tagged source, which builds on install, also works:
 
 ```sh
-claude mcp add --scope local gta6 -- npx -y github:ahump20/gta6-mcp#v0.1.2
+claude mcp add --scope local gta6 -- npx -y github:ahump20/gta6-mcp#v0.1.3
 ```
 
-Both commands were tested against the published release on Node 20 and passed the live protocol test on both protocol versions; the record is the release's [verification log](https://github.com/ahump20/gta6-mcp/releases/download/v0.1.2/gta6-mcp-0.1.2-verification.json). One limit: on npm 10, the source route works with the tag but fails if you replace the tag with a full commit hash.
+Both commands were tested against the published release on Node 20 and passed the live protocol test on both protocol versions; the record is the release's [verification log](https://github.com/ahump20/gta6-mcp/releases/download/v0.1.3/gta6-mcp-0.1.3-verification.json). One limit: on npm 10, the source route works with the tag but fails if you replace the tag with a full commit hash.
 
 The package is published to GitHub Releases only, not to the npm registry. It needs no account, key or hosted service.
 
@@ -49,7 +49,7 @@ The package is published to GitHub Releases only, not to the npm registry. It ne
 Requires Node.js 20 or newer. Install the same release file once, then point Codex at it:
 
 ```sh
-npm install -g https://github.com/ahump20/gta6-mcp/releases/download/v0.1.2/gta6-mcp-0.1.2.tgz
+npm install -g https://github.com/ahump20/gta6-mcp/releases/download/v0.1.3/gta6-mcp-0.1.3.tgz
 codex mcp add gta6 -- gta6-mcp
 ```
 
@@ -64,7 +64,7 @@ To run it through `npx` anyway, with nothing installed, put this in `~/.codex/co
 ```toml
 [mcp_servers.gta6]
 command = "npx"
-args = ["-y", "https://github.com/ahump20/gta6-mcp/releases/download/v0.1.2/gta6-mcp-0.1.2.tgz"]
+args = ["-y", "https://github.com/ahump20/gta6-mcp/releases/download/v0.1.3/gta6-mcp-0.1.3.tgz"]
 required = true
 startup_timeout_sec = 60
 ```
@@ -75,7 +75,7 @@ An operator who holds Fandom's permission passes the setting with `--env`: `code
 
 To remove it: `codex mcp remove gta6`, then `npm uninstall -g gta6-mcp`.
 
-Both routes were tested with Codex CLI 0.166.0 on v0.1.1 and returned the same 22 reports Claude Code gets. The installed route was run again on v0.1.2 with a plain question, and Codex returned the 18 code names and 19 Easter eggs. The desktop app and the IDE extension were not run. The record is sections 20 and 22 of [docs/VERIFICATION.md](docs/VERIFICATION.md).
+Both routes were tested with Codex CLI 0.166.0 on v0.1.1 and returned the same 22 reports Claude Code gets. The installed route was run again on v0.1.3 with a plain question, and Codex returned the 18 code names and 18 Easter eggs. The desktop app and the IDE extension were not run. The record is sections 20, 22 and 24 of [docs/VERIFICATION.md](docs/VERIFICATION.md).
 
 ## Tools
 

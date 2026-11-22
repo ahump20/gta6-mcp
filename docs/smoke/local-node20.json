@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-22T01:02:16.630Z",
-  "tested_sha": "70746e5daa48098bbc4adf9caab591c38c8b18ee",
+  "generated_at": "2026-11-22T01:08:54.647Z",
+  "tested_sha": "f3c8918b81c205a5505302746dad3efaf84500ee",
   "launcher": "~/.nvm/versions/node/v20.20.2/bin/node ./dist/index.js",
   "versions": {
     "node": "v20.20.2",
@@ -38,7 +38,7 @@
     {
       "label": "legacy",
       "requested_mode": "legacy",
-      "wire_log": "$TMPDIR/gta6-mcp-smoke-CAv3HD/legacy.wire.jsonl",
+      "wire_log": "$TMPDIR/gta6-mcp-smoke-ewkLzf/legacy.wire.jsonl",
       "calls": [
         {
           "label": "cheat lookup (default: confirmed only)",
@@ -169,12 +169,12 @@
           "schema_valid": true,
           "text_matches_structured": true,
           "status": "partial",
-          "summary": "Content withheld by spoiler policy. 19 recorded entries are held back at this spoiler level. Ask again with spoilers set to discovery to see them.",
+          "summary": "Content withheld by spoiler policy. 18 recorded entries are held back at this spoiler level. Ask again with spoilers set to discovery to see them.",
           "result_count": 0,
           "notices": [
             {
               "type": "spoiler_withheld",
-              "message": "19 recorded entries are held back at this spoiler level. Ask again with spoilers set to discovery to see them."
+              "message": "18 recorded entries are held back at this spoiler level. Ask again with spoilers set to discovery to see them."
             },
             {
               "type": "coverage_gap",
@@ -194,8 +194,8 @@
           "schema_valid": true,
           "text_matches_structured": true,
           "status": "partial",
-          "summary": "19 secret(s): 18 from the reviewed registry, 1 community report(s), 0 unreviewed and unverified.",
-          "result_count": 19,
+          "summary": "18 secret(s): 17 from the reviewed registry, 1 community report(s), 0 unreviewed and unverified.",
+          "result_count": 18,
           "notices": [
             {
               "type": "coverage_gap",
@@ -363,8 +363,8 @@
             {
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
-              "revision_id": 1387017398,
-              "retrieved_at": "2026-11-22T01:02:09.295Z",
+              "revision_id": 1387018624,
+              "retrieved_at": "2026-11-22T01:08:47.183Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -406,8 +406,8 @@
             {
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
-              "revision_id": 1387017398,
-              "retrieved_at": "2026-11-22T01:02:09.296Z",
+              "revision_id": 1387018624,
+              "retrieved_at": "2026-11-22T01:08:47.183Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -492,7 +492,7 @@
             {
               "title": "Wikipedia search",
               "url": "https://en.wikipedia.org/wiki/Special:Search",
-              "retrieved_at": "2026-11-22T01:02:11.051Z",
+              "retrieved_at": "2026-11-22T01:08:48.997Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -511,7 +511,7 @@
       "observed_era": "legacy",
       "server": {
         "name": "gta6-mcp",
-        "version": "0.1.2"
+        "version": "0.1.3"
       },
       "tools": [
         "easter_eggs",
@@ -546,7 +546,7 @@
       "requested_mode": {
         "pin": "2026-07-28"
       },
-      "wire_log": "$TMPDIR/gta6-mcp-smoke-8lpsDv/modern.wire.jsonl",
+      "wire_log": "$TMPDIR/gta6-mcp-smoke-D0w7lx/modern.wire.jsonl",
       "calls": [
         {
           "label": "cheat lookup (default: confirmed only)",
@@ -677,12 +677,12 @@
           "schema_valid": true,
           "text_matches_structured": true,
           "status": "partial",
-          "summary": "Content withheld by spoiler policy. 19 recorded entries are held back at this spoiler level. Ask again with spoilers set to discovery to see them.",
+          "summary": "Content withheld by spoiler policy. 18 recorded entries are held back at this spoiler level. Ask again with spoilers set to discovery to see them.",
           "result_count": 0,
           "notices": [
             {
               "type": "spoiler_withheld",
-              "message": "19 recorded entries are held back at this spoiler level. Ask again with spoilers set to discovery to see them."
+              "message": "18 recorded entries are held back at this spoiler level. Ask again with spoilers set to discovery to see them."
             },
             {
               "type": "coverage_gap",
@@ -702,8 +702,8 @@
           "schema_valid": true,
           "text_matches_structured": true,
           "status": "partial",
-          "summary": "19 secret(s): 18 from the reviewed registry, 1 community report(s), 0 unreviewed and unverified.",
-          "result_count": 19,
+          "summary": "18 secret(s): 17 from the reviewed registry, 1 community report(s), 0 unreviewed and unverified.",
+          "result_count": 18,
           "notices": [
             {
               "type": "coverage_gap",
@@ -871,8 +871,8 @@
             {
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
-              "revision_id": 1387017398,
-              "retrieved_at": "2026-11-22T01:02:13.245Z",
+              "revision_id": 1387018624,
+              "retrieved_at": "2026-11-22T01:08:51.433Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -914,8 +914,8 @@
             {
               "title": "Grand Theft Auto VI",
               "url": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
-              "revision_id": 1387017398,
-              "retrieved_at": "2026-11-22T01:02:13.246Z",
+              "revision_id": 1387018624,
+              "retrieved_at": "2026-11-22T01:08:51.434Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -1000,7 +1000,7 @@
             {
               "title": "Wikipedia search",
               "url": "https://en.wikipedia.org/wiki/Special:Search",
-              "retrieved_at": "2026-11-22T01:02:15.106Z",
+              "retrieved_at": "2026-11-22T01:08:53.114Z",
               "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)",
               "attribution": "Wikipedia contributors. Text extracted and reduced to plain text by gta6-mcp."
             }
@@ -1019,7 +1019,7 @@
       "observed_era": "modern",
       "server": {
         "name": "gta6-mcp",
-        "version": "0.1.2"
+        "version": "0.1.3"
       },
       "tools": [
         "easter_eggs",
