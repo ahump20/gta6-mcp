@@ -532,12 +532,12 @@ export async function listCheats(
   const page = await fetchPage(deps.http, 'fandom', CHEATS_PAGE);
   if (page.kind === 'unavailable') {
     const nothing = unavailable<CheatRow>('The cheats page', page);
-    return args.include_unverified ? recordedOnly(args, deps.manifest, gapNotice('The cheats page', page.reason), nothing) : nothing;
+    return args.include_unverified ? recordedOnly(args, deps.manifest, gapNotice('The cheats page', page.reason), nothing) : pointAtReports(nothing, deps.manifest, args);
   }
   if (page.kind === 'missing') {
     const noPage = notice('coverage_gap', 'The wiki has no GTA VI cheats page.');
     const nothing = envelope<CheatRow>('no_verified_results', '0 confirmed cheats. The wiki has no GTA VI cheats page.', [], [], [notice('coverage_gap', NO_CONFIRMED), gtawikiGap()]);
-    return args.include_unverified ? recordedOnly(args, deps.manifest, noPage, nothing) : nothing;
+    return args.include_unverified ? recordedOnly(args, deps.manifest, noPage, nothing) : pointAtReports(nothing, deps.manifest, args);
   }
   const recordedSteps = deps.manifest.spoiler_registry.entry_steps;
   const stepsSection = splitSections(page.wikitext).find((s) => s.heading === recordedSteps?.heading);
@@ -632,6 +632,20 @@ function conflictRows(manifest: Manifest): Built[] {
     );
 }
 
+/** A default call that returns no rows still says how many recorded reports the caller can ask for. A count, never their content. */
+function pointAtReports(
+  nothing: Envelope<CheatRow>,
+  manifest: Manifest,
+  args: { readonly platform?: 'ps5' | 'xbox-series' | undefined; readonly spoilers: SpoilerLevel },
+): Envelope<CheatRow> {
+  // Counted with the caller's own platform and spoiler level, so the same call with include_unverified=true returns this many.
+  const recorded = [...conflictRows(manifest), ...communityRows(manifest)].filter(
+    (b) => (args.platform === undefined || b.row.platform === args.platform) && allows(b.communityMinLevel ?? 'full', args.spoilers),
+  ).length;
+  if (recorded === 0) return nothing;
+  return { ...nothing, summary: `${nothing.summary} ${recorded} recorded report(s) are available with include_unverified=true, labelled as reports, not working codes.` };
+}
+
 /** What list_cheats can still say when the wiki's cheat table was not retrieved: recorded conflicts and community reports. */
 function recordedOnly(
   args: { readonly platform?: 'ps5' | 'xbox-series' | undefined; readonly spoilers: SpoilerLevel },
@@ -708,7 +722,7 @@ export async function easterEggs(args: { readonly topic?: string | undefined; re
   const pages = await Promise.all(registry.easter_egg_page_titles.map((title) => fetchPage(deps.http, 'fandom', title)));
   const found = pages.filter((p): p is PageOk => p.kind === 'ok' && !isLeak(p.title) && (mentionsGtaVi(p.title) || mentionsGtaVi(p.wikitext)));
   const failures = pages.filter((p): p is Unavailable => p.kind === 'unavailable');
-  if (reviewed.length === 0 && reported.length === 0 && found.length === 0 && failures[0]) return unavailable('The wiki', failures[0]);
+  if (registry.easter_eggs.length === 0 && reported.length === 0 && found.length === 0 && failures[0]) return unavailable('The wiki', failures[0]);
   const failureMessages = [...new Set(failures.map((f) => (f.reason === 'not_permitted' ? FANDOM_OFF : `The wiki could not be read (${f.reason}); wiki sections are missing from this result.`)))];
   const failureNotices = failureMessages.map((message) => notice('coverage_gap', message));
 
@@ -737,8 +751,15 @@ export async function easterEggs(args: { readonly topic?: string | undefined; re
     }),
   );
   const results = [...reviewed, ...fromCommunity, ...fromPages];
-  const withheld = cleared.length < candidates.length || reportedCleared.length < reported.length;
-  if (results.length === 0 && withheld) return envelope('partial', WITHHELD_MESSAGE, [], [], [notice('spoiler_withheld'), ...failureNotices]);
+  // A count of recorded entries above this level, never what they are.
+  const heldLevels = [...registry.easter_eggs.map((egg) => egg.title_min_level), ...reported.map((r) => r.min_level)].filter((level) => !allows(level, args.spoilers));
+  const held = heldLevels.length;
+  const atDiscovery = heldLevels.filter((level) => level === 'discovery').length;
+  const ask = atDiscovery === held ? 'discovery to see them' : atDiscovery === 0 ? 'full to see them' : `discovery to see ${atDiscovery} of them, or full to see all`;
+  const heldText = `${held} recorded entr${held === 1 ? 'y is' : 'ies are'} held back at this spoiler level. Ask again with spoilers set to ${ask}.`;
+  const withheldNotice = held > 0 ? notice('spoiler_withheld', heldText) : notice('spoiler_withheld');
+  const withheld = cleared.length < candidates.length || held > 0;
+  if (results.length === 0 && withheld) return envelope('partial', held > 0 ? `${WITHHELD_MESSAGE} ${heldText}` : WITHHELD_MESSAGE, [], [], [withheldNotice, ...failureNotices]);
   if (results.length === 0) {
     return envelope('no_verified_results', 'No Easter egg or secret can be returned yet.', [], [], [
       notice(
@@ -754,14 +775,15 @@ export async function easterEggs(args: { readonly topic?: string | undefined; re
   const shownPages = found.filter((page) => visible.some((c) => c.page === page));
   const notices = [
     ...shownPages.flatMap((page) => staleNotices(page.stale, page.retrieved_at)),
-    ...(reviewed.length === 0 ? [notice('coverage_gap', 'No reviewed hint exists; these entries are community reports or unreviewed wiki sections.')] : []),
+    ...(reviewed.every((egg) => egg.hint === null) ? [notice('coverage_gap', 'No reviewed hint exists; these entries are guide listings, community reports or unreviewed wiki sections.')] : []),
+    ...(reviewed.some((egg) => egg.evidence_status !== 'documented') ? [notice('coverage_gap', 'Registry entries marked unverified are listed by guides and were reviewed for spoiler level only. This project has not seen them in the game.')] : []),
     ...failureNotices,
     gtawikiGap(),
-    ...(withheld ? [notice('spoiler_withheld')] : []),
+    ...(withheld ? [withheldNotice] : []),
   ];
   return envelope(
     failures.length > 0 ? 'partial' : 'ok',
-    `${results.length} secret(s): ${reviewed.length} reviewed, ${fromCommunity.length} community report(s), ${fromPages.length} unreviewed and unverified.`,
+    `${results.length} secret(s): ${reviewed.length} from the reviewed registry, ${fromCommunity.length} community report(s), ${fromPages.length} unreviewed and unverified.`,
     results,
     [...shownPages.map((page) => pageSource('fandom', page)), ...reportedShown.map(communitySource)],
     notices,

@@ -70,7 +70,7 @@ async function runEra(label, mode) {
   const transport = new StdioClientTransport({ command, args, stderr: 'pipe' });
   const stderr = [];
   transport.stderr?.on('data', (chunk) => stderr.push(chunk.toString('utf8')));
-  const client = new Client({ name: 'gta6-mcp-smoke', version: '0.1.1' }, { versionNegotiation: { mode } });
+  const client = new Client({ name: 'gta6-mcp-smoke', version: '0.1.2' }, { versionNegotiation: { mode } });
   const report = { label, requested_mode: mode, wire_log: tidy(log), calls: [] };
   try {
     await client.connect(transport);

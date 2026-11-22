@@ -14,7 +14,7 @@ Default-deny: nothing is shown at a level unless a reviewer cleared that exact c
 
 1. A classification is bound to the content reviewed: a page title, a section's text, a cheat row or a registry entry. Section and row classifications carry a fingerprint (SHA-256 over the text with whitespace collapsed). If the text changes, the classification no longer applies and the content is withheld until it is reviewed again.
 2. Filtering runs last, over the finished result, and the plain-text answer is built from the filtered result. A withheld field is `null` in the structured result and absent from the text; a withheld row or section is absent from both.
-3. When something is withheld the result says so with a `spoiler_withheld` notice. It does not say what was withheld.
+3. When something is withheld the result says so with a `spoiler_withheld` notice. It does not say what was withheld. For recorded Easter eggs it gives a count and names the levels that show them, so an assistant can ask again; a count reveals nothing about the game.
 4. A cheat's unlock text has its own classification, separate from its name and input.
 5. A recorded dispute or a community report is shown only at the level its reviewer set. One with no reviewed level is shown at `full` only.
 6. Search snippets are unreviewed, so they are shown only at `full`. Below `full`, a title is shown only if it was reviewed.
