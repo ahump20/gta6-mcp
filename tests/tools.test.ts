@@ -357,8 +357,12 @@ describe('easter_eggs', () => {
   });
 
   it('is unavailable when the wiki cannot be reached', async () => {
-    const out = await easterEggs({ spoilers: 'hints' }, real([{ match: ['action=parse'], result: down() }]));
+    const out = await easterEggs({ spoilers: 'hints' }, noEggs([{ match: ['action=parse'], result: down() }]));
     expect(out.status).toBe('upstream_unavailable');
+    // With entries on record, a wiki outage is not the answer: the call points at them instead.
+    const withEggs = await easterEggs({ spoilers: 'hints' }, real([{ match: ['action=parse'], result: down() }]));
+    expect(withEggs).toMatchObject({ status: 'partial', results: [] });
+    expect(withEggs.summary).toContain('held back at this spoiler level');
   });
 
   it('returns unreviewed sections as unverified in full mode only', async () => {
